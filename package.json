@@ -1,0 +1,29 @@
+{
+  "name": "AKJIO",
+  "version": "1.0.0",
+  "description": "The home of Allan Kimmer Jensen",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Saturate/AKJIO.git"
+  },
+  "keywords": [
+    "blog",
+    "Allan",
+    "Kimmer",
+    "Jensen",
+    "gulp"
+  ],
+  "author": "Allan Kimmer Jensen",
+  "license": "NMon",
+  "bugs": {
+    "url": "https://github.com/Saturate/AKJIO/issues"
+  },
+  "homepage": "https://github.com/Saturate/AKJIO",
+  "dependencies": {
+    "gulp": "^3.8.11"
+  }
+}
