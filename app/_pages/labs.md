@@ -1,5 +1,6 @@
 ---
 template: default.html
+title: Labs
 ---
 
 # Labs
