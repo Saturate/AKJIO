@@ -30,3 +30,4 @@ node_modules
 #Dist
 dist
 .tmp
+project.sublime-workspace
