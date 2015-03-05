@@ -267,7 +267,7 @@ gulp.task('deploy', function() {
   var ghpages = require('gh-pages');
   var path = require('path');
  
-  ghpages.publish(path.join(__dirname, 'build'), {
+  ghpages.publish(path.join(__dirname, 'dist'), {
     repo: 'https://' + process.env.GH_TOKEN + '@github.com/Saturate/AKJIO.git',
     user: {
       name: 'Travis-CI',
