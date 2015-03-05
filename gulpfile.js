@@ -8,6 +8,7 @@ var settings = {
 var gulp = require('gulp');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
+var gppages = require('gh-pages');
 
 // Load plugins, still we like to be lazy so we use this plugin.
 var $ = require('gulp-load-plugins')();
@@ -68,7 +69,8 @@ gulp.task('serve', ['styles', 'fonts'], function () {
 		'app/labs/*.html',
 		'app/scripts/**/*.js',
 		'app/images/**/*',
-		'.tmp/fonts/**/*'
+		'.tmp/fonts/**/*',
+		'.tmp/dist/**/*'
 	]).on('change', reload);
 
 	gulp.watch('app/styles/**/*.scss', ['styles']);
