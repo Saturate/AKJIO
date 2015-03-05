@@ -24,7 +24,6 @@ var permalinks = require('metalsmith-permalinks');
 var gulpFrontMatter = require('gulp-front-matter');
 var assign = require('lodash.assign');
 var wordcount = require("metalsmith-word-count");
-var copy = require("metalsmith-copy");
 var swig = require('swig');
 
 console.log(Metal);
