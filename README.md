@@ -2,7 +2,7 @@
 The source and content for my site, view it here HTTPS://AKJ.IO
 
 ## Mistakes?
-Found spelling and grammar hiccup? Feel free to make a issue, and or make a pull request.
+Found spelling and grammar hiccup? Feel free to make a [issue](https://github.com/Saturate/AKJIO/issues), and or make a pull request.
 
 ## Tech
 Generated static site build with [Gulp](http://gulpjs.com/) and [Metalsmith](http://www.metalsmith.io/). That's awesome.
