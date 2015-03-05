@@ -1,0 +1,13 @@
+{% extends '_master.html' %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+	{% if topImage %}<img src="{{ topImage }}">{% endif %}
+	{{ contents|safe }}
+
+	{% for post in posts %}
+		<p><a href="{{ post.path }}/">{{ post.title }}</a></p>
+		<time>{{ post.date | date('Y-m-d') }}</time>
+	{% endfor %}
+{% endblock %}
