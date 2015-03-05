@@ -5,7 +5,7 @@ The source and content for my site, view it here HTTPS://AKJ.IO
 Find a spelling error? Feel free to make a issue, and or make a pull request.
 
 ## Tech
-Generated static site build with [Gulp](http://gulpjs.com/) and Metalsmith. That's awesome.
+Generated static site build with [Gulp](http://gulpjs.com/) and [Metalsmith](http://www.metalsmith.io/). That's awesome.
 
 ## Copyright
 Feel free to use any code snippets, but the blog content is mine.
