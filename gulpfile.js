@@ -207,7 +207,7 @@ gulp.task('styles', function () {
 			require('autoprefixer-core')({browsers: ['last 1 version']})
 		]))
 		.pipe($.sourcemaps.write())
-		.pipe(gulp.dest('.tmp/styles'))
+		.pipe(gulp.dest('dist/styles'))
 		.pipe(reload({stream: true}));
 });
 
@@ -265,14 +265,17 @@ gulp.task('watch', ['connect', 'serve'], function () {
 });
 
 gulp.task('deploy', function() {
-  var ghpages = require('gh-pages');
-  var path = require('path');
- 
-  ghpages.publish(path.join(__dirname, 'dist'), {
-    repo: 'https://' + process.env.GH_TOKEN + '@github.com/Saturate/AKJIO.git',
-    user: {
-      name: 'Travis-CI',
-      email: 'travis@akj.io'
-    }
-  }, function (err) { console.log(err)});
+	var ghpages = require('gh-pages');
+	var path = require('path');
+	if(process.env.TRAVIS === true) {
+		ghpages.publish(path.join(__dirname, 'dist'), {
+			repo: 'https://' + process.env.GH_TOKEN + '@github.com/Saturate/AKJIO.git',
+			user: {
+				name: 'Travis-CI',
+				email: 'travis@akj.io'
+			}
+		}, function (err) { console.log(err) });
+	} else {
+		ghpages.publish(path.join(__dirname, 'dist'), function (err) { console.log(err) });
+	}
 });
