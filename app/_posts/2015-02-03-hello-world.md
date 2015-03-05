@@ -5,55 +5,13 @@ date: 2014-11-18
 template: post.html
 ---
 
-Hello world! :-)
+Hello World!  
 
-This is just a hello world in JavaScript.
+This is my new blog that I have had intentions of making the last many years. A wise man once said
 
-```
-console.log('Hello World');
-```
+> ‘Finished last’ will always be better than ‘Did not finish’, which always trumps ‘Did not start.’
 
-```javascript
-function fancyAlert(arg) {
-  if(arg) {
-    $.facebox({div:'#foo'})
-  }
-}
-```
+I've made lots of websites before, small and big in my work as a consultant.
+But my own never really got of a life, and each time I tired I stopped somewhere in the process.
 
-# This is an <h1> tag
-## This is an <h2> tag
-###### This is an <h6> tag
-
-
-
-*This text will be italic*
-_This will also be italic_
-
-**This text will be bold**
-__This will also be bold__
-
-*You **can** combine them*
-
-
-* Item 1
-* Item 2
-  * Item 2a
-  * Item 2b
-
-
- 1. Item 1
-2. Item 2
-3. Item 3
-   * Item 3a
-   * Item 3b
-
-
-As Kanye West said:
-
-> We're living the future so
-> the present is our past.
-
-
-I think you should use an
-`<addr>` element here instead.
+It's a pleasure to say welcome to my very own personal website.

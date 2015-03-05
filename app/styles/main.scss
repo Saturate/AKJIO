@@ -38,6 +38,10 @@ a {
 .header {
 	padding: 33px 0;
 
+	nav {
+		border-right: 4px solid #ccc;
+	}
+
 	/* Make the masthead heading the same height as the navigation */
 	h3 {
 		margin-top: 0;
@@ -172,4 +176,30 @@ article {
 		bottom: 0;
 		width: 18rem;
 	}
+}
+
+pre code {
+	display: block;
+	overflow-x: auto;
+	padding: 0.5em;
+	background: #f0f0f0;
+}
+
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+blockquote p {
+  display: inline;
 }

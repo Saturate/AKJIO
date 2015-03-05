@@ -5,7 +5,7 @@ topImage: https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-xaf1/t31.0-8/1654905
 ---
 
 
-# Abour me...
+# About me...
 
 <p>Hello, my name is <span itemprop="name">Allan Kimmer Jensen</span>, also known as:</p>
 
