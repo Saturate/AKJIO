@@ -8,7 +8,6 @@ var settings = {
 var gulp = require('gulp');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
-var gppages = require('gh-pages');
 
 // Load plugins, still we like to be lazy so we use this plugin.
 var $ = require('gulp-load-plugins')();
@@ -48,7 +47,7 @@ gulp.task('default', ['clean'], function () {
 	gulp.start('build');
 });
 
-gulp.task('build', ['jshint', 'metalsmith', 'styles', 'images', 'fonts', 'extras'], function () {
+gulp.task('build', ['jshint', 'metalsmith', 'styles', 'images', /*'fonts',*/ 'extras'], function () {
 	return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
 });
 
@@ -262,4 +261,17 @@ gulp.task('watch', ['connect', 'serve'], function () {
 
 	// Watch bower files
 	gulp.watch('bower.json', ['wiredep']);
+});
+
+gulp.task('deploy', function() {
+  var ghpages = require('gh-pages');
+  var path = require('path');
+ 
+  ghpages.publish(path.join(__dirname, 'build'), {
+    repo: 'https://' + process.env.GH_TOKEN + '@github.com/Saturate/AKJIO.git',
+    user: {
+      name: 'Travis-CI',
+      email: 'travis@akj.io'
+    }
+  }, function (err) { console.log(err)});
 });
