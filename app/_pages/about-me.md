@@ -1,7 +1,8 @@
 ---
 title: About me
 template: default.html
-topImage: https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-xaf1/t31.0-8/1654905_694740623966543_3888718086569560381_o.jpg 
+topImage: https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-xaf1/t31.0-8/1654905_694740623966543_3888718086569560381_o.jpg
+todo: Add http://www.chartjs.org/docs/#radar-chart
 ---
 
 
@@ -24,6 +25,8 @@ topImage: https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-xaf1/t31.0-8/1654905
 <p>I'm currently working as an <span itemprop="title">Interface Consultant</span> at <span itemprop="affiliation">Pentia A/S</span>.</p>
 
 ## Stalker aid
+If you want to stalk me you can find my profiles here.
+Some might be relevant to your kind of stalking others not so much.
 
 - [GitHub](https://github.com/Saturate)
 - [Facebook](https://www.facebook.com/allankimmerjensen)

@@ -4,4 +4,5 @@ title: Awesome blog posts about Front-end
 permalink: false
 ---
  
-# My lastest blog posts:
+# Blog
+### Blog posts that I made...
