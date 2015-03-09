@@ -69,7 +69,7 @@ gulp.task('serve', ['styles', 'fonts'], function () {
 		'app/scripts/**/*.js',
 		'app/images/**/*',
 		'.tmp/fonts/**/*',
-		'.tmp/dist/**/*'
+		'dist/**/*'
 	]).on('change', reload);
 
 	gulp.watch('app/styles/**/*.scss', ['styles']);
@@ -136,7 +136,7 @@ gulp.task('metalsmith', function () {
 				}))
 				.use(wordcount())
 				.use(permalinks({
-					pattern: './:collection/:title'
+					pattern: './:title' // Don't use /:collection for now, we want it all on root.
 				}))
 				.use(templates({
 					'engine': 'swig',
@@ -227,41 +227,6 @@ gulp.task('extras', function () {
 	], {
 		dot: true
 	}).pipe(gulp.dest('dist'));
-});
-
-// Watch
-gulp.task('watch', ['connect', 'serve'], function () {
-	// Watch for changes in `app` folder
-	gulp.watch([
-			'app/**/*.html',
-			'app/**/*.md',
-			'app/styles/**/*.scss',
-			'app/scripts/**/*.js',
-			'app/images/**/*',
-			'dist/**/*.{html}'
-	], function (event) {
-			return gulp.src(event.path)
-					.pipe($.connect.reload());
-	});
-
-	// Watch .scss files
-	gulp.watch('app/**/*.md', ['metalsmith']);
-
-	// Watch .scss files
-	gulp.watch('app/styles/**/*.scss', ['styles']);
-
-	// Watch .js files
-	gulp.watch('app/scripts/**/*.js', ['scripts']);
-
-	 // Watch markdown files
-	gulp.watch('app/_posts/*.md', ['metalsmith']);
-	gulp.watch('app/_pages/*.md', ['metalsmith']);
-
-	// Watch image files
-	gulp.watch('app/images/**/*', ['images']);
-
-	// Watch bower files
-	gulp.watch('bower.json', ['wiredep']);
 });
 
 gulp.task('deploy', function() {
