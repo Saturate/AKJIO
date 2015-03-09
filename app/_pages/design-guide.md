@@ -54,6 +54,8 @@ __This will also be bold__
 
 *You **can** combine them*
 
+Also you can do ~~this~~... it's cool.
+
 * Item 1
 * Item 2
   * Item 2a
@@ -69,5 +71,6 @@ __This will also be bold__
 
 We also have some qoutes:
 
-> Extinction is the rule. Survival is the exception.
+> Extinction is the rule. Survival is the exception.   
+> — Carl Sagan
 
