@@ -7,7 +7,7 @@
 	{{ contents|safe }}
 
 	{% for post in posts %}
-		<p><a href="{{ post.path }}/">{{ post.title }}</a></p>
-		<time>{{ post.date | date('Y-m-d') }}</time>
+		<p><a href="{{ post.path }}/"><time>{{ post.date | date('Y-m-d') }}</time> / {{ post.title }}</a></p>
+		
 	{% endfor %}
 {% endblock %}

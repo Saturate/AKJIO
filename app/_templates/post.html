@@ -3,14 +3,17 @@
 {% block title %}{% endblock %}
 
 {% block content %}
-	<article>
+	<article class="article">
 		{% if topImage %}<img src="{{ topImage }}">{% endif %}
-		<div class="content">
-			<header>
+		<div class="article__content">
+			<header class="article__header">
 				<h1 itemprop="headline">{{ title }}</h1>
-				<time itemprop="datePublished" datetime="2009-10-09"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>{{ date | date('Y-m-d') }}</time>
-
-				Reading time: {{readingTime}}
+				<h3 >{{ subtitle }}</h3>
+				<div class="article__header__metadata">
+					Published: <time itemprop="datePublished" datetime="2009-10-09"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>{{ date | date('Y-m-d') }}</time><br />
+					Last updated: {{ date | date('Y-m-d') }}<br />
+					Reading time: {{readingTime}}
+				</div>
 			</header>
 			{{ contents|safe }}
 			<footer>
