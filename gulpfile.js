@@ -232,7 +232,8 @@ gulp.task('extras', function () {
 gulp.task('deploy', function() {
 	var ghpages = require('gh-pages');
 	var path = require('path');
-	if(process.env.TRAVIS === true) {
+	console.log(process.env);
+	//if(process.env.TRAVIS === true) {
 		ghpages.publish(path.join(__dirname, 'dist'), {
 			repo: 'https://' + process.env.GH_TOKEN + '@github.com/Saturate/AKJIO.git',
 			user: {
@@ -240,7 +241,7 @@ gulp.task('deploy', function() {
 				email: 'travis@akj.io'
 			}
 		}, function (err) { console.log(err) });
-	} else {
-		ghpages.publish(path.join(__dirname, 'dist'), function (err) { console.log(err) });
-	}
+	//} else {
+	//	ghpages.publish(path.join(__dirname, 'dist'), function (err) { console.log(err) });
+	//}
 });
