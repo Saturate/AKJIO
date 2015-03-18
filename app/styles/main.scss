@@ -1,3 +1,9 @@
+/*
+	Welcome, all classes are named with the BEM convention.
+	Google it :-)
+*/
+
+
 $icon-font-path: "../bower_components/bootstrap-sass/vendor/assets/fonts/bootstrap/";
 
 // bower:scss
@@ -25,6 +31,7 @@ html, body {
 /* Space out content a bit */
 body {
 	font-family: 'Helvetica Neue', Helvetica, Arial, Frutiger, 'Frutiger Linotype', sans-serif;
+	font-family: 'Old Standard TT', serif;
 	font-size: 22px;
 	line-height: 1.42857;
 	color: #3A4145;
@@ -35,22 +42,20 @@ a {
 }
 
 h1 {
-	font-size: 4em;
+	font-size: 3.245em;
 	line-height: 1;
 	margin: 0.67em 0 0 0;
 }
 
 h3 {
-	color: #727272;
 	margin-top: 0;
 }
 
 /* Custom page header */
 .header {
-	padding: 33px 0;
-	background: #F5F5F5;
-	nav {
-	}
+	padding: 33px 0 1em;
+	background: #F7F0E6;
+	text-align: center;
 
 	/* Make the masthead heading the same height as the navigation */
 	h3 {
@@ -65,53 +70,29 @@ h3 {
 			font-size: 0.3em;
 			font-weight: normal;
 			padding-top: 9px;
+			padding-bottom: 10px;
 			line-height: 1;
-		}
-	}
-	a {
-		text-decoration: none;
-		display: block;
-		padding: 20px;
-		text-align: center;
-	}
-
-	.nav-pills > li.active > a {
-		color: #fff;
-		background-color: rgba(255, 255, 255, 0.1);
-		&:hover, &:focus {
-			color: #fff;
-			background-color: rgba(255, 255, 255, 0.1);
-		}
-	}
-
-	.nav > li > a {
-		&:hover, &:focus {
-			text-decoration: none;
-			background-color: rgba(0, 0, 0, 0.2);
-		}
-	}
-
-	a .description {
-		font-size: 0.6em;
-		clear: both;
-		display: block;
-	}
-
-	.nav {
-		list-style: none;
-		padding: 0;
-		li {
 			&:after {
+			  	top: 6px;
+  				position: relative;
 				border-bottom: 1px solid #A3A3A3;
 				content: " ";
 				display: block;
-				width: 10%;
+				width: 225px;
 				margin: auto;
 			}
 		}
 	}
 }
 
+@import "_menu.scss";
+@import "_markdown.scss";
+
+main {
+	margin: 0 auto;
+	padding: 0 1em;
+	max-width: 700px;
+}
 
 article,
 .article {
@@ -158,76 +139,7 @@ article,
 	margin: 30px 0;
 }
 
-/* Main marketing message and sign up button */
-.jumbotron {
-	text-align: center;
-	border-bottom: 1px solid #e5e5e5;
-	.btn {
-		font-size: 21px;
-		padding: 14px 24px;
-	}
-}
-
-/* Supporting marketing content */
-.marketing {
-	margin: 40px 0;
-	p + h4 {
-		margin-top: 28px;
-	}
-}
 
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
-	/* Remove the padding we set earlier */
-	.header,
-	.marketing,
-	.footer {
-		padding-left: 0;
-		padding-right: 0;
-	}
-
-	main {
-		max-width: 760px;
-		max-width: 44rem;
-		margin-left: 22rem;
-		margin-right: 2rem;
-		padding-top: 2rem;
-	}
-
-	/* Space out the masthead */
-	.header {
-		max-width: 300px;
-		padding: 2rem 0;
-		position: fixed;
-		top: 0;
-		left: 0;
-		bottom: 0;
-		width: 18rem;
-	}
-}
-
-pre code {
-	display: block;
-	overflow-x: auto;
-	padding: 0.5em;
-	background: #f0f0f0;
-}
-
-blockquote {
-  background: #f9f9f9;
-  border-left: 10px solid #ccc;
-  margin: 1.5em 10px;
-  padding: 0.5em 10px;
-  quotes: "\201C""\201D""\2018""\2019";
-}
-blockquote:before {
-  color: #ccc;
-  content: open-quote;
-  font-size: 4em;
-  line-height: 0.1em;
-  margin-right: 0.25em;
-  vertical-align: -0.4em;
-}
-blockquote p {
-  display: inline;
 }

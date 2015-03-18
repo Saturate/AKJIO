@@ -63,6 +63,7 @@
     "wiredep": "^2.2.2"
   },
   "devDependencies": {
-    "gh-pages": "^0.2.0"
+    "gh-pages": "^0.2.0",
+    "gulp": "^3.8.11"
   }
 }

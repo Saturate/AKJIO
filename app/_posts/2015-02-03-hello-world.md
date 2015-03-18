@@ -31,7 +31,7 @@ I intend to make my blog a little different. I want to update each article when 
 Okay I want a place to document my front-end findings, while I practice the **art** of writing.
 All feedback and blog ideas are welcome.
 
-## How is it made?
+## How It's Made
 
 It's made using Gulp, NodeJS and Metalsmith. All hosted on GitHub.
 
@@ -40,6 +40,6 @@ All posts and pages are just plain markdown files that gets converted to HTML on
 I'll cover the pros and cons of a static generated site in a later post. And update this post
 
 
-## Whats going to happen now?
+## The Future
 
 I'll continue to work on the site, make a design and implement some nice but missing features.
