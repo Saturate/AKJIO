@@ -34,5 +34,14 @@ Some might be relevant to your kind of stalking others not so much.
 - [StackOverflow](http://stackoverflow.com/users/171087/allan-kimmer-jensen)
 - [keybase.io](https://keybase.io/akj)
 
+## Speaking
+I've been speaking at some events:
+
+### 2x Technology Perspective Seminar, Netcompany.
+Frontend in general, and how we do it. Optimizing, testing ect.
+
+### [JavaScript Copenhagen](http://imus.dk/2014-09-23/free-javascript-event-in-copenhagen/), IMUS Events
+I held a talk about Node Taskrunners focused on a frontend asset pipeline.
+
 ## Skills
 I am a level 234636 human, just respect me already.
