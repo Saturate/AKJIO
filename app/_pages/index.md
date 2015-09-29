@@ -3,6 +3,6 @@ template: posts.html
 title: Awesome blog posts about Front-end
 permalink: false
 ---
- 
+
 # Blog
-### Blog posts that I made...
+Want something to read? This is a great place to start, it's everything webdevelopment!
