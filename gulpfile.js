@@ -11,6 +11,7 @@ var reload = browserSync.reload;
 
 // Load plugins, still we like to be lazy so we use this plugin.
 var $ = require('gulp-load-plugins')();
+var autoprefixer = require('autoprefixer');
 
 // Metalsmith
 var Metal = require('gulp-load-plugins')({pattern: ['metalsmith-*', 'metalsmith.*']});
@@ -204,7 +205,7 @@ gulp.task('styles', function () {
 			onError: console.error.bind(console, 'Sass error:')
 		}))
 		.pipe($.postcss([
-			require('autoprefixer-core')({browsers: ['last 1 version']})
+			autoprefixer({ browsers: ['last 2 versions'] })
 		]))
 		.pipe($.sourcemaps.write())
 		.pipe(gulp.dest('dist/styles'))
