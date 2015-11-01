@@ -8,7 +8,7 @@ todo: Add http://www.chartjs.org/docs/#radar-chart
 
 # About me...
 
-<p>Hello, my name is <span itemprop="name">Allan Kimmer Jensen</span>, also known as:</p>
+<p>Yo! I'm <span itemprop="name">Allan Kimmer Jensen</span>, also known as:</p>
 
 <ul>
     <li itemprop="nickname">
@@ -22,7 +22,11 @@ todo: Add http://www.chartjs.org/docs/#radar-chart
     </li>
 </ul>
 
-<p>I'm currently working as an <span itemprop="title">Interface Consultant</span> at <span itemprop="affiliation">Pentia A/S</span>.</p>
+<p>I'm currently working as an <span itemprop="title">Consultant</span> at <span itemprop="affiliation">Pentia A/S</span> where I'm doing front-end stuff.</p>
+
+## Stuff I Use
+I made [this really cool list](/stuff-i-use) of stuff I own. 
+
 
 ## Stalker aid
 If you want to stalk me you can find my profiles here.
@@ -35,4 +39,4 @@ Some might be relevant to your kind of stalking others not so much.
 - [keybase.io](https://keybase.io/akj)
 
 ## Skills
-I am a level 234636 human, just respect me already.
+I am a level 234636 human, just listen to me already.
