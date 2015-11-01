@@ -1,8 +1,8 @@
-# AKJ.IO  [![Build Status](https://travis-ci.org/Saturate/AKJIO.svg)](https://travis-ci.org/Saturate/AKJIO) [![Dependencies](https://david-dm.org/Saturate/AKJIO.svg)](https://david-dm.org/Saturate/AKJIO) 
+# AKJ.IO  [![Build Status](https://travis-ci.org/Saturate/AKJIO.svg)](https://travis-ci.org/Saturate/AKJIO) [![Dependencies](https://david-dm.org/Saturate/AKJIO.svg)](https://david-dm.org/Saturate/AKJIO)
 The source and content for my site, view it here HTTPS://AKJ.IO
 
 ## Mistakes?
-Found spelling and grammar hiccup? Feel free to make a [issue](https://github.com/Saturate/AKJIO/issues), and or make a pull request.
+Found spelling or grammar hiccups? Feel free to make a [issue](https://github.com/Saturate/AKJIO/issues), and/or make a pull request.
 
 ## Tech
 Generated static site build with [Gulp](http://gulpjs.com/) and [Metalsmith](http://www.metalsmith.io/). That's awesome.

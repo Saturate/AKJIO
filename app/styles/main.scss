@@ -43,13 +43,16 @@ a {
 }
 
 h1 {
-	font-size: 3.245em;
+	font-size: 48px;
 	line-height: 1;
-	margin: 0.67em 0 0 0;
+	margin: 75px 0 0 0;
 }
-
+h2 {
+	font-size: 38px;
+}
 h3 {
 	margin-top: 0;
+	font-size: 25px;
 }
 
 /* Custom page header */
@@ -99,7 +102,7 @@ article,
 .article {
 	margin-bottom: 3em;
 	.article__content {}
-	
+
 	img {
 		width: 100%;
 	}
@@ -115,7 +118,7 @@ article,
 .article__header {
 	margin-bottom: 2em;
 	h1 {
-		font-size: 4em;
+		font-size: 3.5em;
 		line-height: 1;
 		margin: 0.67em 0 0 0;
 	}
