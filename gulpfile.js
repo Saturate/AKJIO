@@ -25,9 +25,9 @@ var permalinks = require('metalsmith-permalinks');
 var gulpFrontMatter = require('gulp-front-matter');
 var assign = require('lodash.assign');
 var wordcount = require("metalsmith-word-count");
-var swig = require('swig');
+var nunjucks = require('nunjucks');
 
-console.log(Metal);
+nunjucks.configure('./app/_templates', {watch: false})
 
 // tell me what the error is!
 // -> prevent .pipe from dying on error w/ gulp-plumber
@@ -35,10 +35,6 @@ console.log(Metal);
 var showError = function(err) {
 	console.log(err);
 };
-
-swig.setDefaults({
-	cache: false
-});
 
 // Clean
 gulp.task('clean', require('del').bind(null, ['.tmp', 'dist']));
@@ -144,7 +140,7 @@ gulp.task('metalsmith', function () {
 					pattern: './:title' // Don't use /:collection for now, we want it all on root.
 				}))
 				.use(templates({
-					'engine': 'swig',
+					'engine': 'nunjucks',
 					'directory': 'app/_templates',
 					'default': 'default.html'
 				}))
