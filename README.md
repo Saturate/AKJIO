@@ -12,4 +12,4 @@ Feel free to use any code snippets, but the blog content is mine.
 You can link and qoute it, but please include a link to my blog/site and my name.
 Anything else? Just ask!
 
-Copyright 2015 - Allan Kimmer Jensen
+Copyright 2016 - Allan Kimmer Jensen
