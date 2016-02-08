@@ -22,11 +22,12 @@ todo: Add http://www.chartjs.org/docs/#radar-chart
     </li>
 </ul>
 
+I do have many more names, but I really hate lists.
+
 <p>I'm currently working as an <span itemprop="title">Consultant</span> at <span itemprop="affiliation">Pentia A/S</span> where I'm doing front-end stuff.</p>
 
 ## Stuff I Use
-I made [this really cool list](/stuff-i-use) of stuff I own. 
-
+I made [this really cool list](/stuff-i-use) of stuff I own.
 
 ## Stalker aid
 If you want to stalk me you can find my profiles here.
@@ -39,13 +40,17 @@ Some might be relevant to your kind of stalking others not so much.
 - [keybase.io](https://keybase.io/akj)
 
 ## Speaking
-I've been speaking at some events:
+I've been speaking at some occasions:
 
-### 2x Technology Perspective Seminar, Netcompany.
+- ### 2x Technology Perspective Seminar, Netcompany.
 Frontend in general, and how we do it. Optimizing, testing ect.
 
-### [JavaScript Copenhagen](http://imus.dk/2014-09-23/free-javascript-event-in-copenhagen/), IMUS Events
+- ### [JavaScript Copenhagen](http://imus.dk/2014-09-23/free-javascript-event-in-copenhagen/), IMUS Events
 I held a talk about Node Taskrunners focused on a frontend asset pipeline.
 
+- ### [JavaScript Copenhagen, 2nd edition](http://imus.dk/2015-10-28/free-javascript-event-in-copenhagen-2nd-edition/), IMUS Events
+Debugging with Chrome DevTools.
+
+
 ## Skills
-I am a level 234636 human, just listen to me already.
+Not filling out the skills sections on my website, that's for sure.
