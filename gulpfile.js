@@ -17,7 +17,7 @@ var autoprefixer = require('autoprefixer');
 var Metal = require('gulp-load-plugins')({pattern: ['metalsmith-*', 'metalsmith.*']});
 var gulpsmith = require('gulpsmith');
 var markdown = require('metalsmith-markdown');
-var templates = require('metalsmith-templates');
+var templates = require('metalsmith-layouts');
 var collections = require('metalsmith-collections');
 var ignore = require('metalsmith-ignore');
 var wordcount = require('metalsmith-word-count');
@@ -33,11 +33,11 @@ console.log(Metal);
 // -> prevent .pipe from dying on error w/ gulp-plumber
 // -> and give more useful error messages
 var showError = function(err) {
-  console.log(err);
+	console.log(err);
 };
 
 swig.setDefaults({
-  cache: false
+	cache: false
 });
 
 // Clean
@@ -49,7 +49,11 @@ gulp.task('default', ['clean'], function () {
 });
 
 gulp.task('build', ['jshint', 'metalsmith', 'styles', 'images', /*'fonts',*/ 'extras'], function () {
-	return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
+	return gulp.src('dist/**/*')
+		.pipe($.size({
+			title: 'build',
+			gzip: true
+		}));
 });
 
 gulp.task('serve', ['styles', 'fonts'], function () {
@@ -100,14 +104,14 @@ gulp.task('metalsmith', function () {
 			remove: true // should we remove front-matter header?
 		}))
 		.pipe($.tap(function(file, t) {
-	        assign(file, file.frontMatter);
+			assign(file, file.frontMatter);
 			//delete file.frontMatter;
-	    }))
+		}))
 		//.on('data', function addPropertyToFileObject (file) {
 		//	assign(file, file.frontMatter);
 		//	delete file.frontMatter;
-	    //})
-		.pipe($.debug({title: 'Going to gulpsmith:'}))
+		//})
+		.pipe($.debug({title: 'Pipe to gulpsmith:'}))
 		.pipe(
 			gulpsmith()
 				.metadata({
@@ -149,7 +153,7 @@ gulp.task('metalsmith', function () {
 		.pipe($.rename(function (path) {
 			path.dirname = path.dirname.replace('_pages','');
 		}))
-		.pipe($.debug({title: 'Going to dist:'}))
+		.pipe($.debug({title: 'Pipe to dist:'}))
 		.pipe(gulp.dest('dist'));
 });
 
@@ -230,6 +234,10 @@ gulp.task('extras', function () {
 	}).pipe(gulp.dest('dist'));
 });
 
+/*
+	# deploy
+	Publish tasks to Github Pages
+*/
 gulp.task('deploy', function() {
 	var ghpages = require('gh-pages');
 	var path = require('path');
