@@ -1,31 +1,46 @@
 'use strict';
 
-var settings = {
+const settings = {
 	port: 9077
 }
 
 // Standing on the shoulders of giants
-var gulp = require('gulp');
-var browserSync = require('browser-sync');
-var reload = browserSync.reload;
+const gulp = require('gulp');
+const browserSync = require('browser-sync');
+const reload = browserSync.reload;
 
 // Load plugins, still we like to be lazy so we use this plugin.
-var $ = require('gulp-load-plugins')();
-var autoprefixer = require('autoprefixer');
+//var $ = require('gulp-load-plugins')();
+const rename = require('gulp-rename');
+const gulpif = require('gulp-if');
+const eslint = require('gulp-eslint');
+const size = require('gulp-size');
+const debug = require('gulp-debug');
+const cache = require('gulp-cache');
+const postcss = require('gulp-postcss');
+const sass = require('gulp-sass');
+const tap = require('gulp-tap');
+const plumber = require('gulp-plumber');
+const autoprefixer = require('autoprefixer');
+const sourcemaps = require('gulp-sourcemaps');
+const imagemin = require('gulp-imagemin');
+const useref = require('gulp-useref');
+const uglify = require('gulp-uglify');
+const csso = require('gulp-csso');
+const htmlmin = require('gulp-htmlmin');
 
 // Metalsmith
-var Metal = require('gulp-load-plugins')({pattern: ['metalsmith-*', 'metalsmith.*']});
-var gulpsmith = require('gulpsmith');
-var markdown = require('metalsmith-markdown');
-var templates = require('metalsmith-layouts');
-var collections = require('metalsmith-collections');
-var ignore = require('metalsmith-ignore');
-var wordcount = require('metalsmith-word-count');
-var permalinks = require('metalsmith-permalinks');
-var gulpFrontMatter = require('gulp-front-matter');
-var assign = require('lodash.assign');
-var wordcount = require("metalsmith-word-count");
-var nunjucks = require('nunjucks');
+const gulpsmith = require('gulpsmith');
+const markdown = require('metalsmith-markdown');
+const templates = require('metalsmith-layouts');
+const collections = require('metalsmith-collections');
+const ignore = require('metalsmith-ignore');
+const wordcount = require('metalsmith-word-count');
+const permalinks = require('metalsmith-permalinks');
+
+const gulpFrontMatter = require('gulp-front-matter');
+const assign = require('lodash.assign');
+const nunjucks = require('nunjucks');
 
 nunjucks.configure('./app/_templates', {watch: false})
 
@@ -44,9 +59,9 @@ gulp.task('default', ['clean'], function () {
 	gulp.start('build');
 });
 
-gulp.task('build', ['jshint', 'metalsmith', 'styles', 'images', /*'fonts',*/ 'extras'], function () {
+gulp.task('build', ['lint', 'metalsmith', 'styles', 'images', /*'fonts',*/ 'extras'], function () {
 	return gulp.src('dist/**/*')
-		.pipe($.size({
+		.pipe(size({
 			title: 'build',
 			gzip: true
 		}));
@@ -79,19 +94,23 @@ gulp.task('serve', ['styles', 'fonts'], function () {
 	gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
 
-// JSHint
-gulp.task('jshint', function () {
-	return gulp.src('app/scripts/**/*.js')
-		.pipe(reload({stream: true, once: true}))
-		.pipe($.jshint())
-		.pipe($.jshint.reporter('jshint-stylish'))
-		.pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
+// Lint
+gulp.task('lint', function () {
+	return gulp.src(['app/scripts/**/*.js','!node_modules/**'])
+		.pipe(eslint())
+		.pipe(eslint.format())
+		.pipe(eslint.failAfterError());
+});
+
+
+gulp.task('generatesite', function () {
+	
 });
 
 // Generate site with metalsmith
 gulp.task('metalsmith', function () {
 	return gulp.src('app/**/*.{md,html}')
-		.pipe($.plumber({
+		.pipe(plumber({
 			errorHandler: showError
 		}))
 		// TODO: Denne læser ikke korrekt dataen ind i filen
@@ -99,7 +118,7 @@ gulp.task('metalsmith', function () {
 			property: 'frontMatter', // property added to file object
 			remove: true // should we remove front-matter header?
 		}))
-		.pipe($.tap(function(file, t) {
+		.pipe(tap(function(file, t) {
 			assign(file, file.frontMatter);
 			//delete file.frontMatter;
 		}))
@@ -107,12 +126,12 @@ gulp.task('metalsmith', function () {
 		//	assign(file, file.frontMatter);
 		//	delete file.frontMatter;
 		//})
-		.pipe($.debug({title: 'Pipe to gulpsmith:'}))
+		.pipe(debug({title: 'Pipe to gulpsmith:'}))
 		.pipe(
 			gulpsmith()
 				.metadata({
 					'title': 'Allan Kimmer Jensen',
-					'description': 'Hehehehe'
+					'description': 'The most epic site of all time in all galaxies...'
 				})
 				.use(collections({
 					pages: {
@@ -129,7 +148,6 @@ gulp.task('metalsmith', function () {
 				  '_drafts/*',
 				  '_templates/*'
 				]))
-				.use(wordcount())
 				.use(markdown({
 					smartypants: true,
 					gfm: true,
@@ -146,36 +164,37 @@ gulp.task('metalsmith', function () {
 				}))
 
 		)
-		.pipe($.rename(function (path) {
+		.pipe(rename(function (path) {
 			path.dirname = path.dirname.replace('_pages','');
 		}))
-		.pipe($.debug({title: 'Pipe to dist:'}))
+		.pipe(debug({title: 'Pipe to dist:'}))
 		.pipe(gulp.dest('dist'));
 });
 
 gulp.task('html', ['styles'], function () {
-	var assets = $.useref.assets({searchPath: ['.tmp', 'app', '.']});
+	var assets = useref.assets({searchPath: ['.tmp', 'app', '.']});
 
 	return gulp.src('dist/**/*.html')
 		.pipe(assets)
-		.pipe($.if('*.js', $.uglify()))
-		.pipe($.if('*.css', $.csso()))
+		.pipe(gulpif('*.js', uglify()))
+		.pipe(gulpif('*.css', csso()))
 		.pipe(assets.restore())
-		.pipe($.useref())
-		.pipe($.if('*.html', $.minifyHtml({conditionals: true, loose: true})))
+		.pipe(useref())
+		.pipe(gulpif('*.html', htmlmin({collapseWhitespace: true})))
 		.pipe(gulp.dest('dist'));
 });
 
 // Images
 gulp.task('images', function () {
 	return gulp.src('app/images/**/*')
-		.pipe($.cache($.imagemin({
-			optimizationLevel: 3,
-			progressive: true,
-			interlaced: true
+		.pipe(cache(imagemin({
+			svgoPlugins: [
+				{removeViewBox: false},
+				{cleanupIDs: false}
+			],
 		})))
 		.pipe(gulp.dest('dist/images'))
-		.pipe($.size());
+		.pipe(size());
 });
 
 // Inject Bower components
@@ -197,17 +216,17 @@ gulp.task('wiredep', function () {
 
 gulp.task('styles', function () {
 	return gulp.src('app/styles/main.scss')
-		.pipe($.sourcemaps.init())
-		.pipe($.sass({
+		.pipe(sourcemaps.init())
+		.pipe(sass({
 			outputStyle: 'nested', // libsass doesn't support expanded yet
 			precision: 10,
 			includePaths: ['.'],
 			onError: console.error.bind(console, 'Sass error:')
 		}))
-		.pipe($.postcss([
+		.pipe(postcss([
 			autoprefixer({ browsers: ['last 2 versions'] })
 		]))
-		.pipe($.sourcemaps.write())
+		.pipe(sourcemaps.write())
 		.pipe(gulp.dest('dist/styles'))
 		.pipe(reload({stream: true}));
 });
