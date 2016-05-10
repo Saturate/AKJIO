@@ -42,7 +42,7 @@ const gulpFrontMatter = require('gulp-front-matter');
 const assign = require('lodash.assign');
 const nunjucks = require('nunjucks');
 
-nunjucks.configure('./app/_templates', {watch: false})
+nunjucks.configure('./app/_templates', {watch: false });
 
 // tell me what the error is!
 // -> prevent .pipe from dying on error w/ gulp-plumber
@@ -104,7 +104,7 @@ gulp.task('lint', function () {
 
 
 gulp.task('generatesite', function () {
-	
+
 });
 
 // Generate site with metalsmith
