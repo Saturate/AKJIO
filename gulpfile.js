@@ -107,6 +107,27 @@ gulp.task('generatesite', function () {
 
 });
 
+
+// Recipe
+
+/*
+	- Load all files
+	- Get templates
+	- Make pages from template inset markdown HTML
+*/
+
+var recipe = function() {
+
+};
+
+gulp.task('do-recipe', function () {
+	return gulp.src('content/**/*')
+		.pipe(recipe({
+			test: 'test'
+		}));
+});
+
+
 // Generate site with metalsmith
 gulp.task('metalsmith', function () {
 	return gulp.src('app/**/*.{md,html}')
@@ -118,7 +139,7 @@ gulp.task('metalsmith', function () {
 			property: 'frontMatter', // property added to file object
 			remove: true // should we remove front-matter header?
 		}))
-		.pipe(tap(function(file, t) {
+		.pipe(tap(function(file) {
 			assign(file, file.frontMatter);
 			//delete file.frontMatter;
 		}))
