@@ -51,6 +51,9 @@ fs.readdir('content/pages', function(err, files) {
 	readableStream.on('end', function() {
 		var foo = matter(data);
 		var content = marked(foo.content);
+
+		// TODO:
+		// Find out how to set the LAYOUT / extends in nunjucks from a string, we need to set a default one and then be able to override this from the greymatter plugin.
 		content = nunjucks.renderString(content, foo.data);
 
 		console.log('CONTENT (%s - %s):\n\n', foo.data.title, files[6], content);
