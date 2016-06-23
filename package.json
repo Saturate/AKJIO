@@ -27,7 +27,8 @@
     "browser-sync": "^2.2.1",
     "del": "^2.0.2",
     "gh-pages": "^0.11.0",
-    "gulp": "^3.9.0",
+    "gray-matter": "^2.0.2",
+    "gulp": "^4.0.0",
     "gulp-cache": "^0.4.2",
     "gulp-coloor": "^0.2.1",
     "gulp-csso": "^2.0.0",
@@ -54,6 +55,7 @@
     "gulpsmith": "^0.5.5",
     "lodash.assign": "^4.0.2",
     "main-bower-files": "^2.5.0",
+    "marked": "^0.3.5",
     "metalsmith": "^2.1.0",
     "metalsmith-collections": "^0.7.0",
     "metalsmith-ignore": "^0.1.2",
@@ -61,7 +63,8 @@
     "metalsmith-markdown": "^0.2.1",
     "metalsmith-permalinks": "^0.5.0",
     "metalsmith-word-count": "0.0.4",
-    "nunjucks": "^2.3.0",
+    "nunjucks": "^2.4.2",
+    "through2": "^2.0.1",
     "wiredep": "^4.0.0"
   }
 }
