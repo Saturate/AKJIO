@@ -45,7 +45,6 @@ var waterTransform = function(options) {
 			posts: '/posts'
 		}, options);
 
-
 		console.log(file.path);
 
 		var contents = file.contents.toString();
@@ -69,11 +68,12 @@ var waterTransform = function(options) {
 		//console.log('CONTENT (%s - %s):\n\n', foo.data.title, file, res, renderOptions);
 
 		file.contents = new Buffer(res);
+
+		// TODO: Write paths corrently
 		file.path = gutil.replaceExtension(file.path, '.html');
 
 		file.path = file.path.replace('pages\\','')
 		console.log(file.path);
-
 
 		callback(null, file);
 	});

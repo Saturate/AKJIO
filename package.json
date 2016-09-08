@@ -66,5 +66,9 @@
     "nunjucks": "^2.4.2",
     "through2": "^2.0.1",
     "wiredep": "^4.0.0"
+  },
+  "devDependencies": {
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-sass": "^2.3.2"
   }
 }
