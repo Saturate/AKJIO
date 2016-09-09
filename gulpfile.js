@@ -10,7 +10,7 @@ const sourcemaps = require('gulp-sourcemaps');
 
 const config = {
 	dist: './dist'
-}
+};
 
 function preview() {
 	browserSync.init({
@@ -37,13 +37,14 @@ function styles() {
 }
 
 function clean() {
-	return del([ 'test-dist' ]);
+	return del([ config.dist ]);
 }
 
-// metadata
+// Task Metadata
 preview.description = 'Starts a browser-sync server with the generated site.';
+generate.description = 'Generate static site with water.';
 
-// Public funs
+// Public Tasks
 exports.preview = preview;
 exports.generate = generate;
 exports.clean = clean;

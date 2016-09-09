@@ -17,7 +17,8 @@
 */
 'use strict';
 
-const fs = require('fs');
+var fs = require('fs');
+var path = require('path');
 const through = require('through2'); // npm install --save through2
 const matter = require('gray-matter'); // npm i gray-matter --save
 const marked = require('marked'); // npm install marked --save
@@ -28,12 +29,12 @@ var waterTransform = function(options) {
 	return through.obj(function(file, encoding, callback) {
 
 		if (file.isNull()) {
-			cb(null, file);
+			callback(null, file);
 			return;
 		}
 
 		if (file.isStream()) {
-			cb(new gutil.PluginError('gulp-water', 'Streaming not supported'));
+			callback(new gutil.PluginError('gulp-water', 'Streaming not supported'));
 			return;
 		}
 
@@ -72,7 +73,35 @@ var waterTransform = function(options) {
 		// TODO: Write paths corrently
 		file.path = gutil.replaceExtension(file.path, '.html');
 
-		file.path = file.path.replace('pages\\','')
+		file.path = file.path.replace('pages\\','');
+		file.path = file.path.replace('posts\\','');
+
+		function parsePath(filePath) {
+			var extname = path.extname(filePath);
+			return {
+				dirname: path.dirname(filePath),
+				basename: path.basename(filePath, extname),
+				extname: extname
+			};
+		}
+
+		var pathObj = parsePath(file.path);
+		console.log(pathObj);
+
+		console.log(
+			path.normalize(file.path),
+			path.normalize(settings.posts),
+			path.normalize(file.path).match(path.normalize(settings.posts))
+
+		);
+
+		// Check if it's in the pages dir.
+		if(path.normalize(file.path).match(path.normalize(settings.posts))) {
+			pathObj.basename = 'index';
+		}
+
+		file.path = path.join(pathObj.dirname, pathObj.basename + pathObj.extname);
+
 		console.log(file.path);
 
 		callback(null, file);
