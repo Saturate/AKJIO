@@ -21,8 +21,8 @@ function preview() {
 }
 
 function generate() {
-	return gulp.src('content/**/*.md')
-		.pipe(debug({title: 'Src to water:'}))
+	return gulp.src('./content/**/*.md')
+		.pipe(debug({title: 'Pipe to water:'}))
 		.pipe(water())
 		.pipe(debug({title: 'Dist:'}))
 		.pipe(gulp.dest(config.dist));
@@ -43,6 +43,7 @@ function clean() {
 // Task Metadata
 preview.description = 'Starts a browser-sync server with the generated site.';
 generate.description = 'Generate static site with water.';
+generate.clean = 'Clean\'s everything up neat and tidy.';
 
 // Public Tasks
 exports.preview = preview;
