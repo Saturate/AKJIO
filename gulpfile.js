@@ -36,7 +36,6 @@ function styles() {
 		.pipe(gulp.dest(config.dist + '/styles'));
 }
 
-
 function clean() {
 	return del([ config.dist ]);
 }
@@ -44,7 +43,7 @@ function clean() {
 // Task Metadata
 preview.description = 'Starts a browser-sync server with the generated site.';
 generate.description = 'Generate static site with water.';
-generate.clean = 'Clean\'s everything up neat and tidy.';
+clean.description = 'Clean\'s everything up neat and tidy.';
 
 // Public Tasks
 exports.preview = preview;
