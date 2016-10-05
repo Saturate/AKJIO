@@ -3,7 +3,7 @@
 const gulp = require('gulp');
 const debug = require('gulp-debug');
 const del = require('del');
-const water = require('./water.js');
+const water = require('gulp-water');
 const browserSync = require('browser-sync').create();
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
@@ -35,6 +35,7 @@ function styles() {
 		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest(config.dist + '/styles'));
 }
+
 
 function clean() {
 	return del([ config.dist ]);
