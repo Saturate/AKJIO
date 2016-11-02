@@ -8,3 +8,6 @@ todo: Add http://www.chartjs.org/docs/#radar-chart
 
 # Welcome!
 Depending on why you are here, you might want to check out my [blog posts](/blogs) or [read more about me](/about-me).
+
+# HeaderTest {{title}}
+Breadtext, we are using the {{template}} as a template!
