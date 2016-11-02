@@ -3,14 +3,7 @@
 	Google it :-)
 */
 
-
-$icon-font-path: "../bower_components/bootstrap-sass/vendor/assets/fonts/bootstrap/";
-
-// bower:scss
-//@import "../bower_components/bootstrap-sass/vendor/assets/stylesheets/bootstrap.scss";
-// endbower
-
-@import "normalize.scss";
+@import "_normalize.scss";
 
 .browsehappy {
 	margin: 0.2em 0;
@@ -30,7 +23,6 @@ html, body {
 
 /* Space out content a bit */
 body {
-	font-family: 'Helvetica Neue', Helvetica, Arial, Frutiger, 'Frutiger Linotype', sans-serif;
 	font-family: 'Droid Serif', serif;
 	font-size: 20px;
 	line-height: 1.42857;
