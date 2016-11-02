@@ -20,6 +20,19 @@ function preview() {
 	});
 }
 
+function dev() {
+	var watcher = gulp.watch('dist/**/*.html');
+	var contentWatcher = gulp.watch('content/**/*.md', gulp.series(generate));
+
+	contentWatcher.on('change', function(path) {
+		console.log('File ' + path + ' was removed');
+	});
+
+	watcher.on('change', browserSync.reload);
+
+	return gulp.series(clean, generate, styles, preview);
+}
+
 function generate() {
 	return gulp.src('./content/**/*.md')
 		.pipe(debug({title: 'Pipe to water:'}))
@@ -47,6 +60,7 @@ clean.description = 'Clean\'s everything up neat and tidy.';
 
 // Public Tasks
 exports.preview = preview;
+exports.dev = dev;
 exports.generate = generate;
 exports.clean = clean;
 
