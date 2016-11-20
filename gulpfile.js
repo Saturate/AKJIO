@@ -53,6 +53,8 @@ function clean() {
 	return del([ config.dist ]);
 }
 
+var build = gulp.series(clean, generate, styles);
+
 // Task Metadata
 preview.description = 'Starts a browser-sync server with the generated site.';
 generate.description = 'Generate static site with water.';
@@ -63,6 +65,6 @@ exports.preview = preview;
 exports.dev = dev;
 exports.generate = generate;
 exports.clean = clean;
+exports.build = build;
 
-gulp.task('build', gulp.series(clean, generate, styles));
-gulp.task('default', 'build');
+gulp.task('default', build);
