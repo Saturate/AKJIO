@@ -35,9 +35,9 @@ function dev() {
 
 function generate() {
 	return gulp.src('./content/**/*.md')
-		.pipe(debug({title: 'Pipe to water:'}))
+		//.pipe(debug({title: 'Pipe to water:'}))
 		.pipe(water())
-		.pipe(debug({title: 'Dist:'}))
+		//.pipe(debug({title: 'Dist:'}))
 		.pipe(gulp.dest(config.dist));
 }
 
@@ -64,4 +64,5 @@ exports.dev = dev;
 exports.generate = generate;
 exports.clean = clean;
 
-gulp.task('default', gulp.series(clean, generate, styles));
+gulp.task('build', gulp.series(clean, generate, styles));
+gulp.task('default', 'build');
