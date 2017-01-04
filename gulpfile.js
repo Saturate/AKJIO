@@ -21,8 +21,8 @@ function preview() {
 }
 
 function dev() {
-	var watcher = gulp.watch('dist/**/*.html');
-	var contentWatcher = gulp.watch('content/**/*.md', gulp.series(generate));
+	let watcher = gulp.watch('dist/**/*.html');
+	let contentWatcher = gulp.watch('content/**/*.md', gulp.series(generate));
 
 	contentWatcher.on('change', function(path) {
 		console.log('File ' + path + ' was removed');
@@ -34,10 +34,8 @@ function dev() {
 }
 
 function generate() {
-	return gulp.src('./content/**/*.md')
-		//.pipe(debug({title: 'Pipe to water:'}))
-		.pipe(water())
-		//.pipe(debug({title: 'Dist:'}))
+	return new water({ content: './content/**/*.md' })
+		.pipe(debug({title: 'Piped from water module:'}))
 		.pipe(gulp.dest(config.dist));
 }
 
