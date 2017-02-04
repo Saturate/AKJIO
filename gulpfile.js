@@ -20,17 +20,22 @@ function preview() {
 	});
 }
 
-function dev() {
+function watch() {
 	let watcher = gulp.watch('dist/**/*.html');
 	let contentWatcher = gulp.watch('content/**/*.md', gulp.series(generate));
+	let appWatcher = gulp.watch('./app/**/*.{html}', gulp.series(generate));
 
 	contentWatcher.on('change', function(path) {
 		console.log('File ' + path + ' was removed');
 	});
 
+	appWatcher.on('change', function(path) {
+		console.log('File ' + path + ' was removed');
+	});
+
 	watcher.on('change', browserSync.reload);
 
-	return gulp.series(clean, generate, styles, preview);
+	return watcher;
 }
 
 function generate() {
@@ -51,12 +56,15 @@ function clean() {
 	return del([ config.dist ]);
 }
 
+var dev = gulp.series(generate, gulp.parallel(preview, watch));
 var build = gulp.series(clean, generate, styles);
 
 // Task Metadata
 preview.description = 'Starts a browser-sync server with the generated site.';
 generate.description = 'Generate static site with water.';
 clean.description = 'Clean\'s everything up neat and tidy.';
+dev.description = 'Start up a local server, watch files and run generate on change.';
+
 
 // Public Tasks
 exports.preview = preview;
