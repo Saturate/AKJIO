@@ -1,0 +1,24 @@
+{% extends '_master.html' %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+	{{ contents | safe }}
+
+	<h2>List of awesome blogposts:</h2>
+
+	{% for post in water('collection').get('posts') -%}
+		<p>
+			<a href="{{ post.meta.link }}">{{ post.data.title }}</a><br />
+			<time>{{ post.data.date | date('Y-m-d') }}</time>
+		</p>
+	{%- endfor %}
+
+	<h1>DEBUGGING:</h1>
+
+	{% for pagePath, matter in __water %}
+		{{ pagePath }}
+		<pre><code>{{ matter | json }}</pre></code>
+	{% endfor %}
+
+{% endblock %}
