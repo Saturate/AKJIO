@@ -14,6 +14,7 @@ const config = {
 
 function preview() {
 	browserSync.init({
+		open: false, // TODO: Use args from commandline?
 		server: {
 			baseDir: config.dist
 		}
@@ -21,7 +22,7 @@ function preview() {
 }
 
 function watch() {
-	let watcher = gulp.watch('dist/**/*.html');
+	let watcher = gulp.watch('dist/**/*.html', browserSync.reload);
 	let contentWatcher = gulp.watch('content/**/*.md', gulp.series(generate));
 	let appWatcher = gulp.watch('./app/**/*.{html}', gulp.series(generate));
 
@@ -33,7 +34,7 @@ function watch() {
 		console.log('File ' + path + ' was removed');
 	});
 
-	watcher.on('change', browserSync.reload);
+	//watcher.on('change', browserSync.reload);
 
 	return watcher;
 }
@@ -41,7 +42,8 @@ function watch() {
 function generate() {
 	return new water({ content: './content/**/*.md' })
 		.pipe(debug({title: 'Piped from water module:'}))
-		.pipe(gulp.dest(config.dist));
+		.pipe(gulp.dest(config.dist))
+		.pipe(browserSync.stream());
 }
 
 function styles() {
@@ -64,7 +66,6 @@ preview.description = 'Starts a browser-sync server with the generated site.';
 generate.description = 'Generate static site with water.';
 clean.description = 'Clean\'s everything up neat and tidy.';
 dev.description = 'Start up a local server, watch files and run generate on change.';
-
 
 // Public Tasks
 exports.preview = preview;
