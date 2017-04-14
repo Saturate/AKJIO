@@ -8,33 +8,34 @@ const browserSync = require('browser-sync').create();
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 
-const config = {
-	dist: './dist'
+const paths = {
+	dist: './dist',
+	styles: [
+		'./app/styles/**/*.scss',
+		'./app/components/**/*.scss'
+	],
+	scripts: [
+		'./app/scripts/**/*.js',
+		'./app/components/**/*.js'
+	],
+	images: [
+		'./content/**/*.{jpeg,jpg,png}'
+	]
 };
 
 function preview() {
 	browserSync.init({
 		open: false, // TODO: Use args from commandline?
 		server: {
-			baseDir: config.dist
+			baseDir: paths.dist
 		}
 	});
 }
 
 function watch() {
 	let watcher = gulp.watch('dist/**/*.html', browserSync.reload);
-	let contentWatcher = gulp.watch('content/**/*.md', gulp.series(generate));
-	let appWatcher = gulp.watch('./app/**/*.{html}', gulp.series(generate));
-
-	contentWatcher.on('change', function(path) {
-		console.log('File ' + path + ' was removed');
-	});
-
-	appWatcher.on('change', function(path) {
-		console.log('File ' + path + ' was removed');
-	});
-
-	//watcher.on('change', browserSync.reload);
+	gulp.watch(paths.styles, gulp.series(styles));
+	gulp.watch(['./content/**/*.md', './app/**/*.{html,njk}'], gulp.series(generate));
 
 	return watcher;
 }
@@ -42,7 +43,7 @@ function watch() {
 function generate() {
 	return new water({ content: './content/**/*.md' })
 		.pipe(debug({title: 'Piped from water module:'}))
-		.pipe(gulp.dest(config.dist))
+		.pipe(gulp.dest(paths.dist))
 		.pipe(browserSync.stream());
 }
 
@@ -51,14 +52,15 @@ function styles() {
 		.pipe(sourcemaps.init())
 		.pipe(sass().on('error', sass.logError))
 		.pipe(sourcemaps.write('./'))
-		.pipe(gulp.dest(config.dist + '/styles'));
+		.pipe(gulp.dest(paths.dist + '/styles'))
+		.pipe(browserSync.stream());
 }
 
 function clean() {
-	return del([ config.dist ]);
+	return del([ paths.dist ]);
 }
 
-var dev = gulp.series(generate, gulp.parallel(preview, watch));
+var dev = gulp.series(gulp.parallel(styles, generate), gulp.parallel(preview, watch));
 var build = gulp.series(clean, generate, styles);
 
 // Task Metadata
