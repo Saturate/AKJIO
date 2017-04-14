@@ -1,0 +1,21 @@
+{% extends '_master.html' %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+	{{ contents | safe }}
+
+	<h1>DEBUGGING:</h1>
+
+	{% for pagePath, matter in __water %}
+		{{ pagePath }}
+		<pre><code>{{ matter | json }}</pre></code>
+	{% endfor %}
+
+
+	{% for post in water('collection').get('posts') -%}
+		{{ post }}
+		<pre><code>{{ post | json }}</pre></code>
+	{%- endfor %}
+
+{% endblock %}

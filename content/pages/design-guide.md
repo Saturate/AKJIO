@@ -1,6 +1,6 @@
 ---
 title: Design Guide
-template: default.html
+template: debugging.html
 ---
 
 This is my design guide.
@@ -73,4 +73,3 @@ We also have some qoutes:
 
 > Extinction is the rule. Survival is the exception.   
 > — Carl Sagan
-

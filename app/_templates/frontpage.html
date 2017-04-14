@@ -8,17 +8,13 @@
 	<h2>List of awesome blogposts:</h2>
 
 	{% for post in water('collection').get('posts') -%}
-		<p>
-			<a href="{{ post.meta.link }}">{{ post.data.title }}</a><br />
-			<time>{{ post.data.date | date('Y-m-d') }}</time>
-		</p>
+		<article class="post" itemscope="" itemtype="http://schema.org/BlogPosting" role="article">
+			<h1><a href="{{ post.meta.link }}">{{ post.data.title }}</a></h1>
+			<time datetime="{{ post.data.date | date('Y-m-d') }}">{{ post.data.date | date('Y-m-d') }}</time>
+			<p itemprop="description">
+				{{ post.excerpt }} <a class="read-more" href="{{ post.meta.link }}">»</a>
+			</p>
+		</article>
 	{%- endfor %}
-
-	<h1>DEBUGGING:</h1>
-
-	{% for pagePath, matter in __water %}
-		{{ pagePath }}
-		<pre><code>{{ matter | json }}</pre></code>
-	{% endfor %}
 
 {% endblock %}
