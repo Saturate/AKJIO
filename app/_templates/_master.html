@@ -41,13 +41,16 @@
 				</ul>
 			</nav>
 		</header>
-
-		<main class="container">
+		{% block beforeContent %}
+		{% endblock %}
+		<main>
 			{% block content %}
 			{% endblock %}
 			<div class="footer">
 				<p>© 2017 Allan Kimmer Jensen</p>
 			</div>
+
+			{# include "../components/footer.njk" #}
 		</main>
 
 		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -70,7 +73,6 @@
 		<!-- endbuild -->
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 		<script>hljs.initHighlightingOnLoad();</script>
 	</body>
 </html>
