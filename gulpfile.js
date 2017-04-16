@@ -20,6 +20,9 @@ const paths = {
 	],
 	images: [
 		'./content/**/*.{jpeg,jpg,png}'
+	],
+	meta: [
+		'./app/meta/**/*'
 	]
 };
 
@@ -56,6 +59,10 @@ function styles() {
 		.pipe(browserSync.stream());
 }
 
+function meta() {
+	return gulp.src(paths.meta)
+		.pipe(gulp.dest(paths.dist));
+}
 
 function deploy() {
 	const ghpages = require('gh-pages');
@@ -75,7 +82,7 @@ function clean() {
 }
 
 var dev = gulp.series(gulp.parallel(styles, generate), gulp.parallel(preview, watch));
-var build = gulp.series(clean, generate, styles);
+var build = gulp.series(clean, gulp.parallel(styles, generate), meta);
 
 // Task Metadata
 preview.description = 'Starts a browser-sync server with the generated site.';
