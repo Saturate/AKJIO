@@ -1,252 +1,79 @@
 'use strict';
 
-var settings = {
-	port: 9077
-}
+const gulp = require('gulp');
+const debug = require('gulp-debug');
+const del = require('del');
+const water = require('gulp-water');
+const browserSync = require('browser-sync').create();
+const sass = require('gulp-sass');
+const sourcemaps = require('gulp-sourcemaps');
 
-// Standing on the shoulders of giants
-var gulp = require('gulp');
-var browserSync = require('browser-sync');
-var reload = browserSync.reload;
-
-// Load plugins, still we like to be lazy so we use this plugin.
-var $ = require('gulp-load-plugins')();
-var autoprefixer = require('autoprefixer');
-
-// Metalsmith
-var Metal = require('gulp-load-plugins')({pattern: ['metalsmith-*', 'metalsmith.*']});
-var gulpsmith = require('gulpsmith');
-var markdown = require('metalsmith-markdown');
-var templates = require('metalsmith-layouts');
-var collections = require('metalsmith-collections');
-var ignore = require('metalsmith-ignore');
-var wordcount = require('metalsmith-word-count');
-var permalinks = require('metalsmith-permalinks');
-var gulpFrontMatter = require('gulp-front-matter');
-var assign = require('lodash.assign');
-var wordcount = require("metalsmith-word-count");
-var nunjucks = require('nunjucks');
-
-nunjucks.configure('./app/_templates', {watch: false})
-
-// tell me what the error is!
-// -> prevent .pipe from dying on error w/ gulp-plumber
-// -> and give more useful error messages
-var showError = function(err) {
-	console.log(err);
+const paths = {
+	dist: './dist',
+	styles: [
+		'./app/styles/**/*.scss',
+		'./app/components/**/*.scss'
+	],
+	scripts: [
+		'./app/scripts/**/*.js',
+		'./app/components/**/*.js'
+	],
+	images: [
+		'./content/**/*.{jpeg,jpg,png}'
+	]
 };
 
-// Clean
-gulp.task('clean', require('del').bind(null, ['.tmp', 'dist']));
-
-// Default task
-gulp.task('default', ['clean'], function () {
-	gulp.start('build');
-});
-
-gulp.task('build', ['jshint', 'metalsmith', 'styles', 'images', /*'fonts',*/ 'extras'], function () {
-	return gulp.src('dist/**/*')
-		.pipe($.size({
-			title: 'build',
-			gzip: true
-		}));
-});
-
-gulp.task('serve', ['styles', 'fonts'], function () {
-	browserSync({
-		notify: false,
-		port: settings.port,
+function preview() {
+	browserSync.init({
+		open: false, // TODO: Use args from commandline?
 		server: {
-			baseDir: ['.tmp', 'dist'],
-			routes: {
-				'/bower_components': 'bower_components'
-			}
+			baseDir: paths.dist
 		}
 	});
+}
 
-	// watch for changes
-	gulp.watch([
-		'app/labs/*.html',
-		'app/scripts/**/*.js',
-		'app/images/**/*',
-		'.tmp/fonts/**/*',
-		'dist/**/*'
-	]).on('change', reload);
+function watch() {
+	let watcher = gulp.watch('dist/**/*.html', browserSync.reload);
+	gulp.watch(paths.styles, gulp.series(styles));
+	gulp.watch(['./content/**/*.md', './app/**/*.{html,njk}'], gulp.series(generate));
 
-	gulp.watch('app/styles/**/*.scss', ['styles']);
-	gulp.watch('app/fonts/**/*', ['fonts']);
-	gulp.watch('app/{_posts,_templates,_pages}/**/*', ['metalsmith']);
-	gulp.watch('bower.json', ['wiredep', 'fonts']);
-});
+	return watcher;
+}
 
-// JSHint
-gulp.task('jshint', function () {
-	return gulp.src('app/scripts/**/*.js')
-		.pipe(reload({stream: true, once: true}))
-		.pipe($.jshint())
-		.pipe($.jshint.reporter('jshint-stylish'))
-		.pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
-});
+function generate() {
+	return new water({ content: './content/**/*.md' })
+		.pipe(debug({title: 'Piped from water module:'}))
+		.pipe(gulp.dest(paths.dist))
+		.pipe(browserSync.stream());
+}
 
-// Generate site with metalsmith
-gulp.task('metalsmith', function () {
-	return gulp.src('app/**/*.{md,html}')
-		.pipe($.plumber({
-			errorHandler: showError
-		}))
-		// TODO: Denne læser ikke korrekt dataen ind i filen
-		.pipe(gulpFrontMatter({ // optional configuration
-			property: 'frontMatter', // property added to file object
-			remove: true // should we remove front-matter header?
-		}))
-		.pipe($.tap(function(file, t) {
-			assign(file, file.frontMatter);
-			//delete file.frontMatter;
-		}))
-		//.on('data', function addPropertyToFileObject (file) {
-		//	assign(file, file.frontMatter);
-		//	delete file.frontMatter;
-		//})
-		.pipe($.debug({title: 'Pipe to gulpsmith:'}))
-		.pipe(
-			gulpsmith()
-				.metadata({
-					'title': 'Allan Kimmer Jensen',
-					'description': 'Hehehehe'
-				})
-				.use(collections({
-					pages: {
-						pattern: 'app/_pages/*.md'
-					},
-					posts: {
-						pattern: 'app/_posts/*.md',
-						sortBy: 'date',
-						reverse: true,
-						template: 'post.html'
-					}
-				}))
-				.use(ignore([
-				  '_drafts/*',
-				  '_templates/*'
-				]))
-				.use(wordcount())
-				.use(markdown({
-					smartypants: true,
-					gfm: true,
-					tables: true
-				}))
-				.use(wordcount())
-				.use(permalinks({
-					pattern: './:title' // Don't use /:collection for now, we want it all on root.
-				}))
-				.use(templates({
-					'engine': 'nunjucks',
-					'directory': 'app/_templates',
-					'default': 'default.html'
-				}))
+function styles() {
+	return gulp.src('./app/styles/**/*.scss')
+		.pipe(sourcemaps.init())
+		.pipe(sass().on('error', sass.logError))
+		.pipe(sourcemaps.write('./'))
+		.pipe(gulp.dest(paths.dist + '/styles'))
+		.pipe(browserSync.stream());
+}
 
-		)
-		.pipe($.rename(function (path) {
-			path.dirname = path.dirname.replace('_pages','');
-		}))
-		.pipe($.debug({title: 'Pipe to dist:'}))
-		.pipe(gulp.dest('dist'));
-});
+function clean() {
+	return del([ paths.dist ]);
+}
 
-gulp.task('html', ['styles'], function () {
-	var assets = $.useref.assets({searchPath: ['.tmp', 'app', '.']});
+var dev = gulp.series(gulp.parallel(styles, generate), gulp.parallel(preview, watch));
+var build = gulp.series(clean, generate, styles);
 
-	return gulp.src('dist/**/*.html')
-		.pipe(assets)
-		.pipe($.if('*.js', $.uglify()))
-		.pipe($.if('*.css', $.csso()))
-		.pipe(assets.restore())
-		.pipe($.useref())
-		.pipe($.if('*.html', $.minifyHtml({conditionals: true, loose: true})))
-		.pipe(gulp.dest('dist'));
-});
+// Task Metadata
+preview.description = 'Starts a browser-sync server with the generated site.';
+generate.description = 'Generate static site with water.';
+clean.description = 'Clean\'s everything up neat and tidy.';
+dev.description = 'Start up a local server, watch files and run generate on change.';
 
-// Images
-gulp.task('images', function () {
-	return gulp.src('app/images/**/*')
-		.pipe($.cache($.imagemin({
-			optimizationLevel: 3,
-			progressive: true,
-			interlaced: true
-		})))
-		.pipe(gulp.dest('dist/images'))
-		.pipe($.size());
-});
+// Public Tasks
+exports.preview = preview;
+exports.dev = dev;
+exports.generate = generate;
+exports.clean = clean;
+exports.build = build;
 
-// Inject Bower components
-gulp.task('wiredep', function () {
-	gulp.src('app/styles/*.scss')
-		.pipe(wiredep({
-			directory: 'app/bower_components',
-			ignorePath: 'app/bower_components/'
-		}))
-		.pipe(gulp.dest('app/styles'));
-
-	gulp.src('app/_templates/*.html')
-		.pipe(wiredep({
-			directory: 'app/bower_components',
-			ignorePath: 'app/'
-		}))
-		.pipe(gulp.dest('app'));
-});
-
-gulp.task('styles', function () {
-	return gulp.src('app/styles/main.scss')
-		.pipe($.sourcemaps.init())
-		.pipe($.sass({
-			outputStyle: 'nested', // libsass doesn't support expanded yet
-			precision: 10,
-			includePaths: ['.'],
-			onError: console.error.bind(console, 'Sass error:')
-		}))
-		.pipe($.postcss([
-			autoprefixer({ browsers: ['last 2 versions'] })
-		]))
-		.pipe($.sourcemaps.write())
-		.pipe(gulp.dest('dist/styles'))
-		.pipe(reload({stream: true}));
-});
-
-gulp.task('fonts', function () {
-	return gulp.src(require('main-bower-files')({
-		filter: '**/*.{eot,svg,ttf,woff,woff2}'
-	}).concat('app/fonts/**/*'))
-		.pipe(gulp.dest('.tmp/fonts'))
-		.pipe(gulp.dest('dist/fonts'));
-});
-
-gulp.task('extras', function () {
-	return gulp.src([
-		'app/*.*',
-		'!app/*.html',
-		'app/CNAME'
-	], {
-		dot: true
-	}).pipe(gulp.dest('dist'));
-});
-
-/*
-	# deploy
-	Publish tasks to Github Pages
-*/
-gulp.task('deploy', function() {
-	var ghpages = require('gh-pages');
-	var path = require('path');
-	console.log(process.env);
-	//if(process.env.TRAVIS === true) {
-		ghpages.publish(path.join(__dirname, 'dist'), {
-			repo: 'https://' + process.env.GH_TOKEN + '@github.com/Saturate/AKJIO.git',
-			user: {
-				name: 'Travis-CI',
-				email: 'travis@akj.io'
-			}
-		}, function (err) { console.log(err) });
-	//} else {
-	//	ghpages.publish(path.join(__dirname, 'dist'), function (err) { console.log(err) });
-	//}
-});
+gulp.task('default', build);

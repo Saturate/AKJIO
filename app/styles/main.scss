@@ -3,14 +3,7 @@
 	Google it :-)
 */
 
-
-$icon-font-path: "../bower_components/bootstrap-sass/vendor/assets/fonts/bootstrap/";
-
-// bower:scss
-//@import "../bower_components/bootstrap-sass/vendor/assets/stylesheets/bootstrap.scss";
-// endbower
-
-@import "normalize.scss";
+@import "_normalize.scss";
 
 .browsehappy {
 	margin: 0.2em 0;
@@ -30,7 +23,6 @@ html, body {
 
 /* Space out content a bit */
 body {
-	font-family: 'Helvetica Neue', Helvetica, Arial, Frutiger, 'Frutiger Linotype', sans-serif;
 	font-family: 'Droid Serif', serif;
 	font-size: 20px;
 	line-height: 1.42857;
@@ -95,7 +87,7 @@ h3 {
 main {
 	margin: 0 auto;
 	padding: 0 1em;
-	max-width: 700px;
+	max-width: 740px;
 }
 
 article,
@@ -118,9 +110,9 @@ article,
 .article__header {
 	margin-bottom: 2em;
 	h1 {
-		font-size: 3.5em;
+		font-size: 2.4em;
 		line-height: 1;
-		margin: 0.67em 0 0 0;
+		margin: 2em 0 0 0;
 	}
 	h3 {
 		color: #727272;
@@ -130,6 +122,24 @@ article,
 .article__header__metadata {
 	color: #ccc;
 	font-size: 16px;
+}
+
+.post {
+	border-bottom: #EBF2F6 1px solid;
+	&:after {
+		display: block;
+		content: "";
+		width: 7px;
+		height: 7px;
+		border: #E7EEF2 1px solid;
+		position: absolute;
+		bottom: -5px;
+		left: 50%;
+		margin-left: -5px;
+		background: #FFF;
+		border-radius: 100%;
+		box-shadow: #FFF 0 0 0 5px;
+	}
 }
 
 /* Custom page footer */
@@ -144,6 +154,9 @@ article,
 	margin: 30px 0;
 }
 
+.hljs {
+	tab-size: 4;
+}
 
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
