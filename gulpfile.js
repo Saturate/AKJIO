@@ -56,6 +56,20 @@ function styles() {
 		.pipe(browserSync.stream());
 }
 
+
+function deploy() {
+	const ghpages = require('gh-pages');
+	const path = require('path');
+
+	ghpages.publish(path.join(__dirname, 'dist'), {
+		repo: 'https://' + process.env.GH_TOKEN + '@github.com/Saturate/AKJIO.git',
+		user: {
+			name: 'Travis-CI',
+			email: 'travis@akj.io'
+		}
+	}, function (err) { console.log(err); });
+}
+
 function clean() {
 	return del([ paths.dist ]);
 }
@@ -75,5 +89,6 @@ exports.dev = dev;
 exports.generate = generate;
 exports.clean = clean;
 exports.build = build;
+exports.deploy = deploy;
 
 gulp.task('default', build);
