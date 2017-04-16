@@ -39,19 +39,20 @@
 				</ul>
 			</nav>
 		</header>
-
-		<main class="container">
+		
+		
+		<main>
 			
 	<p>This is my design guide.
-Or well, it’s good for testing some things out with the styling and the markdown.</p>
-<p>Here’s a code snippet, awesome. It’s JavaScript.</p>
+Or well, it&#39;s good for testing some things out with the styling and the markdown.</p>
+<p>Here&#39;s a code snippet, awesome. It&#39;s JavaScript.</p>
 <pre><code class="lang-javascript">function fancyAlert(arg) {
   if(arg) {
     $.facebox({div:&#39;#foo&#39;})
   }
 }
 </code></pre>
-<p>Now let’s study some headlines. Look at them.</p>
+<p>Now let&#39;s study some headlines. Look at them.</p>
 <h1 id="this-is-an-h1-tag">This is an <code>&lt;h1&gt;</code> tag</h1>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.</p>
 <h2 id="this-is-an-h2-tag">This is an <code>&lt;h2&gt;</code> tag</h2>
@@ -70,7 +71,7 @@ Or well, it’s good for testing some things out with the styling and the markdo
 <p><strong>This text will be bold</strong>
 <strong>This will also be bold</strong></p>
 <p><em>You <strong>can</strong> combine them</em></p>
-<p>Also you can do <del>this</del>… it’s cool.</p>
+<p>Also you can do <del>this</del>... it&#39;s cool.</p>
 <ul>
 <li>Item 1</li>
 <li>Item 2<ul>
@@ -94,9 +95,398 @@ Or well, it’s good for testing some things out with the styling and the markdo
 </blockquote>
 
 
+	<h1>DEBUGGING:</h1>
+
+	
+		D:\AKJ\GitHub\AKJIO\content\pages\404.md
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntemplate: default.html\r\ntitle: Oooops, I could not find that\r\npermalink: /404.html\r\n---\r\n\r\n# 404 - Not Found\r\nThese are not the droids you are looking for.\r\n&quot;,
+	&quot;data&quot;: {
+		&quot;template&quot;: &quot;default.html&quot;,
+		&quot;title&quot;: &quot;Oooops, I could not find that&quot;,
+		&quot;permalink&quot;: &quot;/404.html&quot;
+	},
+	&quot;content&quot;: &quot;\r\n\r\n# 404 - Not Found\r\nThese are not the droids you are looking for.\r\n&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;pages&quot;,
+			&quot;path&quot;: &quot;/pages&quot;,
+			&quot;defaults&quot;: {}
+		},
+		&quot;draft&quot;: false,
+		&quot;basename&quot;: &quot;404&quot;,
+		&quot;link&quot;: &quot;/404.html&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;h1 id=\&quot;404-not-found\&quot;&gt;404 - Not Found&lt;/h1&gt;\n&lt;p&gt;These are not the droids you are looking for.&lt;/p&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;These are not the droids you are looking for.&quot;
+}</pre></code>
+	
+		D:\AKJ\GitHub\AKJIO\content\pages\about-me\about-me.md
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntitle: About me\r\ntemplate: default.html\r\ntopImage: https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-xaf1/t31.0-8/1654905_694740623966543_3888718086569560381_o.jpg\r\ntodo: Add http://www.chartjs.org/docs/#radar-chart\r\n---\r\n\r\n\r\n# About me...\r\n\r\n&lt;p&gt;Yo! I&#39;m &lt;span itemprop=\&quot;name\&quot;&gt;Allan Kimmer Jensen&lt;/span&gt;, also known as:&lt;/p&gt;\r\n\r\n&lt;ul&gt;\r\n    &lt;li itemprop=\&quot;nickname\&quot;&gt;\r\n        Saturate\r\n    &lt;/li&gt;\r\n    &lt;li itemprop=\&quot;nickname\&quot;&gt;\r\n        AKJ\r\n    &lt;/li&gt;\r\n    &lt;li itemprop=\&quot;nickname\&quot;&gt;\r\n        All4n\r\n    &lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\nI do have many more names, but I really hate lists.\r\n\r\n&lt;p&gt;I&#39;m currently working as an &lt;span itemprop=\&quot;title\&quot;&gt;Consultant&lt;/span&gt; at &lt;span itemprop=\&quot;affiliation\&quot;&gt;Pentia A/S&lt;/span&gt; where I&#39;m doing front-end stuff.&lt;/p&gt;\r\n\r\n## Stuff I Use\r\nI made [this really cool list](/stuff-i-use) of stuff I own.\r\n\r\n## Stalker aid\r\nIf you want to stalk me you can find my profiles here.\r\nSome might be relevant to your kind of stalking others not so much.\r\n\r\n- [GitHub](https://github.com/Saturate)\r\n- [Facebook](https://www.facebook.com/allankimmerjensen)\r\n- [LinkedIn](https://www.linkedin.com/in/allankimmerjensen)\r\n- [StackOverflow](http://stackoverflow.com/users/171087/allan-kimmer-jensen)\r\n- [keybase.io](https://keybase.io/akj)\r\n\r\n## Speaking\r\nI&#39;ve been speaking at some occasions:\r\n\r\n- ### 2x Technology Perspective Seminar, Netcompany.\r\nFrontend in general, and how we do it. Optimizing, testing ect.\r\n\r\n- ### [JavaScript Copenhagen](http://imus.dk/2014-09-23/free-javascript-event-in-copenhagen/), IMUS Events\r\nI held a talk about Node Taskrunners focused on a frontend asset pipeline.\r\n\r\n- ### [JavaScript Copenhagen, 2nd edition](http://imus.dk/2015-10-28/free-javascript-event-in-copenhagen-2nd-edition/), IMUS Events\r\nDebugging with Chrome DevTools.\r\n\r\n\r\n## Skills\r\nNot filling out the skills sections on my website, that&#39;s for sure.\r\n&quot;,
+	&quot;data&quot;: {
+		&quot;title&quot;: &quot;About me&quot;,
+		&quot;template&quot;: &quot;default.html&quot;,
+		&quot;topImage&quot;: &quot;https://fbcdn-sphotos-c-a.akamaihd.net/hphotos-ak-xaf1/t31.0-8/1654905_694740623966543_3888718086569560381_o.jpg&quot;,
+		&quot;todo&quot;: &quot;Add http://www.chartjs.org/docs/#radar-chart&quot;
+	},
+	&quot;content&quot;: &quot;\r\n\r\n\r\n# About me...\r\n\r\n&lt;p&gt;Yo! I&#39;m &lt;span itemprop=\&quot;name\&quot;&gt;Allan Kimmer Jensen&lt;/span&gt;, also known as:&lt;/p&gt;\r\n\r\n&lt;ul&gt;\r\n    &lt;li itemprop=\&quot;nickname\&quot;&gt;\r\n        Saturate\r\n    &lt;/li&gt;\r\n    &lt;li itemprop=\&quot;nickname\&quot;&gt;\r\n        AKJ\r\n    &lt;/li&gt;\r\n    &lt;li itemprop=\&quot;nickname\&quot;&gt;\r\n        All4n\r\n    &lt;/li&gt;\r\n&lt;/ul&gt;\r\n\r\nI do have many more names, but I really hate lists.\r\n\r\n&lt;p&gt;I&#39;m currently working as an &lt;span itemprop=\&quot;title\&quot;&gt;Consultant&lt;/span&gt; at &lt;span itemprop=\&quot;affiliation\&quot;&gt;Pentia A/S&lt;/span&gt; where I&#39;m doing front-end stuff.&lt;/p&gt;\r\n\r\n## Stuff I Use\r\nI made [this really cool list](/stuff-i-use) of stuff I own.\r\n\r\n## Stalker aid\r\nIf you want to stalk me you can find my profiles here.\r\nSome might be relevant to your kind of stalking others not so much.\r\n\r\n- [GitHub](https://github.com/Saturate)\r\n- [Facebook](https://www.facebook.com/allankimmerjensen)\r\n- [LinkedIn](https://www.linkedin.com/in/allankimmerjensen)\r\n- [StackOverflow](http://stackoverflow.com/users/171087/allan-kimmer-jensen)\r\n- [keybase.io](https://keybase.io/akj)\r\n\r\n## Speaking\r\nI&#39;ve been speaking at some occasions:\r\n\r\n- ### 2x Technology Perspective Seminar, Netcompany.\r\nFrontend in general, and how we do it. Optimizing, testing ect.\r\n\r\n- ### [JavaScript Copenhagen](http://imus.dk/2014-09-23/free-javascript-event-in-copenhagen/), IMUS Events\r\nI held a talk about Node Taskrunners focused on a frontend asset pipeline.\r\n\r\n- ### [JavaScript Copenhagen, 2nd edition](http://imus.dk/2015-10-28/free-javascript-event-in-copenhagen-2nd-edition/), IMUS Events\r\nDebugging with Chrome DevTools.\r\n\r\n\r\n## Skills\r\nNot filling out the skills sections on my website, that&#39;s for sure.\r\n&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;pages&quot;,
+			&quot;path&quot;: &quot;/pages&quot;,
+			&quot;defaults&quot;: {}
+		},
+		&quot;draft&quot;: false,
+		&quot;basename&quot;: &quot;about-me&quot;,
+		&quot;link&quot;: &quot;about-me&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;h1 id=\&quot;about-me-\&quot;&gt;About me...&lt;/h1&gt;\n&lt;p&gt;Yo! I&amp;#39;m &lt;span itemprop=\&quot;name\&quot;&gt;Allan Kimmer Jensen&lt;/span&gt;, also known as:&lt;/p&gt;\n\n&lt;ul&gt;\n    &lt;li itemprop=\&quot;nickname\&quot;&gt;\n        Saturate\n    &lt;/li&gt;\n    &lt;li itemprop=\&quot;nickname\&quot;&gt;\n        AKJ\n    &lt;/li&gt;\n    &lt;li itemprop=\&quot;nickname\&quot;&gt;\n        All4n\n    &lt;/li&gt;\n&lt;/ul&gt;\n\n&lt;p&gt;I do have many more names, but I really hate lists.&lt;/p&gt;\n&lt;p&gt;I&amp;#39;m currently working as an &lt;span itemprop=\&quot;title\&quot;&gt;Consultant&lt;/span&gt; at &lt;span itemprop=\&quot;affiliation\&quot;&gt;Pentia A/S&lt;/span&gt; where I&amp;#39;m doing front-end stuff.&lt;/p&gt;\n\n&lt;h2 id=\&quot;stuff-i-use\&quot;&gt;Stuff I Use&lt;/h2&gt;\n&lt;p&gt;I made &lt;a href=\&quot;/stuff-i-use\&quot;&gt;this really cool list&lt;/a&gt; of stuff I own.&lt;/p&gt;\n&lt;h2 id=\&quot;stalker-aid\&quot;&gt;Stalker aid&lt;/h2&gt;\n&lt;p&gt;If you want to stalk me you can find my profiles here.\nSome might be relevant to your kind of stalking others not so much.&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;a href=\&quot;https://github.com/Saturate\&quot;&gt;GitHub&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;https://www.facebook.com/allankimmerjensen\&quot;&gt;Facebook&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;https://www.linkedin.com/in/allankimmerjensen\&quot;&gt;LinkedIn&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;http://stackoverflow.com/users/171087/allan-kimmer-jensen\&quot;&gt;StackOverflow&lt;/a&gt;&lt;/li&gt;\n&lt;li&gt;&lt;a href=\&quot;https://keybase.io/akj\&quot;&gt;keybase.io&lt;/a&gt;&lt;/li&gt;\n&lt;/ul&gt;\n&lt;h2 id=\&quot;speaking\&quot;&gt;Speaking&lt;/h2&gt;\n&lt;p&gt;I&amp;#39;ve been speaking at some occasions:&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;&lt;h3 id=\&quot;2x-technology-perspective-seminar-netcompany-\&quot;&gt;2x Technology Perspective Seminar, Netcompany.&lt;/h3&gt;\n&lt;p&gt;Frontend in general, and how we do it. Optimizing, testing ect.&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;&lt;h3 id=\&quot;-javascript-copenhagen-http-imus-dk-2014-09-23-free-javascript-event-in-copenhagen-imus-events\&quot;&gt;&lt;a href=\&quot;http://imus.dk/2014-09-23/free-javascript-event-in-copenhagen/\&quot;&gt;JavaScript Copenhagen&lt;/a&gt;, IMUS Events&lt;/h3&gt;\n&lt;p&gt;I held a talk about Node Taskrunners focused on a frontend asset pipeline.&lt;/p&gt;\n&lt;/li&gt;\n&lt;li&gt;&lt;h3 id=\&quot;-javascript-copenhagen-2nd-edition-http-imus-dk-2015-10-28-free-javascript-event-in-copenhagen-2nd-edition-imus-events\&quot;&gt;&lt;a href=\&quot;http://imus.dk/2015-10-28/free-javascript-event-in-copenhagen-2nd-edition/\&quot;&gt;JavaScript Copenhagen, 2nd edition&lt;/a&gt;, IMUS Events&lt;/h3&gt;\n&lt;p&gt;Debugging with Chrome DevTools.&lt;/p&gt;\n&lt;/li&gt;\n&lt;/ul&gt;\n&lt;h2 id=\&quot;skills\&quot;&gt;Skills&lt;/h2&gt;\n&lt;p&gt;Not filling out the skills sections on my website, that&amp;#39;s for sure.&lt;/p&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;Yo! I&#39;m Allan Kimmer Jensen, also known as:&quot;
+}</pre></code>
+	
+		D:\AKJ\GitHub\AKJIO\content\pages\blogs.md
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntemplate: posts.html\r\ntitle: Awesome blog posts about Front-end\r\n---\r\n\r\n# Blog\r\n### Blog posts that I made...\r\n\r\nOh, you want a list here?\r\n&quot;,
+	&quot;data&quot;: {
+		&quot;template&quot;: &quot;posts.html&quot;,
+		&quot;title&quot;: &quot;Awesome blog posts about Front-end&quot;
+	},
+	&quot;content&quot;: &quot;\r\n\r\n# Blog\r\n### Blog posts that I made...\r\n\r\nOh, you want a list here?\r\n&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;pages&quot;,
+			&quot;path&quot;: &quot;/pages&quot;,
+			&quot;defaults&quot;: {}
+		},
+		&quot;draft&quot;: false,
+		&quot;basename&quot;: &quot;blogs&quot;,
+		&quot;link&quot;: &quot;blogs&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;h1 id=\&quot;blog\&quot;&gt;Blog&lt;/h1&gt;\n&lt;h3 id=\&quot;blog-posts-that-i-made-\&quot;&gt;Blog posts that I made...&lt;/h3&gt;\n&lt;p&gt;Oh, you want a list here?&lt;/p&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;Oh, you want a list here?&quot;
+}</pre></code>
+	
+		D:\AKJ\GitHub\AKJIO\content\pages\design-guide.md
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntitle: Design Guide\r\ntemplate: debugging.html\n---\r\n\r\nThis is my design guide.\r\nOr well, it&#39;s good for testing some things out with the styling and the markdown.\r\n\r\nHere&#39;s a code snippet, awesome. It&#39;s JavaScript.\r\n\r\n```javascript\r\nfunction fancyAlert(arg) {\r\n  if(arg) {\r\n    $.facebox({div:&#39;#foo&#39;})\r\n  }\r\n}\r\n```\r\n\r\nNow let&#39;s study some headlines. Look at them.\r\n\r\n# This is an `&lt;h1&gt;` tag\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.\r\n\r\n## This is an `&lt;h2&gt;` tag\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.\r\n\r\n### This is an `&lt;h3&gt;` tag\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.\r\n\r\n#### This is an `&lt;h4&gt;` tag\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.\r\n\r\n##### This is an `&lt;h5&gt;` tag\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.\r\n\r\n###### This is an `&lt;h6&gt;` tag\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.\r\n\r\n\r\n\r\nBut we can also do some fancy italic stuff!\r\n\r\n*This text will be italic*\r\n_This will also be italic_\r\n\r\n**This text will be bold**\r\n__This will also be bold__\r\n\r\n*You **can** combine them*\r\n\r\nAlso you can do ~~this~~... it&#39;s cool.\r\n\r\n* Item 1\r\n* Item 2\r\n  * Item 2a\r\n  * Item 2b\r\n\r\n\r\n 1. Item 1\r\n2. Item 2\r\n3. Item 3\r\n   * Item 3a\r\n   * Item 3b\r\n\r\n\r\nWe also have some qoutes:\r\n\r\n&gt; Extinction is the rule. Survival is the exception.   \r\n&gt; — Carl Sagan\r\n&quot;,
+	&quot;data&quot;: {
+		&quot;title&quot;: &quot;Design Guide&quot;,
+		&quot;template&quot;: &quot;debugging.html&quot;
+	},
+	&quot;content&quot;: &quot;\r\n\r\nThis is my design guide.\r\nOr well, it&#39;s good for testing some things out with the styling and the markdown.\r\n\r\nHere&#39;s a code snippet, awesome. It&#39;s JavaScript.\r\n\r\n```javascript\r\nfunction fancyAlert(arg) {\r\n  if(arg) {\r\n    $.facebox({div:&#39;#foo&#39;})\r\n  }\r\n}\r\n```\r\n\r\nNow let&#39;s study some headlines. Look at them.\r\n\r\n# This is an `&lt;h1&gt;` tag\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.\r\n\r\n## This is an `&lt;h2&gt;` tag\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.\r\n\r\n### This is an `&lt;h3&gt;` tag\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.\r\n\r\n#### This is an `&lt;h4&gt;` tag\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.\r\n\r\n##### This is an `&lt;h5&gt;` tag\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.\r\n\r\n###### This is an `&lt;h6&gt;` tag\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.\r\n\r\n\r\n\r\nBut we can also do some fancy italic stuff!\r\n\r\n*This text will be italic*\r\n_This will also be italic_\r\n\r\n**This text will be bold**\r\n__This will also be bold__\r\n\r\n*You **can** combine them*\r\n\r\nAlso you can do ~~this~~... it&#39;s cool.\r\n\r\n* Item 1\r\n* Item 2\r\n  * Item 2a\r\n  * Item 2b\r\n\r\n\r\n 1. Item 1\r\n2. Item 2\r\n3. Item 3\r\n   * Item 3a\r\n   * Item 3b\r\n\r\n\r\nWe also have some qoutes:\r\n\r\n&gt; Extinction is the rule. Survival is the exception.   \r\n&gt; — Carl Sagan\r\n&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;pages&quot;,
+			&quot;path&quot;: &quot;/pages&quot;,
+			&quot;defaults&quot;: {}
+		},
+		&quot;draft&quot;: false,
+		&quot;basename&quot;: &quot;design-guide&quot;,
+		&quot;link&quot;: &quot;design-guide&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;p&gt;This is my design guide.\nOr well, it&amp;#39;s good for testing some things out with the styling and the markdown.&lt;/p&gt;\n&lt;p&gt;Here&amp;#39;s a code snippet, awesome. It&amp;#39;s JavaScript.&lt;/p&gt;\n&lt;pre&gt;&lt;code class=\&quot;lang-javascript\&quot;&gt;function fancyAlert(arg) {\n  if(arg) {\n    $.facebox({div:&amp;#39;#foo&amp;#39;})\n  }\n}\n&lt;/code&gt;&lt;/pre&gt;\n&lt;p&gt;Now let&amp;#39;s study some headlines. Look at them.&lt;/p&gt;\n&lt;h1 id=\&quot;this-is-an-h1-tag\&quot;&gt;This is an &lt;code&gt;&amp;lt;h1&amp;gt;&lt;/code&gt; tag&lt;/h1&gt;\n&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.&lt;/p&gt;\n&lt;h2 id=\&quot;this-is-an-h2-tag\&quot;&gt;This is an &lt;code&gt;&amp;lt;h2&amp;gt;&lt;/code&gt; tag&lt;/h2&gt;\n&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.&lt;/p&gt;\n&lt;h3 id=\&quot;this-is-an-h3-tag\&quot;&gt;This is an &lt;code&gt;&amp;lt;h3&amp;gt;&lt;/code&gt; tag&lt;/h3&gt;\n&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.&lt;/p&gt;\n&lt;h4 id=\&quot;this-is-an-h4-tag\&quot;&gt;This is an &lt;code&gt;&amp;lt;h4&amp;gt;&lt;/code&gt; tag&lt;/h4&gt;\n&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.&lt;/p&gt;\n&lt;h5 id=\&quot;this-is-an-h5-tag\&quot;&gt;This is an &lt;code&gt;&amp;lt;h5&amp;gt;&lt;/code&gt; tag&lt;/h5&gt;\n&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.&lt;/p&gt;\n&lt;h6 id=\&quot;this-is-an-h6-tag\&quot;&gt;This is an &lt;code&gt;&amp;lt;h6&amp;gt;&lt;/code&gt; tag&lt;/h6&gt;\n&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus libero nec augue hendrerit tristique. Integer varius congue augue vel bibendum. Etiam id finibus odio, in imperdiet elit. Sed metus odio, fermentum sed ante ac, sollicitudin tincidunt velit. Nunc ullamcorper fringilla ultrices. Donec eget sagittis est, non pharetra magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus euismod sollicitudin risus ut tempor. Pellentesque molestie hendrerit velit eu efficitur.&lt;/p&gt;\n&lt;p&gt;But we can also do some fancy italic stuff!&lt;/p&gt;\n&lt;p&gt;&lt;em&gt;This text will be italic&lt;/em&gt;\n&lt;em&gt;This will also be italic&lt;/em&gt;&lt;/p&gt;\n&lt;p&gt;&lt;strong&gt;This text will be bold&lt;/strong&gt;\n&lt;strong&gt;This will also be bold&lt;/strong&gt;&lt;/p&gt;\n&lt;p&gt;&lt;em&gt;You &lt;strong&gt;can&lt;/strong&gt; combine them&lt;/em&gt;&lt;/p&gt;\n&lt;p&gt;Also you can do &lt;del&gt;this&lt;/del&gt;... it&amp;#39;s cool.&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;Item 1&lt;/li&gt;\n&lt;li&gt;Item 2&lt;ul&gt;\n&lt;li&gt;Item 2a&lt;/li&gt;\n&lt;li&gt;Item 2b&lt;/li&gt;\n&lt;/ul&gt;\n&lt;/li&gt;\n&lt;/ul&gt;\n&lt;ol&gt;\n&lt;li&gt;Item 1&lt;ol&gt;\n&lt;li&gt;Item 2&lt;/li&gt;\n&lt;li&gt;Item 3&lt;/li&gt;\n&lt;li&gt;Item 3a&lt;/li&gt;\n&lt;li&gt;Item 3b&lt;/li&gt;\n&lt;/ol&gt;\n&lt;/li&gt;\n&lt;/ol&gt;\n&lt;p&gt;We also have some qoutes:&lt;/p&gt;\n&lt;blockquote&gt;\n&lt;p&gt;Extinction is the rule. Survival is the exception.&lt;br&gt;— Carl Sagan&lt;/p&gt;\n&lt;/blockquote&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;This is my design guide.\nOr well, it&#39;s good for testing some things out with the styling and the markdown.&quot;
+}</pre></code>
+	
+		D:\AKJ\GitHub\AKJIO\content\pages\index.md
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntitle: Welcome\r\npermalink: false\r\ntemplate: frontpage.html\ntopImage: http://placehold.it/350x150\ntodo: Add http://www.chartjs.org/docs/#radar-chart\r\n---\r\n\n# Welcome!\nI&#39;m Allan Kimmer Jensen, I work for Pentia A/S. I do crazy stuff with JavaScript and other frontend technologies. [Read More](/about-me).\n&quot;,
+	&quot;data&quot;: {
+		&quot;title&quot;: &quot;Welcome&quot;,
+		&quot;permalink&quot;: false,
+		&quot;template&quot;: &quot;frontpage.html&quot;,
+		&quot;topImage&quot;: &quot;http://placehold.it/350x150&quot;,
+		&quot;todo&quot;: &quot;Add http://www.chartjs.org/docs/#radar-chart&quot;
+	},
+	&quot;content&quot;: &quot;\r\n\n# Welcome!\nI&#39;m Allan Kimmer Jensen, I work for Pentia A/S. I do crazy stuff with JavaScript and other frontend technologies. [Read More](/about-me).\n&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;pages&quot;,
+			&quot;path&quot;: &quot;/pages&quot;,
+			&quot;defaults&quot;: {}
+		},
+		&quot;draft&quot;: false,
+		&quot;basename&quot;: &quot;index&quot;,
+		&quot;link&quot;: &quot;index&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;h1 id=\&quot;welcome-\&quot;&gt;Welcome!&lt;/h1&gt;\n&lt;p&gt;I&amp;#39;m Allan Kimmer Jensen, I work for Pentia A/S. I do crazy stuff with JavaScript and other frontend technologies. &lt;a href=\&quot;/about-me\&quot;&gt;Read More&lt;/a&gt;.&lt;/p&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;I&#39;m Allan Kimmer Jensen, I work for Pentia A/S. I do crazy stuff with JavaScript and other frontend technologies. Read More.&quot;
+}</pre></code>
+	
+		D:\AKJ\GitHub\AKJIO\content\pages\labs.md
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntemplate: default.html\r\ntitle: Labs\r\n---\r\n\r\n# Labs\r\n\r\nNot much here yet. In the future I&#39;ll put all my strange tools or links to tools here.\r\n\r\n## NemTerminal\r\nA plugin for NemID. Now you can login the cool way!\r\n\r\nGitHub: https://github.com/Saturate/NemTerminal\r\n\r\n## SongPopper\r\nA Chrome extension. It intercepts data requests and display&#39;s the correct awnser to the user, makes it really easy to win.\r\nThey should really improve on how they handle their data.\r\n\r\nGoogle Store: https://chrome.google.com/webstore/detail/songpopper/ggajjiolijnoobokjaghfjhibpofamhh\r\nGitHub: https://github.com/Saturate/SongPopper\r\n\r\n## LikeJacker\r\nIt&#39;s a jQuery plugin for LikeJacking Facebook pages.\r\nI know it&#39;s evil but it was so easy to do, I couldn&#39;t pass the temptation of seeing how easy it would b,\r\nI recommend https://disconnect.me/ to avoid the annoying like buttons on all pages.\r\n\r\nGitHub: https://github.com/Saturate/LikeJacker\r\n&quot;,
+	&quot;data&quot;: {
+		&quot;template&quot;: &quot;default.html&quot;,
+		&quot;title&quot;: &quot;Labs&quot;
+	},
+	&quot;content&quot;: &quot;\r\n\r\n# Labs\r\n\r\nNot much here yet. In the future I&#39;ll put all my strange tools or links to tools here.\r\n\r\n## NemTerminal\r\nA plugin for NemID. Now you can login the cool way!\r\n\r\nGitHub: https://github.com/Saturate/NemTerminal\r\n\r\n## SongPopper\r\nA Chrome extension. It intercepts data requests and display&#39;s the correct awnser to the user, makes it really easy to win.\r\nThey should really improve on how they handle their data.\r\n\r\nGoogle Store: https://chrome.google.com/webstore/detail/songpopper/ggajjiolijnoobokjaghfjhibpofamhh\r\nGitHub: https://github.com/Saturate/SongPopper\r\n\r\n## LikeJacker\r\nIt&#39;s a jQuery plugin for LikeJacking Facebook pages.\r\nI know it&#39;s evil but it was so easy to do, I couldn&#39;t pass the temptation of seeing how easy it would b,\r\nI recommend https://disconnect.me/ to avoid the annoying like buttons on all pages.\r\n\r\nGitHub: https://github.com/Saturate/LikeJacker\r\n&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;pages&quot;,
+			&quot;path&quot;: &quot;/pages&quot;,
+			&quot;defaults&quot;: {}
+		},
+		&quot;draft&quot;: false,
+		&quot;basename&quot;: &quot;labs&quot;,
+		&quot;link&quot;: &quot;labs&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;h1 id=\&quot;labs\&quot;&gt;Labs&lt;/h1&gt;\n&lt;p&gt;Not much here yet. In the future I&amp;#39;ll put all my strange tools or links to tools here.&lt;/p&gt;\n&lt;h2 id=\&quot;nemterminal\&quot;&gt;NemTerminal&lt;/h2&gt;\n&lt;p&gt;A plugin for NemID. Now you can login the cool way!&lt;/p&gt;\n&lt;p&gt;GitHub: &lt;a href=\&quot;https://github.com/Saturate/NemTerminal\&quot;&gt;https://github.com/Saturate/NemTerminal&lt;/a&gt;&lt;/p&gt;\n&lt;h2 id=\&quot;songpopper\&quot;&gt;SongPopper&lt;/h2&gt;\n&lt;p&gt;A Chrome extension. It intercepts data requests and display&amp;#39;s the correct awnser to the user, makes it really easy to win.\nThey should really improve on how they handle their data.&lt;/p&gt;\n&lt;p&gt;Google Store: &lt;a href=\&quot;https://chrome.google.com/webstore/detail/songpopper/ggajjiolijnoobokjaghfjhibpofamhh\&quot;&gt;https://chrome.google.com/webstore/detail/songpopper/ggajjiolijnoobokjaghfjhibpofamhh&lt;/a&gt;\nGitHub: &lt;a href=\&quot;https://github.com/Saturate/SongPopper\&quot;&gt;https://github.com/Saturate/SongPopper&lt;/a&gt;&lt;/p&gt;\n&lt;h2 id=\&quot;likejacker\&quot;&gt;LikeJacker&lt;/h2&gt;\n&lt;p&gt;It&amp;#39;s a jQuery plugin for LikeJacking Facebook pages.\nI know it&amp;#39;s evil but it was so easy to do, I couldn&amp;#39;t pass the temptation of seeing how easy it would b,\nI recommend &lt;a href=\&quot;https://disconnect.me/\&quot;&gt;https://disconnect.me/&lt;/a&gt; to avoid the annoying like buttons on all pages.&lt;/p&gt;\n&lt;p&gt;GitHub: &lt;a href=\&quot;https://github.com/Saturate/LikeJacker\&quot;&gt;https://github.com/Saturate/LikeJacker&lt;/a&gt;&lt;/p&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;Not much here yet. In the future I&#39;ll put all my strange tools or links to tools here.&quot;
+}</pre></code>
+	
+		D:\AKJ\GitHub\AKJIO\content\pages\stuff-i-use\stuff-i-use.md
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntitle: Stuff I Use\ntemplate: default.html\n---\r\n\r\n\r\n# Stuff I Use\nThis is a collection of what I use. I&#39;m not sure why I like the idea, but I do so here it is.\n\n\n## Web Development\n\n- Cmder, the windows commandline is bad - this makes it better.\n- Atom, my primary editor\n\n## Photoghrapy\nI have a Nikon D610, I like this camera but want to upgrade when they release something new as I could use some more features like GPS and better video. My other gear includes:\n\n- MindShift Backlight 26L\n- Lee Big Stopper\n- Lee Little Stopper\n- Nikon Flash\n&quot;,
+	&quot;data&quot;: {
+		&quot;title&quot;: &quot;Stuff I Use&quot;,
+		&quot;template&quot;: &quot;default.html&quot;
+	},
+	&quot;content&quot;: &quot;\r\n\r\n\r\n# Stuff I Use\nThis is a collection of what I use. I&#39;m not sure why I like the idea, but I do so here it is.\n\n\n## Web Development\n\n- Cmder, the windows commandline is bad - this makes it better.\n- Atom, my primary editor\n\n## Photoghrapy\nI have a Nikon D610, I like this camera but want to upgrade when they release something new as I could use some more features like GPS and better video. My other gear includes:\n\n- MindShift Backlight 26L\n- Lee Big Stopper\n- Lee Little Stopper\n- Nikon Flash\n&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;pages&quot;,
+			&quot;path&quot;: &quot;/pages&quot;,
+			&quot;defaults&quot;: {}
+		},
+		&quot;draft&quot;: false,
+		&quot;basename&quot;: &quot;stuff-i-use&quot;,
+		&quot;link&quot;: &quot;stuff-i-use&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;h1 id=\&quot;stuff-i-use\&quot;&gt;Stuff I Use&lt;/h1&gt;\n&lt;p&gt;This is a collection of what I use. I&amp;#39;m not sure why I like the idea, but I do so here it is.&lt;/p&gt;\n&lt;h2 id=\&quot;web-development\&quot;&gt;Web Development&lt;/h2&gt;\n&lt;ul&gt;\n&lt;li&gt;Cmder, the windows commandline is bad - this makes it better.&lt;/li&gt;\n&lt;li&gt;Atom, my primary editor&lt;/li&gt;\n&lt;/ul&gt;\n&lt;h2 id=\&quot;photoghrapy\&quot;&gt;Photoghrapy&lt;/h2&gt;\n&lt;p&gt;I have a Nikon D610, I like this camera but want to upgrade when they release something new as I could use some more features like GPS and better video. My other gear includes:&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;MindShift Backlight 26L&lt;/li&gt;\n&lt;li&gt;Lee Big Stopper&lt;/li&gt;\n&lt;li&gt;Lee Little Stopper&lt;/li&gt;\n&lt;li&gt;Nikon Flash&lt;/li&gt;\n&lt;/ul&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;This is a collection of what I use. I&#39;m not sure why I like the idea, but I do so here it is.&quot;
+}</pre></code>
+	
+		D:\AKJ\GitHub\AKJIO\content\pages\test\subtest.md
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntitle: Test\r\ntemplate: posts.html\r\n---\r\n\r\n# HeaderTest {{title}}\r\nBreadtext, we are using the {{template}} as a template!&quot;,
+	&quot;data&quot;: {
+		&quot;title&quot;: &quot;Test&quot;,
+		&quot;template&quot;: &quot;posts.html&quot;
+	},
+	&quot;content&quot;: &quot;\r\n\r\n# HeaderTest {{title}}\r\nBreadtext, we are using the {{template}} as a template!&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;pages&quot;,
+			&quot;path&quot;: &quot;/pages&quot;,
+			&quot;defaults&quot;: {}
+		},
+		&quot;draft&quot;: false,
+		&quot;basename&quot;: &quot;subtest&quot;,
+		&quot;link&quot;: &quot;subtest&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;h1 id=\&quot;headertest-title-\&quot;&gt;HeaderTest {{title}}&lt;/h1&gt;\n&lt;p&gt;Breadtext, we are using the {{template}} as a template!&lt;/p&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;Breadtext, we are using the {{template}} as a template!&quot;
+}</pre></code>
+	
+		D:\AKJ\GitHub\AKJIO\content\posts\_drafts\getting-the-frontend-build-right.md
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntitle: Getting the frontend build right\r\nsubtitle: A multi part series about the use of gulp in major projects.\r\ncollection: posts\r\ndate: 2015-03-09\r\ntemplate: post.html\r\n---\r\n\r\nThis is part one. We will discuss what we need build tools for, and what it can do for us.\r\n\r\n## What&#39;s the point?\r\nIn modern web-development we need to do more and more things.\r\nYou have to optimize everything, and if you are working in big teams you need to write consistent code, and maybe some unit test.\r\n\r\nLet&#39;s start be identifying our needs.\r\n\r\n\r\n- Optimize assets\r\n- Compiling\r\n\r\n\r\n### Optimizations of assets:\r\n\t- Images/Vectors\r\n\t- JavaScript\r\n\t- CSS\r\n\r\n### Compiling\r\nUsing things like LESS or SASS is a really great way to improve your CSS. It gives you a lot of powerfull features, that you don&#39;t have in CSS.\r\n\r\nIf you have to do this each time you want to deploy it quickly gets to the point where writing a script saves you a lot of time.\r\nWriting a script will save you from human errors. It will make you do the fun things, and not the boring repetitive things. It will save you money.&quot;,
+	&quot;data&quot;: {
+		&quot;title&quot;: &quot;Getting the frontend build right&quot;,
+		&quot;subtitle&quot;: &quot;A multi part series about the use of gulp in major projects.&quot;,
+		&quot;collection&quot;: &quot;posts&quot;,
+		&quot;date&quot;: &quot;2015-03-09T00:00:00.000Z&quot;,
+		&quot;template&quot;: &quot;post.html&quot;
+	},
+	&quot;content&quot;: &quot;\r\n\r\nThis is part one. We will discuss what we need build tools for, and what it can do for us.\r\n\r\n## What&#39;s the point?\r\nIn modern web-development we need to do more and more things.\r\nYou have to optimize everything, and if you are working in big teams you need to write consistent code, and maybe some unit test.\r\n\r\nLet&#39;s start be identifying our needs.\r\n\r\n\r\n- Optimize assets\r\n- Compiling\r\n\r\n\r\n### Optimizations of assets:\r\n\t- Images/Vectors\r\n\t- JavaScript\r\n\t- CSS\r\n\r\n### Compiling\r\nUsing things like LESS or SASS is a really great way to improve your CSS. It gives you a lot of powerfull features, that you don&#39;t have in CSS.\r\n\r\nIf you have to do this each time you want to deploy it quickly gets to the point where writing a script saves you a lot of time.\r\nWriting a script will save you from human errors. It will make you do the fun things, and not the boring repetitive things. It will save you money.&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;posts&quot;,
+			&quot;path&quot;: &quot;/posts&quot;,
+			&quot;defaults&quot;: {
+				&quot;template&quot;: &quot;post.html&quot;
+			}
+		},
+		&quot;draft&quot;: true,
+		&quot;basename&quot;: &quot;getting-the-frontend-build-right&quot;,
+		&quot;link&quot;: &quot;getting-the-frontend-build-right&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;p&gt;This is part one. We will discuss what we need build tools for, and what it can do for us.&lt;/p&gt;\n&lt;h2 id=\&quot;what-s-the-point-\&quot;&gt;What&amp;#39;s the point?&lt;/h2&gt;\n&lt;p&gt;In modern web-development we need to do more and more things.\nYou have to optimize everything, and if you are working in big teams you need to write consistent code, and maybe some unit test.&lt;/p&gt;\n&lt;p&gt;Let&amp;#39;s start be identifying our needs.&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;Optimize assets&lt;/li&gt;\n&lt;li&gt;Compiling&lt;/li&gt;\n&lt;/ul&gt;\n&lt;h3 id=\&quot;optimizations-of-assets-\&quot;&gt;Optimizations of assets:&lt;/h3&gt;\n&lt;pre&gt;&lt;code&gt;- Images/Vectors\n- JavaScript\n- CSS\n&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=\&quot;compiling\&quot;&gt;Compiling&lt;/h3&gt;\n&lt;p&gt;Using things like LESS or SASS is a really great way to improve your CSS. It gives you a lot of powerfull features, that you don&amp;#39;t have in CSS.&lt;/p&gt;\n&lt;p&gt;If you have to do this each time you want to deploy it quickly gets to the point where writing a script saves you a lot of time.\nWriting a script will save you from human errors. It will make you do the fun things, and not the boring repetitive things. It will save you money.&lt;/p&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;This is part one. We will discuss what we need build tools for, and what it can do for us.&quot;
+}</pre></code>
+	
+		D:\AKJ\GitHub\AKJIO\content\posts\_drafts\led-video-wall\building-a-led-wall.md
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntitle: Building an interactive LED WALL\r\nsubtitle: Hardware hacking and software adventures.\r\ncollection: posts\r\ndate:\r\ntemplate: post.html\r\n---\r\n\r\nI work for Pentia, and one of the things that make it a great place to work is that we are allowed to play around.\r\nThey sponsored everything, and I used my own time. So shout out to them for letting me play around.\r\n\r\n## Getting Started\r\n\r\nWe talked about office decorations, and we somehow came to a conclusion that building a giant interactive LED wall would be a good idea.\r\nPretty quickly we pitched the idea to management and got the greenlight to build a prototype.\r\n\r\n## Building the prototype\r\n\r\nWe found a pretty awesome LED cube on adafruit.com, it had a guide and part list, pretty much everything - awesome!\r\nWe ordered everything we needed and got some extra stuff from adafruit.\r\n\r\n### Power\r\nEverything runs on 5v current, and just buying everything would be bad as we like to hack around. I got the idea that we could repurpose an old ATX powersupply from an old workstation.\r\n\r\nIt&#39;s pretty easy to get out... normally but this was some custom dell thingy. We succeeded but only after my Coworker Mads had an incedent with some evil chip that cut he&#39;s finger. RIP.\r\nTo jump a power supply is an easy task, just connect the green wire to a black one. You might need a more detailed guide, I&#39;m sure google can help you there!\r\nConnecting the rest turned out to be easier than I was thinking at first, the cards support MOLEX. I found a MOLEX cable and removed the 12v wires, just to be sure. NOTE: SOMETHING ABOUT THE STRANGE MOLEX COLORS.\r\n\r\nThe LED panels is connected to the receiver card, only hard thing here was finding the + and -, as it&#39;s not clearly\r\n\r\nEverything turned on. But nothing worked, the LED panels was flickering in a really strange pattern\r\n\r\n![T-Nuts 2020](/images/tnuts2020.jpg)\r\n&quot;,
+	&quot;data&quot;: {
+		&quot;title&quot;: &quot;Building an interactive LED WALL&quot;,
+		&quot;subtitle&quot;: &quot;Hardware hacking and software adventures.&quot;,
+		&quot;collection&quot;: &quot;posts&quot;,
+		&quot;date&quot;: null,
+		&quot;template&quot;: &quot;post.html&quot;
+	},
+	&quot;content&quot;: &quot;\r\n\r\nI work for Pentia, and one of the things that make it a great place to work is that we are allowed to play around.\r\nThey sponsored everything, and I used my own time. So shout out to them for letting me play around.\r\n\r\n## Getting Started\r\n\r\nWe talked about office decorations, and we somehow came to a conclusion that building a giant interactive LED wall would be a good idea.\r\nPretty quickly we pitched the idea to management and got the greenlight to build a prototype.\r\n\r\n## Building the prototype\r\n\r\nWe found a pretty awesome LED cube on adafruit.com, it had a guide and part list, pretty much everything - awesome!\r\nWe ordered everything we needed and got some extra stuff from adafruit.\r\n\r\n### Power\r\nEverything runs on 5v current, and just buying everything would be bad as we like to hack around. I got the idea that we could repurpose an old ATX powersupply from an old workstation.\r\n\r\nIt&#39;s pretty easy to get out... normally but this was some custom dell thingy. We succeeded but only after my Coworker Mads had an incedent with some evil chip that cut he&#39;s finger. RIP.\r\nTo jump a power supply is an easy task, just connect the green wire to a black one. You might need a more detailed guide, I&#39;m sure google can help you there!\r\nConnecting the rest turned out to be easier than I was thinking at first, the cards support MOLEX. I found a MOLEX cable and removed the 12v wires, just to be sure. NOTE: SOMETHING ABOUT THE STRANGE MOLEX COLORS.\r\n\r\nThe LED panels is connected to the receiver card, only hard thing here was finding the + and -, as it&#39;s not clearly\r\n\r\nEverything turned on. But nothing worked, the LED panels was flickering in a really strange pattern\r\n\r\n![T-Nuts 2020](/images/tnuts2020.jpg)\r\n&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;posts&quot;,
+			&quot;path&quot;: &quot;/posts&quot;,
+			&quot;defaults&quot;: {
+				&quot;template&quot;: &quot;post.html&quot;
+			}
+		},
+		&quot;draft&quot;: true,
+		&quot;basename&quot;: &quot;building-a-led-wall&quot;,
+		&quot;link&quot;: &quot;building-a-led-wall&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;p&gt;I work for Pentia, and one of the things that make it a great place to work is that we are allowed to play around.\nThey sponsored everything, and I used my own time. So shout out to them for letting me play around.&lt;/p&gt;\n&lt;h2 id=\&quot;getting-started\&quot;&gt;Getting Started&lt;/h2&gt;\n&lt;p&gt;We talked about office decorations, and we somehow came to a conclusion that building a giant interactive LED wall would be a good idea.\nPretty quickly we pitched the idea to management and got the greenlight to build a prototype.&lt;/p&gt;\n&lt;h2 id=\&quot;building-the-prototype\&quot;&gt;Building the prototype&lt;/h2&gt;\n&lt;p&gt;We found a pretty awesome LED cube on adafruit.com, it had a guide and part list, pretty much everything - awesome!\nWe ordered everything we needed and got some extra stuff from adafruit.&lt;/p&gt;\n&lt;h3 id=\&quot;power\&quot;&gt;Power&lt;/h3&gt;\n&lt;p&gt;Everything runs on 5v current, and just buying everything would be bad as we like to hack around. I got the idea that we could repurpose an old ATX powersupply from an old workstation.&lt;/p&gt;\n&lt;p&gt;It&amp;#39;s pretty easy to get out... normally but this was some custom dell thingy. We succeeded but only after my Coworker Mads had an incedent with some evil chip that cut he&amp;#39;s finger. RIP.\nTo jump a power supply is an easy task, just connect the green wire to a black one. You might need a more detailed guide, I&amp;#39;m sure google can help you there!\nConnecting the rest turned out to be easier than I was thinking at first, the cards support MOLEX. I found a MOLEX cable and removed the 12v wires, just to be sure. NOTE: SOMETHING ABOUT THE STRANGE MOLEX COLORS.&lt;/p&gt;\n&lt;p&gt;The LED panels is connected to the receiver card, only hard thing here was finding the + and -, as it&amp;#39;s not clearly&lt;/p&gt;\n&lt;p&gt;Everything turned on. But nothing worked, the LED panels was flickering in a really strange pattern&lt;/p&gt;\n&lt;p&gt;&lt;img src=\&quot;/images/tnuts2020.jpg\&quot; alt=\&quot;T-Nuts 2020\&quot;&gt;&lt;/p&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;I work for Pentia, and one of the things that make it a great place to work is that we are allowed to play around.\nThey sponsored…&quot;
+}</pre></code>
+	
+		D:\AKJ\GitHub\AKJIO\content\posts\_drafts\led-video-wall\making-a-led-video-wall.md
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntitle: Making a LED Video Wall\r\nsubtitle:\r\ncollection: posts\r\ndate:\r\ntemplate: post.html\r\n---\r\n\r\n\r\nLinsn RV901\r\n\r\nThe wiring is pretty simple.\r\n\r\nHowever the documentation and software is a pure nightmare made of the stuff that haunts you forever.\r\nWe bought the modules from adafruit, they had most things needed for building this project.\r\n\r\n## The mythical test function\r\nIn the manual it&#39;s descriped as follows:\r\n\r\n&gt; 25. Test Function\r\n&gt; Receiving card has the test function, no sending card needed; can test the display directly, such as bias,\r\n&gt; gray level, red, green, blue, etc. many kinds of test modes.\r\nsource: http://www.linsnled.com/rv801-led-receiver.html\r\n\r\nThis seems great right!? Yeah, but that&#39;s about it... I have no idea how to use this mode. It would be pretty handy however.\r\n\r\n## Docs used:\r\n\r\nhttp://www.robe.cz/fileadmin/robe/downloads/software/ropix/Manual_801_802.pdf&quot;,
+	&quot;data&quot;: {
+		&quot;title&quot;: &quot;Making a LED Video Wall&quot;,
+		&quot;subtitle&quot;: null,
+		&quot;collection&quot;: &quot;posts&quot;,
+		&quot;date&quot;: null,
+		&quot;template&quot;: &quot;post.html&quot;
+	},
+	&quot;content&quot;: &quot;\r\n\r\n\r\nLinsn RV901\r\n\r\nThe wiring is pretty simple.\r\n\r\nHowever the documentation and software is a pure nightmare made of the stuff that haunts you forever.\r\nWe bought the modules from adafruit, they had most things needed for building this project.\r\n\r\n## The mythical test function\r\nIn the manual it&#39;s descriped as follows:\r\n\r\n&gt; 25. Test Function\r\n&gt; Receiving card has the test function, no sending card needed; can test the display directly, such as bias,\r\n&gt; gray level, red, green, blue, etc. many kinds of test modes.\r\nsource: http://www.linsnled.com/rv801-led-receiver.html\r\n\r\nThis seems great right!? Yeah, but that&#39;s about it... I have no idea how to use this mode. It would be pretty handy however.\r\n\r\n## Docs used:\r\n\r\nhttp://www.robe.cz/fileadmin/robe/downloads/software/ropix/Manual_801_802.pdf&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;posts&quot;,
+			&quot;path&quot;: &quot;/posts&quot;,
+			&quot;defaults&quot;: {
+				&quot;template&quot;: &quot;post.html&quot;
+			}
+		},
+		&quot;draft&quot;: true,
+		&quot;basename&quot;: &quot;making-a-led-video-wall&quot;,
+		&quot;link&quot;: &quot;making-a-led-video-wall&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;p&gt;Linsn RV901&lt;/p&gt;\n&lt;p&gt;The wiring is pretty simple.&lt;/p&gt;\n&lt;p&gt;However the documentation and software is a pure nightmare made of the stuff that haunts you forever.\nWe bought the modules from adafruit, they had most things needed for building this project.&lt;/p&gt;\n&lt;h2 id=\&quot;the-mythical-test-function\&quot;&gt;The mythical test function&lt;/h2&gt;\n&lt;p&gt;In the manual it&amp;#39;s descriped as follows:&lt;/p&gt;\n&lt;blockquote&gt;\n&lt;ol&gt;\n&lt;li&gt;Test Function\nReceiving card has the test function, no sending card needed; can test the display directly, such as bias,\ngray level, red, green, blue, etc. many kinds of test modes.\nsource: &lt;a href=\&quot;http://www.linsnled.com/rv801-led-receiver.html\&quot;&gt;http://www.linsnled.com/rv801-led-receiver.html&lt;/a&gt;&lt;/li&gt;\n&lt;/ol&gt;\n&lt;/blockquote&gt;\n&lt;p&gt;This seems great right!? Yeah, but that&amp;#39;s about it... I have no idea how to use this mode. It would be pretty handy however.&lt;/p&gt;\n&lt;h2 id=\&quot;docs-used-\&quot;&gt;Docs used:&lt;/h2&gt;\n&lt;p&gt;&lt;a href=\&quot;http://www.robe.cz/fileadmin/robe/downloads/software/ropix/Manual_801_802.pdf\&quot;&gt;http://www.robe.cz/fileadmin/robe/downloads/software/ropix/Manual_801_802.pdf&lt;/a&gt;&lt;/p&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;Linsn RV901&quot;
+}</pre></code>
+	
+		D:\AKJ\GitHub\AKJIO\content\posts\clear-cloudflare-cache-from-vsts-release\clear-cloudflare-cache-from-vsts-release.md
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntitle: Clear CloudFlare Cache from VSTS\nsubtitle: Cache everything and purge it when releasing a new version from Visual Studio Team Services\ncollection: posts\r\ndate: 2017-04-12\ntemplate: post.html\ntags:\n - powershell\n - vsts\n - cloudflare\n---\r\n\nRecently I created a website for a client, it was a static generated website, a promosite with only one page.\n\nThis gave me some nice opportunities for trying out some nice things. It&#39;s all generated with [gulp](https://gulpjs.com), much like this site - however it&#39;s optimized to be a single page.\n\nIt&#39;s code is in &lt;abbr title=\&quot;Visual Studio Team Services\&quot;&gt;VSTS&lt;/abbr&gt;, and I set it up to build whenever we create a Pull Request.\nThis works very well, and in one week we did around 140 pull requests - with code reviews.\n\nI found a bug that made it impossible to run Gulp 4 with the Gulp task, and created an [issue](https://github.com/Microsoft/vsts-tasks/issues/3890) on the bugtracker. To get around this I created a PowerShell that invokes the local gulp, and that fixed everything.\n\nReleasing the site was done with &lt;abbr title=\&quot;Visual Studio Team Services\&quot;&gt;VSTS&lt;/abbr&gt; as well. A small note to take here is due to everything being HTML, it&#39;s set to be cached on Cloudflare for the best performance - to clear this cache, you need to login to cloudflare and press a button or use their API.\n\nI like automated things and created this script:\n\n```powershell\n$AUTH_USER = &#39;&#39;\n$AUTH_TOKEN = &#39;&#39;\n$ZONE_KEY = &#39;&#39;\n\n$Headers = @{\n\t&#39;X-Auth-Key&#39;=$AUTH_TOKEN;\n\t&#39;X-Auth-Email&#39;=$AUTH_USER;\n\t&#39;Content-Type&#39;=&#39;application/json&#39;\n}\n$Body = @{\n\t&#39;purge_everything&#39;=[boolean]&#39;True&#39;\n} | ConvertTo-Json\n\nInvoke-RestMethod https://api.cloudflare.com/client/v4/zones/$ZONE_KEY/purge_cache -Method DELETE -Headers $Headers -Body $Body -ContentType &#39;application/json&#39;\n```\n\nOn the [Cloudflare documentation](https://api.cloudflare.com/) there is an example using curl, but it all being windows I rewrote that in powershell, and it works just great.\n\nThis script clears everything, I could have extended it, to clear only the changed files from the release, but this seemed like overkill - taking everything into account.\n&quot;,
+	&quot;data&quot;: {
+		&quot;title&quot;: &quot;Clear CloudFlare Cache from VSTS&quot;,
+		&quot;subtitle&quot;: &quot;Cache everything and purge it when releasing a new version from Visual Studio Team Services&quot;,
+		&quot;collection&quot;: &quot;posts&quot;,
+		&quot;date&quot;: &quot;2017-04-12T00:00:00.000Z&quot;,
+		&quot;template&quot;: &quot;post.html&quot;,
+		&quot;tags&quot;: [
+			&quot;powershell&quot;,
+			&quot;vsts&quot;,
+			&quot;cloudflare&quot;
+		]
+	},
+	&quot;content&quot;: &quot;\r\n\nRecently I created a website for a client, it was a static generated website, a promosite with only one page.\n\nThis gave me some nice opportunities for trying out some nice things. It&#39;s all generated with [gulp](https://gulpjs.com), much like this site - however it&#39;s optimized to be a single page.\n\nIt&#39;s code is in &lt;abbr title=\&quot;Visual Studio Team Services\&quot;&gt;VSTS&lt;/abbr&gt;, and I set it up to build whenever we create a Pull Request.\nThis works very well, and in one week we did around 140 pull requests - with code reviews.\n\nI found a bug that made it impossible to run Gulp 4 with the Gulp task, and created an [issue](https://github.com/Microsoft/vsts-tasks/issues/3890) on the bugtracker. To get around this I created a PowerShell that invokes the local gulp, and that fixed everything.\n\nReleasing the site was done with &lt;abbr title=\&quot;Visual Studio Team Services\&quot;&gt;VSTS&lt;/abbr&gt; as well. A small note to take here is due to everything being HTML, it&#39;s set to be cached on Cloudflare for the best performance - to clear this cache, you need to login to cloudflare and press a button or use their API.\n\nI like automated things and created this script:\n\n```powershell\n$AUTH_USER = &#39;&#39;\n$AUTH_TOKEN = &#39;&#39;\n$ZONE_KEY = &#39;&#39;\n\n$Headers = @{\n\t&#39;X-Auth-Key&#39;=$AUTH_TOKEN;\n\t&#39;X-Auth-Email&#39;=$AUTH_USER;\n\t&#39;Content-Type&#39;=&#39;application/json&#39;\n}\n$Body = @{\n\t&#39;purge_everything&#39;=[boolean]&#39;True&#39;\n} | ConvertTo-Json\n\nInvoke-RestMethod https://api.cloudflare.com/client/v4/zones/$ZONE_KEY/purge_cache -Method DELETE -Headers $Headers -Body $Body -ContentType &#39;application/json&#39;\n```\n\nOn the [Cloudflare documentation](https://api.cloudflare.com/) there is an example using curl, but it all being windows I rewrote that in powershell, and it works just great.\n\nThis script clears everything, I could have extended it, to clear only the changed files from the release, but this seemed like overkill - taking everything into account.\n&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;posts&quot;,
+			&quot;path&quot;: &quot;/posts&quot;,
+			&quot;defaults&quot;: {
+				&quot;template&quot;: &quot;post.html&quot;
+			}
+		},
+		&quot;draft&quot;: false,
+		&quot;basename&quot;: &quot;clear-cloudflare-cache-from-vsts-release&quot;,
+		&quot;link&quot;: &quot;clear-cloudflare-cache-from-vsts-release&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;p&gt;Recently I created a website for a client, it was a static generated website, a promosite with only one page.&lt;/p&gt;\n&lt;p&gt;This gave me some nice opportunities for trying out some nice things. It&amp;#39;s all generated with &lt;a href=\&quot;https://gulpjs.com\&quot;&gt;gulp&lt;/a&gt;, much like this site - however it&amp;#39;s optimized to be a single page.&lt;/p&gt;\n&lt;p&gt;It&amp;#39;s code is in &lt;abbr title=\&quot;Visual Studio Team Services\&quot;&gt;VSTS&lt;/abbr&gt;, and I set it up to build whenever we create a Pull Request.\nThis works very well, and in one week we did around 140 pull requests - with code reviews.&lt;/p&gt;\n&lt;p&gt;I found a bug that made it impossible to run Gulp 4 with the Gulp task, and created an &lt;a href=\&quot;https://github.com/Microsoft/vsts-tasks/issues/3890\&quot;&gt;issue&lt;/a&gt; on the bugtracker. To get around this I created a PowerShell that invokes the local gulp, and that fixed everything.&lt;/p&gt;\n&lt;p&gt;Releasing the site was done with &lt;abbr title=\&quot;Visual Studio Team Services\&quot;&gt;VSTS&lt;/abbr&gt; as well. A small note to take here is due to everything being HTML, it&amp;#39;s set to be cached on Cloudflare for the best performance - to clear this cache, you need to login to cloudflare and press a button or use their API.&lt;/p&gt;\n&lt;p&gt;I like automated things and created this script:&lt;/p&gt;\n&lt;pre&gt;&lt;code class=\&quot;lang-powershell\&quot;&gt;$AUTH_USER = &amp;#39;&amp;#39;\n$AUTH_TOKEN = &amp;#39;&amp;#39;\n$ZONE_KEY = &amp;#39;&amp;#39;\n\n$Headers = @{\n    &amp;#39;X-Auth-Key&amp;#39;=$AUTH_TOKEN;\n    &amp;#39;X-Auth-Email&amp;#39;=$AUTH_USER;\n    &amp;#39;Content-Type&amp;#39;=&amp;#39;application/json&amp;#39;\n}\n$Body = @{\n    &amp;#39;purge_everything&amp;#39;=[boolean]&amp;#39;True&amp;#39;\n} | ConvertTo-Json\n\nInvoke-RestMethod https://api.cloudflare.com/client/v4/zones/$ZONE_KEY/purge_cache -Method DELETE -Headers $Headers -Body $Body -ContentType &amp;#39;application/json&amp;#39;\n&lt;/code&gt;&lt;/pre&gt;\n&lt;p&gt;On the &lt;a href=\&quot;https://api.cloudflare.com/\&quot;&gt;Cloudflare documentation&lt;/a&gt; there is an example using curl, but it all being windows I rewrote that in powershell, and it works just great.&lt;/p&gt;\n&lt;p&gt;This script clears everything, I could have extended it, to clear only the changed files from the release, but this seemed like overkill - taking everything into account.&lt;/p&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;Recently I created a website for a client, it was a static generated website, a promosite with only one page.&quot;
+}</pre></code>
+	
+		D:\AKJ\GitHub\AKJIO\content\posts\hello-world\hello-world.md
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntitle: Hello World\r\nsubtitle: Just another blog? Or something more?\ncollection: posts\r\ndate: 2016-04-12\r\nupdated:  2016-04-12\r\ntemplate: post.html\r\n---\r\n\r\nThis is my new blog that I have had intentions of making, the last many years. A wise man once said\n\r\n&gt; ‘Finished last’ will always be better than ‘Did not finish’, which always trumps ‘Did not start.’\n\n&lt;!-- more --&gt;\n\r\nI installed WordPress, MySQL, PHP and then never really got anywhere after that.\r\n\r\nIt was time to try something new. Now I have the great pleasure, of launching my site unfinished. Keep on reading if you want the details.\r\n\r\n## But, why even make a blog?\r\n\r\nIt seems a bit like JavaScript frameworks. Everybody and their dog&#39;s has one of their own.\r\n\r\nI intend to make my blog a little different. I want to update each article when the time is fit, little more like a wiki than a blog. I realize that this can be hard, and therefore I also Open Sourced my blog.   \nIt&#39;s all on GitHub and people are free to make pull-requests to update or add missing information.\n\r\n### But that does not really answer my question...\r\n\r\nOkay I want a place to document my front-end findings, while I practice the **art** of writing.\r\nAll feedback and blog ideas are welcome.\r\n\r\n## How It&#39;s Made\r\n\r\nIt&#39;s made using Gulp, Nunjucks, NodeJS and Water. All hosted on GitHub.\n\r\nAll posts and pages are just plain markdown files that gets converted to HTML on build. This is also called a [Static Generated Site](https://davidwalsh.name/introduction-static-site-generators), you can do it with Jekyll. I really like Jekyll, and took a lot of their ideas but did it all in JavaScript. Why not use metalsmith? It did not fit my needs, I wanted it to be compliant with the gulp ecosystem... this lead me to create [gulp-water](https://github.com/Saturate/gulp-water), naming it gulp-water is a misstep, as it works for all things node, it&#39;s just using steams... Maybe one day I will rename it.\n\nI&#39;ll cover the pros and cons of a static generated site in a later post.\n\r\n## The Future\n\nI&#39;ll continue to work on the site, make a design and implement some nice, but missing features. I&#39;m already considering shifting out Nunjucks for (p)react, to do some nice page transitions and client rendering.\n&quot;,
+	&quot;data&quot;: {
+		&quot;title&quot;: &quot;Hello World&quot;,
+		&quot;subtitle&quot;: &quot;Just another blog? Or something more?&quot;,
+		&quot;collection&quot;: &quot;posts&quot;,
+		&quot;date&quot;: &quot;2016-04-12T00:00:00.000Z&quot;,
+		&quot;updated&quot;: &quot;2016-04-12T00:00:00.000Z&quot;,
+		&quot;template&quot;: &quot;post.html&quot;
+	},
+	&quot;content&quot;: &quot;\r\n\r\nThis is my new blog that I have had intentions of making, the last many years. A wise man once said\n\r\n&gt; ‘Finished last’ will always be better than ‘Did not finish’, which always trumps ‘Did not start.’\n\n&lt;!-- more --&gt;\n\r\nI installed WordPress, MySQL, PHP and then never really got anywhere after that.\r\n\r\nIt was time to try something new. Now I have the great pleasure, of launching my site unfinished. Keep on reading if you want the details.\r\n\r\n## But, why even make a blog?\r\n\r\nIt seems a bit like JavaScript frameworks. Everybody and their dog&#39;s has one of their own.\r\n\r\nI intend to make my blog a little different. I want to update each article when the time is fit, little more like a wiki than a blog. I realize that this can be hard, and therefore I also Open Sourced my blog.   \nIt&#39;s all on GitHub and people are free to make pull-requests to update or add missing information.\n\r\n### But that does not really answer my question...\r\n\r\nOkay I want a place to document my front-end findings, while I practice the **art** of writing.\r\nAll feedback and blog ideas are welcome.\r\n\r\n## How It&#39;s Made\r\n\r\nIt&#39;s made using Gulp, Nunjucks, NodeJS and Water. All hosted on GitHub.\n\r\nAll posts and pages are just plain markdown files that gets converted to HTML on build. This is also called a [Static Generated Site](https://davidwalsh.name/introduction-static-site-generators), you can do it with Jekyll. I really like Jekyll, and took a lot of their ideas but did it all in JavaScript. Why not use metalsmith? It did not fit my needs, I wanted it to be compliant with the gulp ecosystem... this lead me to create [gulp-water](https://github.com/Saturate/gulp-water), naming it gulp-water is a misstep, as it works for all things node, it&#39;s just using steams... Maybe one day I will rename it.\n\nI&#39;ll cover the pros and cons of a static generated site in a later post.\n\r\n## The Future\n\nI&#39;ll continue to work on the site, make a design and implement some nice, but missing features. I&#39;m already considering shifting out Nunjucks for (p)react, to do some nice page transitions and client rendering.\n&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;posts&quot;,
+			&quot;path&quot;: &quot;/posts&quot;,
+			&quot;defaults&quot;: {
+				&quot;template&quot;: &quot;post.html&quot;
+			}
+		},
+		&quot;draft&quot;: false,
+		&quot;basename&quot;: &quot;hello-world&quot;,
+		&quot;link&quot;: &quot;hello-world&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;p&gt;This is my new blog that I have had intentions of making, the last many years. A wise man once said&lt;/p&gt;\n&lt;blockquote&gt;\n&lt;p&gt;‘Finished last’ will always be better than ‘Did not finish’, which always trumps ‘Did not start.’&lt;/p&gt;\n&lt;/blockquote&gt;\n&lt;!-- more --&gt;\n&lt;p&gt;I installed WordPress, MySQL, PHP and then never really got anywhere after that.&lt;/p&gt;\n&lt;p&gt;It was time to try something new. Now I have the great pleasure, of launching my site unfinished. Keep on reading if you want the details.&lt;/p&gt;\n&lt;h2 id=\&quot;but-why-even-make-a-blog-\&quot;&gt;But, why even make a blog?&lt;/h2&gt;\n&lt;p&gt;It seems a bit like JavaScript frameworks. Everybody and their dog&amp;#39;s has one of their own.&lt;/p&gt;\n&lt;p&gt;I intend to make my blog a little different. I want to update each article when the time is fit, little more like a wiki than a blog. I realize that this can be hard, and therefore I also Open Sourced my blog.&lt;br&gt;It&amp;#39;s all on GitHub and people are free to make pull-requests to update or add missing information.&lt;/p&gt;\n&lt;h3 id=\&quot;but-that-does-not-really-answer-my-question-\&quot;&gt;But that does not really answer my question...&lt;/h3&gt;\n&lt;p&gt;Okay I want a place to document my front-end findings, while I practice the &lt;strong&gt;art&lt;/strong&gt; of writing.\nAll feedback and blog ideas are welcome.&lt;/p&gt;\n&lt;h2 id=\&quot;how-it-s-made\&quot;&gt;How It&amp;#39;s Made&lt;/h2&gt;\n&lt;p&gt;It&amp;#39;s made using Gulp, Nunjucks, NodeJS and Water. All hosted on GitHub.&lt;/p&gt;\n&lt;p&gt;All posts and pages are just plain markdown files that gets converted to HTML on build. This is also called a &lt;a href=\&quot;https://davidwalsh.name/introduction-static-site-generators\&quot;&gt;Static Generated Site&lt;/a&gt;, you can do it with Jekyll. I really like Jekyll, and took a lot of their ideas but did it all in JavaScript. Why not use metalsmith? It did not fit my needs, I wanted it to be compliant with the gulp ecosystem... this lead me to create &lt;a href=\&quot;https://github.com/Saturate/gulp-water\&quot;&gt;gulp-water&lt;/a&gt;, naming it gulp-water is a misstep, as it works for all things node, it&amp;#39;s just using steams... Maybe one day I will rename it.&lt;/p&gt;\n&lt;p&gt;I&amp;#39;ll cover the pros and cons of a static generated site in a later post.&lt;/p&gt;\n&lt;h2 id=\&quot;the-future\&quot;&gt;The Future&lt;/h2&gt;\n&lt;p&gt;I&amp;#39;ll continue to work on the site, make a design and implement some nice, but missing features. I&amp;#39;m already considering shifting out Nunjucks for (p)react, to do some nice page transitions and client rendering.&lt;/p&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;This is my new blog that I have had intentions of making, the last many years. A wise man once said\n‘Finished last’ will always be better…&quot;
+}</pre></code>
+	
+
+
+	[object Object]
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntitle: Clear CloudFlare Cache from VSTS\nsubtitle: Cache everything and purge it when releasing a new version from Visual Studio Team Services\ncollection: posts\r\ndate: 2017-04-12\ntemplate: post.html\ntags:\n - powershell\n - vsts\n - cloudflare\n---\r\n\nRecently I created a website for a client, it was a static generated website, a promosite with only one page.\n\nThis gave me some nice opportunities for trying out some nice things. It&#39;s all generated with [gulp](https://gulpjs.com), much like this site - however it&#39;s optimized to be a single page.\n\nIt&#39;s code is in &lt;abbr title=\&quot;Visual Studio Team Services\&quot;&gt;VSTS&lt;/abbr&gt;, and I set it up to build whenever we create a Pull Request.\nThis works very well, and in one week we did around 140 pull requests - with code reviews.\n\nI found a bug that made it impossible to run Gulp 4 with the Gulp task, and created an [issue](https://github.com/Microsoft/vsts-tasks/issues/3890) on the bugtracker. To get around this I created a PowerShell that invokes the local gulp, and that fixed everything.\n\nReleasing the site was done with &lt;abbr title=\&quot;Visual Studio Team Services\&quot;&gt;VSTS&lt;/abbr&gt; as well. A small note to take here is due to everything being HTML, it&#39;s set to be cached on Cloudflare for the best performance - to clear this cache, you need to login to cloudflare and press a button or use their API.\n\nI like automated things and created this script:\n\n```powershell\n$AUTH_USER = &#39;&#39;\n$AUTH_TOKEN = &#39;&#39;\n$ZONE_KEY = &#39;&#39;\n\n$Headers = @{\n\t&#39;X-Auth-Key&#39;=$AUTH_TOKEN;\n\t&#39;X-Auth-Email&#39;=$AUTH_USER;\n\t&#39;Content-Type&#39;=&#39;application/json&#39;\n}\n$Body = @{\n\t&#39;purge_everything&#39;=[boolean]&#39;True&#39;\n} | ConvertTo-Json\n\nInvoke-RestMethod https://api.cloudflare.com/client/v4/zones/$ZONE_KEY/purge_cache -Method DELETE -Headers $Headers -Body $Body -ContentType &#39;application/json&#39;\n```\n\nOn the [Cloudflare documentation](https://api.cloudflare.com/) there is an example using curl, but it all being windows I rewrote that in powershell, and it works just great.\n\nThis script clears everything, I could have extended it, to clear only the changed files from the release, but this seemed like overkill - taking everything into account.\n&quot;,
+	&quot;data&quot;: {
+		&quot;title&quot;: &quot;Clear CloudFlare Cache from VSTS&quot;,
+		&quot;subtitle&quot;: &quot;Cache everything and purge it when releasing a new version from Visual Studio Team Services&quot;,
+		&quot;collection&quot;: &quot;posts&quot;,
+		&quot;date&quot;: &quot;2017-04-12T00:00:00.000Z&quot;,
+		&quot;template&quot;: &quot;post.html&quot;,
+		&quot;tags&quot;: [
+			&quot;powershell&quot;,
+			&quot;vsts&quot;,
+			&quot;cloudflare&quot;
+		]
+	},
+	&quot;content&quot;: &quot;\r\n\nRecently I created a website for a client, it was a static generated website, a promosite with only one page.\n\nThis gave me some nice opportunities for trying out some nice things. It&#39;s all generated with [gulp](https://gulpjs.com), much like this site - however it&#39;s optimized to be a single page.\n\nIt&#39;s code is in &lt;abbr title=\&quot;Visual Studio Team Services\&quot;&gt;VSTS&lt;/abbr&gt;, and I set it up to build whenever we create a Pull Request.\nThis works very well, and in one week we did around 140 pull requests - with code reviews.\n\nI found a bug that made it impossible to run Gulp 4 with the Gulp task, and created an [issue](https://github.com/Microsoft/vsts-tasks/issues/3890) on the bugtracker. To get around this I created a PowerShell that invokes the local gulp, and that fixed everything.\n\nReleasing the site was done with &lt;abbr title=\&quot;Visual Studio Team Services\&quot;&gt;VSTS&lt;/abbr&gt; as well. A small note to take here is due to everything being HTML, it&#39;s set to be cached on Cloudflare for the best performance - to clear this cache, you need to login to cloudflare and press a button or use their API.\n\nI like automated things and created this script:\n\n```powershell\n$AUTH_USER = &#39;&#39;\n$AUTH_TOKEN = &#39;&#39;\n$ZONE_KEY = &#39;&#39;\n\n$Headers = @{\n\t&#39;X-Auth-Key&#39;=$AUTH_TOKEN;\n\t&#39;X-Auth-Email&#39;=$AUTH_USER;\n\t&#39;Content-Type&#39;=&#39;application/json&#39;\n}\n$Body = @{\n\t&#39;purge_everything&#39;=[boolean]&#39;True&#39;\n} | ConvertTo-Json\n\nInvoke-RestMethod https://api.cloudflare.com/client/v4/zones/$ZONE_KEY/purge_cache -Method DELETE -Headers $Headers -Body $Body -ContentType &#39;application/json&#39;\n```\n\nOn the [Cloudflare documentation](https://api.cloudflare.com/) there is an example using curl, but it all being windows I rewrote that in powershell, and it works just great.\n\nThis script clears everything, I could have extended it, to clear only the changed files from the release, but this seemed like overkill - taking everything into account.\n&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;posts&quot;,
+			&quot;path&quot;: &quot;/posts&quot;,
+			&quot;defaults&quot;: {
+				&quot;template&quot;: &quot;post.html&quot;
+			}
+		},
+		&quot;draft&quot;: false,
+		&quot;basename&quot;: &quot;clear-cloudflare-cache-from-vsts-release&quot;,
+		&quot;link&quot;: &quot;clear-cloudflare-cache-from-vsts-release&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;p&gt;Recently I created a website for a client, it was a static generated website, a promosite with only one page.&lt;/p&gt;\n&lt;p&gt;This gave me some nice opportunities for trying out some nice things. It&amp;#39;s all generated with &lt;a href=\&quot;https://gulpjs.com\&quot;&gt;gulp&lt;/a&gt;, much like this site - however it&amp;#39;s optimized to be a single page.&lt;/p&gt;\n&lt;p&gt;It&amp;#39;s code is in &lt;abbr title=\&quot;Visual Studio Team Services\&quot;&gt;VSTS&lt;/abbr&gt;, and I set it up to build whenever we create a Pull Request.\nThis works very well, and in one week we did around 140 pull requests - with code reviews.&lt;/p&gt;\n&lt;p&gt;I found a bug that made it impossible to run Gulp 4 with the Gulp task, and created an &lt;a href=\&quot;https://github.com/Microsoft/vsts-tasks/issues/3890\&quot;&gt;issue&lt;/a&gt; on the bugtracker. To get around this I created a PowerShell that invokes the local gulp, and that fixed everything.&lt;/p&gt;\n&lt;p&gt;Releasing the site was done with &lt;abbr title=\&quot;Visual Studio Team Services\&quot;&gt;VSTS&lt;/abbr&gt; as well. A small note to take here is due to everything being HTML, it&amp;#39;s set to be cached on Cloudflare for the best performance - to clear this cache, you need to login to cloudflare and press a button or use their API.&lt;/p&gt;\n&lt;p&gt;I like automated things and created this script:&lt;/p&gt;\n&lt;pre&gt;&lt;code class=\&quot;lang-powershell\&quot;&gt;$AUTH_USER = &amp;#39;&amp;#39;\n$AUTH_TOKEN = &amp;#39;&amp;#39;\n$ZONE_KEY = &amp;#39;&amp;#39;\n\n$Headers = @{\n    &amp;#39;X-Auth-Key&amp;#39;=$AUTH_TOKEN;\n    &amp;#39;X-Auth-Email&amp;#39;=$AUTH_USER;\n    &amp;#39;Content-Type&amp;#39;=&amp;#39;application/json&amp;#39;\n}\n$Body = @{\n    &amp;#39;purge_everything&amp;#39;=[boolean]&amp;#39;True&amp;#39;\n} | ConvertTo-Json\n\nInvoke-RestMethod https://api.cloudflare.com/client/v4/zones/$ZONE_KEY/purge_cache -Method DELETE -Headers $Headers -Body $Body -ContentType &amp;#39;application/json&amp;#39;\n&lt;/code&gt;&lt;/pre&gt;\n&lt;p&gt;On the &lt;a href=\&quot;https://api.cloudflare.com/\&quot;&gt;Cloudflare documentation&lt;/a&gt; there is an example using curl, but it all being windows I rewrote that in powershell, and it works just great.&lt;/p&gt;\n&lt;p&gt;This script clears everything, I could have extended it, to clear only the changed files from the release, but this seemed like overkill - taking everything into account.&lt;/p&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;Recently I created a website for a client, it was a static generated website, a promosite with only one page.&quot;
+}</pre></code>[object Object]
+		<pre><code>{
+	&quot;orig&quot;: &quot;---\r\ntitle: Hello World\r\nsubtitle: Just another blog? Or something more?\ncollection: posts\r\ndate: 2016-04-12\r\nupdated:  2016-04-12\r\ntemplate: post.html\r\n---\r\n\r\nThis is my new blog that I have had intentions of making, the last many years. A wise man once said\n\r\n&gt; ‘Finished last’ will always be better than ‘Did not finish’, which always trumps ‘Did not start.’\n\n&lt;!-- more --&gt;\n\r\nI installed WordPress, MySQL, PHP and then never really got anywhere after that.\r\n\r\nIt was time to try something new. Now I have the great pleasure, of launching my site unfinished. Keep on reading if you want the details.\r\n\r\n## But, why even make a blog?\r\n\r\nIt seems a bit like JavaScript frameworks. Everybody and their dog&#39;s has one of their own.\r\n\r\nI intend to make my blog a little different. I want to update each article when the time is fit, little more like a wiki than a blog. I realize that this can be hard, and therefore I also Open Sourced my blog.   \nIt&#39;s all on GitHub and people are free to make pull-requests to update or add missing information.\n\r\n### But that does not really answer my question...\r\n\r\nOkay I want a place to document my front-end findings, while I practice the **art** of writing.\r\nAll feedback and blog ideas are welcome.\r\n\r\n## How It&#39;s Made\r\n\r\nIt&#39;s made using Gulp, Nunjucks, NodeJS and Water. All hosted on GitHub.\n\r\nAll posts and pages are just plain markdown files that gets converted to HTML on build. This is also called a [Static Generated Site](https://davidwalsh.name/introduction-static-site-generators), you can do it with Jekyll. I really like Jekyll, and took a lot of their ideas but did it all in JavaScript. Why not use metalsmith? It did not fit my needs, I wanted it to be compliant with the gulp ecosystem... this lead me to create [gulp-water](https://github.com/Saturate/gulp-water), naming it gulp-water is a misstep, as it works for all things node, it&#39;s just using steams... Maybe one day I will rename it.\n\nI&#39;ll cover the pros and cons of a static generated site in a later post.\n\r\n## The Future\n\nI&#39;ll continue to work on the site, make a design and implement some nice, but missing features. I&#39;m already considering shifting out Nunjucks for (p)react, to do some nice page transitions and client rendering.\n&quot;,
+	&quot;data&quot;: {
+		&quot;title&quot;: &quot;Hello World&quot;,
+		&quot;subtitle&quot;: &quot;Just another blog? Or something more?&quot;,
+		&quot;collection&quot;: &quot;posts&quot;,
+		&quot;date&quot;: &quot;2016-04-12T00:00:00.000Z&quot;,
+		&quot;updated&quot;: &quot;2016-04-12T00:00:00.000Z&quot;,
+		&quot;template&quot;: &quot;post.html&quot;
+	},
+	&quot;content&quot;: &quot;\r\n\r\nThis is my new blog that I have had intentions of making, the last many years. A wise man once said\n\r\n&gt; ‘Finished last’ will always be better than ‘Did not finish’, which always trumps ‘Did not start.’\n\n&lt;!-- more --&gt;\n\r\nI installed WordPress, MySQL, PHP and then never really got anywhere after that.\r\n\r\nIt was time to try something new. Now I have the great pleasure, of launching my site unfinished. Keep on reading if you want the details.\r\n\r\n## But, why even make a blog?\r\n\r\nIt seems a bit like JavaScript frameworks. Everybody and their dog&#39;s has one of their own.\r\n\r\nI intend to make my blog a little different. I want to update each article when the time is fit, little more like a wiki than a blog. I realize that this can be hard, and therefore I also Open Sourced my blog.   \nIt&#39;s all on GitHub and people are free to make pull-requests to update or add missing information.\n\r\n### But that does not really answer my question...\r\n\r\nOkay I want a place to document my front-end findings, while I practice the **art** of writing.\r\nAll feedback and blog ideas are welcome.\r\n\r\n## How It&#39;s Made\r\n\r\nIt&#39;s made using Gulp, Nunjucks, NodeJS and Water. All hosted on GitHub.\n\r\nAll posts and pages are just plain markdown files that gets converted to HTML on build. This is also called a [Static Generated Site](https://davidwalsh.name/introduction-static-site-generators), you can do it with Jekyll. I really like Jekyll, and took a lot of their ideas but did it all in JavaScript. Why not use metalsmith? It did not fit my needs, I wanted it to be compliant with the gulp ecosystem... this lead me to create [gulp-water](https://github.com/Saturate/gulp-water), naming it gulp-water is a misstep, as it works for all things node, it&#39;s just using steams... Maybe one day I will rename it.\n\nI&#39;ll cover the pros and cons of a static generated site in a later post.\n\r\n## The Future\n\nI&#39;ll continue to work on the site, make a design and implement some nice, but missing features. I&#39;m already considering shifting out Nunjucks for (p)react, to do some nice page transitions and client rendering.\n&quot;,
+	&quot;meta&quot;: {
+		&quot;collection&quot;: {
+			&quot;name&quot;: &quot;posts&quot;,
+			&quot;path&quot;: &quot;/posts&quot;,
+			&quot;defaults&quot;: {
+				&quot;template&quot;: &quot;post.html&quot;
+			}
+		},
+		&quot;draft&quot;: false,
+		&quot;basename&quot;: &quot;hello-world&quot;,
+		&quot;link&quot;: &quot;hello-world&quot;
+	},
+	&quot;transformedContents&quot;: &quot;&lt;p&gt;This is my new blog that I have had intentions of making, the last many years. A wise man once said&lt;/p&gt;\n&lt;blockquote&gt;\n&lt;p&gt;‘Finished last’ will always be better than ‘Did not finish’, which always trumps ‘Did not start.’&lt;/p&gt;\n&lt;/blockquote&gt;\n&lt;!-- more --&gt;\n&lt;p&gt;I installed WordPress, MySQL, PHP and then never really got anywhere after that.&lt;/p&gt;\n&lt;p&gt;It was time to try something new. Now I have the great pleasure, of launching my site unfinished. Keep on reading if you want the details.&lt;/p&gt;\n&lt;h2 id=\&quot;but-why-even-make-a-blog-\&quot;&gt;But, why even make a blog?&lt;/h2&gt;\n&lt;p&gt;It seems a bit like JavaScript frameworks. Everybody and their dog&amp;#39;s has one of their own.&lt;/p&gt;\n&lt;p&gt;I intend to make my blog a little different. I want to update each article when the time is fit, little more like a wiki than a blog. I realize that this can be hard, and therefore I also Open Sourced my blog.&lt;br&gt;It&amp;#39;s all on GitHub and people are free to make pull-requests to update or add missing information.&lt;/p&gt;\n&lt;h3 id=\&quot;but-that-does-not-really-answer-my-question-\&quot;&gt;But that does not really answer my question...&lt;/h3&gt;\n&lt;p&gt;Okay I want a place to document my front-end findings, while I practice the &lt;strong&gt;art&lt;/strong&gt; of writing.\nAll feedback and blog ideas are welcome.&lt;/p&gt;\n&lt;h2 id=\&quot;how-it-s-made\&quot;&gt;How It&amp;#39;s Made&lt;/h2&gt;\n&lt;p&gt;It&amp;#39;s made using Gulp, Nunjucks, NodeJS and Water. All hosted on GitHub.&lt;/p&gt;\n&lt;p&gt;All posts and pages are just plain markdown files that gets converted to HTML on build. This is also called a &lt;a href=\&quot;https://davidwalsh.name/introduction-static-site-generators\&quot;&gt;Static Generated Site&lt;/a&gt;, you can do it with Jekyll. I really like Jekyll, and took a lot of their ideas but did it all in JavaScript. Why not use metalsmith? It did not fit my needs, I wanted it to be compliant with the gulp ecosystem... this lead me to create &lt;a href=\&quot;https://github.com/Saturate/gulp-water\&quot;&gt;gulp-water&lt;/a&gt;, naming it gulp-water is a misstep, as it works for all things node, it&amp;#39;s just using steams... Maybe one day I will rename it.&lt;/p&gt;\n&lt;p&gt;I&amp;#39;ll cover the pros and cons of a static generated site in a later post.&lt;/p&gt;\n&lt;h2 id=\&quot;the-future\&quot;&gt;The Future&lt;/h2&gt;\n&lt;p&gt;I&amp;#39;ll continue to work on the site, make a design and implement some nice, but missing features. I&amp;#39;m already considering shifting out Nunjucks for (p)react, to do some nice page transitions and client rendering.&lt;/p&gt;\n&quot;,
+	&quot;excerpt&quot;: &quot;This is my new blog that I have had intentions of making, the last many years. A wise man once said\n‘Finished last’ will always be better…&quot;
+}</pre></code>
+
+
 			<div class="footer">
-				<p>© 2016 Allan Kimmer Jensen</p>
+				<p>© 2017 Allan Kimmer Jensen</p>
 			</div>
+
+			
 		</main>
 
 		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -119,7 +509,6 @@ Or well, it’s good for testing some things out with the styling and the markdo
 		<!-- endbuild -->
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 		<script>hljs.initHighlightingOnLoad();</script>
 	</body>
 </html>

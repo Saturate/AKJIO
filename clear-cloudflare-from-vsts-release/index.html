@@ -2,7 +2,7 @@
 <html class="no-js">
 	<head>
 		<meta charset="utf-8">
-		<title>Hello World — AKJ.IO</title>
+		<title>Clear CloudFlare Cache from VSTS — AKJ.IO</title>
 		<meta name="description" content="A website from Allan Kimmer Jensen, mostly about being awesome. Granted there are posts about web development.">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -47,32 +47,38 @@
 		
 		<div class="article__content">
 			<header class="article__header">
-				<h1 itemprop="headline">Hello World</h1>
-				<h3>Just another blog? Or something more?</h3>
+				<h1 itemprop="headline">Clear CloudFlare Cache from VSTS</h1>
+				<h3>Cache everything and purge it when releasing a new version from Visual Studio Team Services</h3>
 				<div class="article__header__metadata">
-					<time itemprop="datePublished" datetime="12 April 2016"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>12 April 2016</time>
+					<time itemprop="datePublished" datetime="2009-10-09"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>12 April 2017</time><br />
+					Last updated: 12 April 2017<br />
 				</div>
 			</header>
 
-			<p>This is my new blog that I have had intentions of making, the last many years. A wise man once said</p>
-<blockquote>
-<p>‘Finished last’ will always be better than ‘Did not finish’, which always trumps ‘Did not start.’</p>
-</blockquote>
-<!-- more -->
-<p>I installed WordPress, MySQL, PHP and then never really got anywhere after that.</p>
-<p>It was time to try something new. Now I have the great pleasure, of launching my site unfinished. Keep on reading if you want the details.</p>
-<h2 id="but-why-even-make-a-blog-">But, why even make a blog?</h2>
-<p>It seems a bit like JavaScript frameworks. Everybody and their dog&#39;s has one of their own.</p>
-<p>I intend to make my blog a little different. I want to update each article when the time is fit, little more like a wiki than a blog. I realize that this can be hard, and therefore I also Open Sourced my blog.<br>It&#39;s all on GitHub and people are free to make pull-requests to update or add missing information.</p>
-<h3 id="but-that-does-not-really-answer-my-question-">But that does not really answer my question...</h3>
-<p>Okay I want a place to document my front-end findings, while I practice the <strong>art</strong> of writing.
-All feedback and blog ideas are welcome.</p>
-<h2 id="how-it-s-made">How It&#39;s Made</h2>
-<p>It&#39;s made using Gulp, Nunjucks, NodeJS and Water. All hosted on GitHub.</p>
-<p>All posts and pages are just plain markdown files that gets converted to HTML on build. This is also called a <a href="https://davidwalsh.name/introduction-static-site-generators">Static Generated Site</a>, you can do it with Jekyll. I really like Jekyll, and took a lot of their ideas but did it all in JavaScript. Why not use metalsmith? It did not fit my needs, I wanted it to be compliant with the gulp ecosystem... this lead me to create <a href="https://github.com/Saturate/gulp-water">gulp-water</a>, naming it gulp-water is a misstep, as it works for all things node, it&#39;s just using steams... Maybe one day I will rename it.</p>
-<p>I&#39;ll cover the pros and cons of a static generated site in a later post.</p>
-<h2 id="the-future">The Future</h2>
-<p>I&#39;ll continue to work on the site, make a design and implement some nice, but missing features. I&#39;m already considering shifting out Nunjucks for (p)react, to do some nice page transitions and client rendering.</p>
+			<p>Recently I created a website for a client, it was a static generated website, a promosite with only one page.</p>
+<p>This gave me some nice opportunities for trying out some nice things. It&#39;s all generated with <a href="https://gulpjs.com">gulp</a>, much like this site - however it&#39;s optimized to be a single page.</p>
+<p>It&#39;s code is in <abbr title="Visual Studio Team Services">VSTS</abbr>, and I set it up to build whenever we create a Pull Request.
+This works very well, and in one week we did around 140 pull requests - with code reviews.</p>
+<p>I found a bug that made it impossible to run Gulp 4 with the Gulp task, and created an <a href="https://github.com/Microsoft/vsts-tasks/issues/3890">issue</a> on the bugtracker. To get around this I created a PowerShell that invokes the local gulp, and that fixed everything.</p>
+<p>Releasing the site was done with <abbr title="Visual Studio Team Services">VSTS</abbr> as well. A small note to take here is due to everything being HTML, it&#39;s set to be cached on Cloudflare for the best performance - to clear this cache, you need to login to cloudflare and press a button or use their API.</p>
+<p>I like automated things and created this script:</p>
+<pre><code class="lang-powershell">$AUTH_USER = &#39;&#39;
+$AUTH_TOKEN = &#39;&#39;
+$ZONE_KEY = &#39;&#39;
+
+$Headers = @{
+    &#39;X-Auth-Key&#39;=$AUTH_TOKEN;
+    &#39;X-Auth-Email&#39;=$AUTH_USER;
+    &#39;Content-Type&#39;=&#39;application/json&#39;
+}
+$Body = @{
+    &#39;purge_everything&#39;=[boolean]&#39;True&#39;
+} | ConvertTo-Json
+
+Invoke-RestMethod https://api.cloudflare.com/client/v4/zones/$ZONE_KEY/purge_cache -Method DELETE -Headers $Headers -Body $Body -ContentType &#39;application/json&#39;
+</code></pre>
+<p>On the <a href="https://api.cloudflare.com/">Cloudflare documentation</a> there is an example using curl, but it all being windows I rewrote that in powershell, and it works just great.</p>
+<p>This script clears everything, I could have extended it, to clear only the changed files from the release, but this seemed like overkill - taking everything into account.</p>
 
 
 			<footer class="article__footer">
