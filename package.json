@@ -52,7 +52,7 @@
     "gulp-uglify": "^2.0.0",
     "gulp-useref": "^3.1.0",
     "gulp-watch": "^4.1.1",
-    "gulp-water": "0.0.2",
+    "gulp-water": "^0.1.3",
     "gulpsmith": "^0.5.5",
     "lodash.assign": "^4.0.2",
     "marked": "^0.3.5",
