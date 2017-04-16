@@ -1,7 +1,8 @@
 {
   "name": "AKJIO",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "The home of Allan Kimmer Jensen",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "test": "gulp build"
