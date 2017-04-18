@@ -39,9 +39,8 @@
 				</ul>
 			</nav>
 		</header>
-		
-		
-		<main>
+
+		<main class="container">
 			
 	<article class="article">
 		
@@ -50,7 +49,8 @@
 				<h1 itemprop="headline">Getting the frontend build right</h1>
 				<h3>A multi part series about the use of gulp in major projects.</h3>
 				<div class="article__header__metadata">
-					<time itemprop="datePublished" datetime="9 March 2015"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>9 March 2015</time>
+					<time itemprop="datePublished" datetime="2009-10-09"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>9 March 2015</time><br />
+					Last updated: 9 March 2015<br />
 				</div>
 			</header>
 
@@ -74,23 +74,18 @@ Writing a script will save you from human errors. It will make you do the fun th
 
 
 			<footer class="article__footer">
-				<a itemprop="discussionUrl" href="#">Show comments...</a>
-<div id="disqus_thread"></div>
+				<a itemprop="discussionUrl" href="?comments=1">Show comments...</a>
+				<div id="disqus_thread"></div>
 <script type="text/javascript">
-	var showComments = document.querySelector('[itemprop="discussionUrl"]');
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'akj';
 
-	showComments.addEventListener('click', function(e) {
-		e.preventDefault();
-		/* * * CONFIGURATION VARIABLES * * */
-	    var disqus_shortname = 'akj';
-
-	    /* * * DON'T EDIT BELOW THIS LINE * * */
-	    (function() {
-	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-	    })();
-	});
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
@@ -101,8 +96,6 @@ Writing a script will save you from human errors. It will make you do the fun th
 			<div class="footer">
 				<p>© 2017 Allan Kimmer Jensen</p>
 			</div>
-
-			
 		</main>
 
 		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -121,10 +114,11 @@ Writing a script will save you from human errors. It will make you do the fun th
 		<!-- endbuild -->
 
 		<!-- build:js /scripts/main.js -->
-		<script src="/scripts/main.js"></script>
+		<!-- <script src="/scripts/main.js"></script> -->
 		<!-- endbuild -->
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 		<script>hljs.initHighlightingOnLoad();</script>
 	</body>
 </html>

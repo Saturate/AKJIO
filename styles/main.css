@@ -388,7 +388,7 @@ a {
 h1 {
   font-size: 48px;
   line-height: 1;
-  margin: 75px 0 0.4em 0; }
+  margin: 75px 0 0 0; }
 
 h2 {
   font-size: 27px; }
@@ -516,7 +516,7 @@ article,
   .article__header h1 {
     font-size: 2.4em;
     line-height: 1;
-    margin: 2em 0 18px 0; }
+    margin: 2em 0 0 0; }
   .article__header h3 {
     color: #727272;
     margin-top: 0; }
@@ -525,19 +525,8 @@ article,
   color: #ccc;
   font-size: 16px; }
 
-.website-intro {
-  background: #e0d6c8;
-  padding: 1px 40px 40px; }
-  .website-intro * {
-    margin-left: auto;
-    margin-right: auto;
-    width: 740px; }
-
 .post {
   border-bottom: #EBF2F6 1px solid; }
-  .post time {
-    color: #8e8d8d;
-    font-size: 15px; }
   .post:after {
     display: block;
     content: "";

@@ -39,60 +39,55 @@
 				</ul>
 			</nav>
 		</header>
-		
-		
-		<main>
+
+		<main class="container">
 			
 	<article class="article">
 		
 		<div class="article__content">
 			<header class="article__header">
 				<h1 itemprop="headline">Hello World</h1>
-				<h3>Just another blog? Or something more?</h3>
+				<h3>Just another blog?</h3>
 				<div class="article__header__metadata">
-					<time itemprop="datePublished" datetime="12 April 2016"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>12 April 2016</time>
+					<time itemprop="datePublished" datetime="2009-10-09"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>12 April 2016</time><br />
+					Last updated: 12 April 2016<br />
 				</div>
 			</header>
 
-			<p>This is my new blog that I have had intentions of making, the last many years. A wise man once said</p>
+			<p>Hello World!  </p>
+<p>This is my new blog that I have had intentions of making, the last many years. A wise man once said</p>
 <blockquote>
 <p>‘Finished last’ will always be better than ‘Did not finish’, which always trumps ‘Did not start.’</p>
 </blockquote>
-<!-- more -->
 <p>I installed WordPress, MySQL, PHP and then never really got anywhere after that.</p>
 <p>It was time to try something new. Now I have the great pleasure, of launching my site unfinished. Keep on reading if you want the details.</p>
 <h2 id="but-why-even-make-a-blog-">But, why even make a blog?</h2>
 <p>It seems a bit like JavaScript frameworks. Everybody and their dog&#39;s has one of their own.</p>
-<p>I intend to make my blog a little different. I want to update each article when the time is fit, little more like a wiki than a blog. I realize that this can be hard, and therefore I also Open Sourced my blog.<br>It&#39;s all on GitHub and people are free to make pull-requests to update or add missing information.</p>
+<p>I intend to make my blog a little different. I want to update each article when the time is fit, little more like a wiki than a blog. I realize that this can be hard, and therefore I also Open-Sourced my blog.<br>It&#39;s all on GitHub and people are free to make pull-requests to update add/or missing information.</p>
 <h3 id="but-that-does-not-really-answer-my-question-">But that does not really answer my question...</h3>
 <p>Okay I want a place to document my front-end findings, while I practice the <strong>art</strong> of writing.
 All feedback and blog ideas are welcome.</p>
 <h2 id="how-it-s-made">How It&#39;s Made</h2>
-<p>It&#39;s made using Gulp, Nunjucks, NodeJS and Water. All hosted on GitHub.</p>
-<p>All posts and pages are just plain markdown files that gets converted to HTML on build. This is also called a <a href="https://davidwalsh.name/introduction-static-site-generators">Static Generated Site</a>, you can do it with Jekyll. I really like Jekyll, and took a lot of their ideas but did it all in JavaScript. Why not use metalsmith? It did not fit my needs, I wanted it to be compliant with the gulp ecosystem... this lead me to create <a href="https://github.com/Saturate/gulp-water">gulp-water</a>, naming it gulp-water is a misstep, as it works for all things node, it&#39;s just using steams... Maybe one day I will rename it.</p>
-<p>I&#39;ll cover the pros and cons of a static generated site in a later post.</p>
+<p>It&#39;s made using Gulp, NodeJS and Metalsmith. All hosted on GitHub.</p>
+<p>All posts and pages are just plain markdown files that gets converted to HTML on build. This is also called a <a href="https://davidwalsh.name/introduction-static-site-generators">Static Generated Site</a>, you can do it with Jekyll. I really like Jekyll, and took a lot of their ideas but did it all in JavaScript with Metalsmith. Why metalsmith and not something else? Well there are thousand things that could do this, I just picked one that fitted my needs.</p>
+<p>I&#39;ll cover the pros and cons of a static generated site in a later post. And update this post</p>
 <h2 id="the-future">The Future</h2>
-<p>I&#39;ll continue to work on the site, make a design and implement some nice, but missing features. I&#39;m already considering shifting out Nunjucks for (p)react, to do some nice page transitions and client rendering.</p>
+<p>I&#39;ll continue to work on the site, make a design and implement some nice but missing features.</p>
 
 
 			<footer class="article__footer">
-				<a itemprop="discussionUrl" href="#">Show comments...</a>
-<div id="disqus_thread"></div>
+				<a itemprop="discussionUrl" href="?comments=1">Show comments...</a>
+				<div id="disqus_thread"></div>
 <script type="text/javascript">
-	var showComments = document.querySelector('[itemprop="discussionUrl"]');
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'akj';
 
-	showComments.addEventListener('click', function(e) {
-		e.preventDefault();
-		/* * * CONFIGURATION VARIABLES * * */
-	    var disqus_shortname = 'akj';
-
-	    /* * * DON'T EDIT BELOW THIS LINE * * */
-	    (function() {
-	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-	    })();
-	});
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
@@ -103,8 +98,6 @@ All feedback and blog ideas are welcome.</p>
 			<div class="footer">
 				<p>© 2017 Allan Kimmer Jensen</p>
 			</div>
-
-			
 		</main>
 
 		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -123,10 +116,11 @@ All feedback and blog ideas are welcome.</p>
 		<!-- endbuild -->
 
 		<!-- build:js /scripts/main.js -->
-		<script src="/scripts/main.js"></script>
+		<!-- <script src="/scripts/main.js"></script> -->
 		<!-- endbuild -->
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 		<script>hljs.initHighlightingOnLoad();</script>
 	</body>
 </html>
