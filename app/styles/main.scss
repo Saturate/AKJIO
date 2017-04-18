@@ -5,6 +5,8 @@
 
 @import "_normalize.scss";
 
+$siteWidth: 740px;
+
 .browsehappy {
 	margin: 0.2em 0;
 	background: #ccc;
@@ -37,7 +39,7 @@ a {
 h1 {
 	font-size: 48px;
 	line-height: 1;
-	margin: 75px 0 0 0;
+	margin: 75px 0 0.4em 0;
 }
 h2 {
 	font-size: 27px;
@@ -87,7 +89,7 @@ h3 {
 main {
 	margin: 0 auto;
 	padding: 0 1em;
-	max-width: 740px;
+	max-width: $siteWidth;
 }
 
 article,
@@ -112,7 +114,7 @@ article,
 	h1 {
 		font-size: 2.4em;
 		line-height: 1;
-		margin: 2em 0 0 0;
+		margin: 2em 0 18px 0;
 	}
 	h3 {
 		color: #727272;
@@ -124,8 +126,22 @@ article,
 	font-size: 16px;
 }
 
+.website-intro {
+	background: #e0d6c8;
+	padding: 1px 40px 40px;
+	* {
+		margin-left: auto;
+		margin-right: auto;
+		width: $siteWidth;
+	}
+}
+
 .post {
 	border-bottom: #EBF2F6 1px solid;
+	time {
+		color: #8e8d8d;
+		font-size: 15px;
+	}
 	&:after {
 		display: block;
 		content: "";

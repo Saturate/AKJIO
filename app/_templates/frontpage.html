@@ -2,10 +2,13 @@
 
 {% block title %}{% endblock %}
 
-{% block content %}
-	{{ contents | safe }}
+{% block beforeContent %}
+	<div class="website-intro">
+		{{ contents | safe }}
+	</div>
+{% endblock %}
 
-	<h2>List of awesome blogposts:</h2>
+{% block content %}
 
 	{% for post in water('collection').get('posts') -%}
 		<article class="post" itemscope="" itemtype="http://schema.org/BlogPosting" role="article">

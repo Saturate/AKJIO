@@ -10,15 +10,13 @@
 				<h1 itemprop="headline">{{ title }}</h1>
 				<h3>{{ subtitle }}</h3>
 				<div class="article__header__metadata">
-					<time itemprop="datePublished" datetime="2009-10-09"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>{{ date | date('Y-m-d') }}</time><br />
-					Last updated: {{ date | date('Y-m-d') }}<br />
+					<time itemprop="datePublished" datetime="{{ date | date('YYYY-mm-dd') }}"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>{{ date | date('Y-m-d') }}</time>
 				</div>
 			</header>
 
 			{{ contents | safe }}
 
 			<footer class="article__footer">
-				<a itemprop="discussionUrl" href="?comments=1">Show comments...</a>
 				{% include "./comments.html" %}
 			</footer>
 		</div>
