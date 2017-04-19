@@ -2,7 +2,7 @@
 title: Clear CloudFlare Cache from VSTS
 subtitle: Cache everything and purge it when releasing a new version from Visual Studio Team Services
 collection: posts
-date: 2017-04-12
+date: 2017-04-16
 template: post.html
 tags:
  - powershell
