@@ -2,8 +2,8 @@
 title: Hello World
 subtitle: Just another blog? Or something more?
 collection: posts
-date: 2016-04-12
-updated:  2016-04-12
+date: 2017-04-14
+updated:  2017-04-14
 template: post.html
 ---
 
