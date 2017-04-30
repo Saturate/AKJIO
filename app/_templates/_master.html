@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html class="no-js">
 	<head>
 		<meta charset="utf-8">
@@ -7,22 +7,23 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		{#
-			Place favicon.ico and apple-touch-icon.png in the root directory
+			Place favicon.ico and apple-touch-icon.png in the app/meta directory,
+			These will be compied to root.
 		#}
 
 		<link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
 		<!-- build:css /styles/main.css -->
-		<!-- bower:css -->
-		<!-- endbower -->
 		<link rel="stylesheet" href="/styles/main.css">
-
 		<!-- endbuild -->
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
 
 		<!-- build:js /scripts/vendor/modernizr.js -->
 		<!-- endbuild -->
+
+		{% block head %}
+		{% endblock %}
 	</head>
 	<body>
 		<header class="header">
@@ -53,20 +54,7 @@
 			{# include "../components/footer.njk" #}
 		</main>
 
-		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-		<script>
-			(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-			function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-			e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-			e.src='//www.google-analytics.com/analytics.js';
-			r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-			ga('create','UA-16106069-1');ga('send','pageview');
-		</script>
-
-		<!-- build:js /scripts/vendor.js -->
-		<!-- bower:js -->
-		<!-- endbower -->
-		<!-- endbuild -->
+		{% include "partials/analytics.html" %}
 
 		<!-- build:js /scripts/main.js -->
 		<!-- <script src="/scripts/main.js"></script> -->
