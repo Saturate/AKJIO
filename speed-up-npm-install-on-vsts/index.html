@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html class="no-js">
 	<head>
 		<meta charset="utf-8">
@@ -11,16 +11,16 @@
 		<link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
 		<!-- build:css /styles/main.css -->
-		<!-- bower:css -->
-		<!-- endbower -->
 		<link rel="stylesheet" href="/styles/main.css">
-
 		<!-- endbuild -->
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
 
 		<!-- build:js /scripts/vendor/modernizr.js -->
 		<!-- endbuild -->
+
+		
+		
 	</head>
 	<body>
 		<header class="header">
@@ -54,22 +54,25 @@
 				</div>
 			</header>
 
-			<p>This really bugged me, and I investigated it.<br>It turns our I&#39;m not the only one having this issue.</p>
+			<p>My NPM build times were slow. The npm task alone were taking 75% of the totalt build time. I felt that this was too much so I investigated it a bit more.<br>It turns out I&#39;m not the only one having issues.</p>
+<h2 id="solution-1-run-your-own-build-agent">Solution 1: Run your own build agent</h2>
 <p>Now you could run your own build agent and cache all of the modules there, however if you are like me using Hosted agents, this is not an option.   </p>
-<p>There are mumultipleltrple issues regarding this on the different platforms, like this one <a href="https://github.com/Microsoft/vsts-tasks/issues/553">https://github.com/Microsoft/vsts-tasks/issues/553</a> on github.<br>However the solutions mostly rely on you having an Agent yourself, or on Microsoft doing internal caching for their Hosted network.   </p>
+<h2 id="solution-2-wait-for-microsoft-to-fix-their-things">Solution 2: Wait for Microsoft to fix their things</h2>
+<p>There are multiple issues regarding this on the different platforms, like this one <a href="https://github.com/Microsoft/vsts-tasks/issues/553">https://github.com/Microsoft/vsts-tasks/issues/553</a> on github.<br>However the solutions mostly rely on you having an Agent yourself, or on Microsoft doing internal caching for their Hosted network.   </p>
+<h2 id="solution-3-replace-npm-with-yarn-on-vsts">Solution 3: Replace npm with Yarn on VSTS</h2>
 <p>But one things remains, and that&#39;s what I did <a href="https://marketplace.visualstudio.com/items?itemName=geeklearningio.gl-vsts-tasks-yarn">Install Yarn for VSTS</a>.<br>This enables you to use <a href="https://yarnpkg.com/">Yarn</a> instead of NPM, this should give some speed boosts.</p>
 <p>Installing dependencies:</p>
 <ul>
-<li>NPM: 198 seconds </li>
+<li>NPM: 198 seconds</li>
 <li>YARN: 56 seconds</li>
 </ul>
 <p>Full build:</p>
 <ul>
-<li>With NPM: 264 seconds </li>
+<li>With NPM: 264 seconds</li>
 <li>With YARN: 112 seconds</li>
 </ul>
 <p>This is a considerable speed up for my builds, and a very easy one as well.<br>Just replace the <code>npm install</code> task on VSTS with <code>Yarn</code> and you are finished, nothing else needs to be done.</p>
-<p>This will work for most projects, on other CI-servies, but some have already cached the modules making your builds faster.<br>Until microsoft adds this, this is a great improvement.</p>
+<p>This will work for most projects, on other CI-servies, but some have already cached the modules making your builds faster.<br>Until Microsoft adds this, this is a great improvement.</p>
 
 
 			<footer class="article__footer">
@@ -104,20 +107,14 @@
 			
 		</main>
 
-		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
 		<script>
-			(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-			function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-			e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-			e.src='//www.google-analytics.com/analytics.js';
-			r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-			ga('create','UA-16106069-1');ga('send','pageview');
-		</script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};
+ga('create', 'UA-16106069-1', 'auto');
+ga('set', 'transport', 'beacon');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
 
-		<!-- build:js /scripts/vendor.js -->
-		<!-- bower:js -->
-		<!-- endbower -->
-		<!-- endbuild -->
 
 		<!-- build:js /scripts/main.js -->
 		<!-- <script src="/scripts/main.js"></script> -->

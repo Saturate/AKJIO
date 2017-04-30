@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html class="no-js">
 	<head>
 		<meta charset="utf-8">
@@ -11,16 +11,16 @@
 		<link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
 
 		<!-- build:css /styles/main.css -->
-		<!-- bower:css -->
-		<!-- endbower -->
 		<link rel="stylesheet" href="/styles/main.css">
-
 		<!-- endbuild -->
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
 
 		<!-- build:js /scripts/vendor/modernizr.js -->
 		<!-- endbuild -->
+
+		
+		
 	</head>
 	<body>
 		<header class="header">
@@ -50,6 +50,12 @@
 			
 
 	<article class="post" itemscope="" itemtype="http://schema.org/BlogPosting" role="article">
+			<h1><a href="speed-up-npm-install-on-vsts">Speed Up NPM INSTALL on Visual Studio Team Services</a></h1>
+			<time datetime="20 April 2017">20 April 2017</time>
+			<p itemprop="description">
+				My NPM build times were slow. The npm task alone were taking 75% of the totalt build time. I felt that this was too much so I investigated… <a class="read-more" href="speed-up-npm-install-on-vsts">»</a>
+			</p>
+		</article><article class="post" itemscope="" itemtype="http://schema.org/BlogPosting" role="article">
 			<h1><a href="clear-cloudflare-cache-from-vsts-release">Clear CloudFlare Cache from VSTS</a></h1>
 			<time datetime="16 April 2017">16 April 2017</time>
 			<p itemprop="description">
@@ -62,12 +68,6 @@
 				This is my new blog that I have had intentions of making, the last many years. A wise man once said
 ‘Finished last’ will always be better… <a class="read-more" href="hello-world">»</a>
 			</p>
-		</article><article class="post" itemscope="" itemtype="http://schema.org/BlogPosting" role="article">
-			<h1><a href="speed-up-npm-install-on-vsts">Speed Up NPM INSTALL on Visual Studio Team Services</a></h1>
-			<time datetime="20 April 2017">20 April 2017</time>
-			<p itemprop="description">
-				This really bugged me, and I investigated it.It turns our I&#39;m not the only one having this issue. <a class="read-more" href="speed-up-npm-install-on-vsts">»</a>
-			</p>
 		</article>
 
 
@@ -78,20 +78,14 @@
 			
 		</main>
 
-		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
 		<script>
-			(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-			function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-			e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-			e.src='//www.google-analytics.com/analytics.js';
-			r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-			ga('create','UA-16106069-1');ga('send','pageview');
-		</script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};
+ga('create', 'UA-16106069-1', 'auto');
+ga('set', 'transport', 'beacon');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
 
-		<!-- build:js /scripts/vendor.js -->
-		<!-- bower:js -->
-		<!-- endbower -->
-		<!-- endbuild -->
 
 		<!-- build:js /scripts/main.js -->
 		<!-- <script src="/scripts/main.js"></script> -->
