@@ -27,7 +27,7 @@ html, body {
 body {
 	font-family: 'Droid Serif', serif;
 	font-size: 20px;
-	line-height: 1.42857;
+	line-height: 1.58;
 	color: #3A4145;
 	overflow-y: scroll; // Avoid the page flickers when content goes from long to short.
 }
@@ -38,7 +38,7 @@ a {
 
 h1 {
 	font-size: 48px;
-	line-height: 1;
+    line-height: 1.187;
 	margin: 75px 0 0.4em 0;
 }
 h2 {
@@ -113,7 +113,6 @@ article,
 	margin-bottom: 2em;
 	h1 {
 		font-size: 2.4em;
-		line-height: 1;
 		margin: 2em 0 18px 0;
 	}
 	h3 {
