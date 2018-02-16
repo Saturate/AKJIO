@@ -1,8 +1,6 @@
 language: node_js
 node_js:
   - "node"
-before_script:
-  - npm install -g gulp-cli
 after_success:
-  - "gulp deploy"
+  - "npm run deploy"
   - "curl -X DELETE \"https://api.cloudflare.com/client/v4/zones/63189871c69f2dfb2cc082ec7cc657cc/purge_cache\" -H \"X-Auth-Email: CF_AUTH_MAIL\" -H \"X-Auth-Key: $CF_AUTH_KEY\" -H \"Content-Type: application/json\" --data '{\"purge_everything\":true}'"

@@ -5,7 +5,9 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "test": "gulp build"
+    "build": "gulp build",
+    "test": "gulp build",
+    "deploy": "gulp deploy"
   },
   "repository": {
     "type": "git",
