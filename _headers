@@ -1,0 +1,5 @@
+/*
+  X-XSS-Protection: 1; mode=block
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: no-referrer-when-downgrade
+  Content-Security-Policy: default-src 'self' *.akj.io googleapis.com cdnjs.cloudflare.com google-analytics.com; upgrade-insecure-requests; report-uri https://e3710ad22de216c6539627c47ee49254.report-uri.com/r/d/csp/enforce;
