@@ -31,7 +31,7 @@
     "del": "^3.0.0",
     "gh-pages": "^0.12.0",
     "gray-matter": "^4.0.1",
-    "gulp": "^4.0.0",
+    "gulp": "^4.0.2",
     "gulp-cache": "^1.0.2",
     "gulp-coloor": "^0.2.1",
     "gulp-csso": "^3.0.0",
