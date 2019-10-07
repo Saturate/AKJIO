@@ -41,7 +41,7 @@
     "gulp-front-matter": "^1.2.2",
     "gulp-htmlmin": "^4.0.0",
     "gulp-if": "^2.0.0",
-    "gulp-imagemin": "^4.1.0",
+    "gulp-imagemin": "^6.1.1",
     "gulp-load-plugins": "^1.0.0",
     "gulp-open": "^2.1.0",
     "gulp-plumber": "^1.0.0",
