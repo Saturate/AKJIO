@@ -7,4 +7,4 @@ todo: Add http://www.chartjs.org/docs/#radar-chart
 ---
 
 # Welcome!
-I'm Allan Kimmer Jensen, I work for Pentia A/S. I do crazy stuff with JavaScript and other frontend technologies. [Read More](/about-me).
+I'm Allan Kimmer Jensen. I do crazy stuff with JavaScript and other frontend technologies. [Read More](/about-me).
