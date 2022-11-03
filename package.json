@@ -1,66 +1,23 @@
 {
-  "name": "AKJIO",
-  "version": "2.0.0",
+  "name": "akj.io",
+  "version": "3.0.0",
   "description": "The home of Allan Kimmer Jensen",
   "private": true,
-  "main": "index.js",
   "scripts": {
-    "build": "gulp build",
-    "test": "gulp build",
-    "deploy": "gulp deploy"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Saturate/AKJIO.git"
-  },
-  "keywords": [
-    "blog",
-    "Allan",
-    "Kimmer",
-    "Jensen",
-    "gulp"
-  ],
-  "author": "Allan Kimmer Jensen",
-  "bugs": {
-    "url": "https://github.com/Saturate/AKJIO/issues"
-  },
-  "homepage": "https://github.com/Saturate/AKJIO",
   "dependencies": {
-    "autoprefixer": "^6.7.7",
-    "browser-sync": "^2.23.6",
-    "del": "^3.0.0",
-    "gh-pages": "^0.12.0",
-    "gray-matter": "^4.0.1",
-    "gulp": "^4.0.0",
-    "gulp-cache": "^1.0.2",
-    "gulp-coloor": "^0.2.1",
-    "gulp-csso": "^3.0.0",
-    "gulp-debug": "^4.0.0",
-    "gulp-eslint": "^5.0.0",
-    "gulp-filter": "^5.0.0",
-    "gulp-front-matter": "^1.2.2",
-    "gulp-htmlmin": "^4.0.0",
-    "gulp-if": "^2.0.0",
-    "gulp-imagemin": "^4.1.0",
-    "gulp-load-plugins": "^1.0.0",
-    "gulp-open": "^2.1.0",
-    "gulp-plumber": "^1.0.0",
-    "gulp-postcss": "^6.4.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-rimraf": "^0.2.0",
-    "gulp-sass": "^4.0.1",
-    "gulp-size": "^3.0.0",
-    "gulp-sourcemaps": "^2.2.0",
-    "gulp-tap": "^1.0.1",
-    "gulp-uglify": "^3.0.0",
-    "gulp-useref": "^3.1.4",
-    "gulp-watch": "^5.0.0",
-    "gulp-water": "^0.2.5",
-    "gulpsmith": "^0.6.0",
-    "lodash.assign": "^4.0.2",
-    "marked": "^0.4.0",
-    "nunjucks": "^3.0.1",
-    "through2": "^2.0.1",
-    "wiredep": "^4.0.0"
+    "@types/node": "18.11.9",
+    "@types/react": "18.0.24",
+    "@types/react-dom": "18.0.8",
+    "eslint": "8.26.0",
+    "eslint-config-next": "13.0.1",
+    "next": "13.0.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "4.8.4"
   }
 }
