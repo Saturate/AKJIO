@@ -3,6 +3,7 @@ import Link from "next/link";
 import styles from "../styles/Home.module.scss";
 
 export default function Home() {
+	console.log(styles);
 	return (
 		<div className={styles.page}>
 			<Head>
@@ -13,7 +14,7 @@ export default function Home() {
 
 			<header className={styles.websitetop}>
 				<section className={styles.content}>
-					<h2>
+					<h2 className={styles.headerTitle}>
 						<Link href={"/"}>AKJ</Link>
 					</h2>
 					<nav className={styles.nav}>

@@ -18,16 +18,21 @@ export default function RootLayout({
 		<html lang="en">
 			<body className={styles.page}>
 				<header className={styles.websitetop}>
-					<section className={styles.content}>
-						<h2>
-							<Link href={"/"}>Allan Kimmer Jensen</Link>
+					<section className={styles.header}>
+						<h2 className={styles.headerTitle}>
+							<Link href={"/"}>AKJ.IO</Link>
+							<span>Allan Kimmer Jensen</span>
 						</h2>
 						<nav className={styles.nav}>
-							<Link href={"/words"}>
+							<Link href={"/posts"}>
 								Posts <span>Solutions, Words, toughts</span>
 							</Link>
 							<Link href={"/about"}>
-								About <span></span>
+								About <span>Stats, Level and Skills!</span>
+							</Link>
+							<Link href={"/labs"}>
+								Labs
+								<span>Insane Experiments, fun code, hacks</span>
 							</Link>
 						</nav>
 					</section>

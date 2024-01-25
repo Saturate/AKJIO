@@ -3,15 +3,13 @@ title: Hello World
 subtitle: Just another blog? Or something more?
 collection: posts
 date: 2017-04-14
-updated:  2017-04-14
+updated: 2017-04-14
 template: post.html
 ---
 
 This is my new blog that I have had intentions of making, the last many years. A wise man once said
 
 > ‘Finished last’ will always be better than ‘Did not finish’, which always trumps ‘Did not start.’
-
-<!-- more -->
 
 I installed WordPress, MySQL, PHP and then never really got anywhere after that.
 
@@ -21,7 +19,7 @@ It was time to try something new. Now I have the great pleasure, of launching my
 
 It seems a bit like JavaScript frameworks. Everybody and their dog's has one of their own.
 
-I intend to make my blog a little different. I want to update each article when the time is fit, little more like a wiki than a blog. I realize that this can be hard, and therefore I also Open Sourced my blog.   
+I intend to make my blog a little different. I want to update each article when the time is fit, little more like a wiki than a blog. I realize that this can be hard, and therefore I also Open Sourced my blog.  
 It's all on GitHub and people are free to make pull-requests to update or add missing information.
 
 ### But that does not really answer my question...

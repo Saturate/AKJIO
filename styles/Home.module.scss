@@ -22,6 +22,22 @@
 	flex: 1;
 }
 
+.header {
+	margin: 0 auto;
+	max-width: 600px;
+	flex: 1;
+	text-align: center;
+}
+.headerTitle {
+	font-size: 3.5em;
+	span {
+		margin-top: -13px;
+		display: block;
+		font-size: 0.3em;
+		font-weight: 400;
+	}
+}
+
 .main {
 	background: #5e7eb5;
 	background: rgb(94, 126, 181);
@@ -42,12 +58,37 @@
 	align-items: center;
 }
 
+.nav {
+	color: #141414;
+	display: flex;
+	font-size: 1.3em;
+}
+
 .nav a {
 	text-decoration: none;
 	display: inline-block;
 	padding: 10px 20px;
 	text-align: center;
 	font-size: 0.9em;
+	flex: 1;
+	&:after {
+		padding: 4px;
+		border-bottom: 1px solid #e0e0e0;
+		content: " ";
+		display: block;
+		width: 10%;
+		margin: auto;
+	}
+	&:hover,
+	&:focus {
+		text-decoration: none;
+		background-color: rgba(0, 0, 0, 0.08);
+	}
+	span {
+		font-size: 0.6em;
+		clear: both;
+		display: block;
+	}
 }
 
 .footer {
