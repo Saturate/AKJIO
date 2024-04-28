@@ -15,32 +15,34 @@
     "deploy:vercel": "vercel"
   },
   "dependencies": {
-    "@mdx-js/loader": "^3.0.0",
-    "@mdx-js/react": "^3.0.0",
-    "@next/mdx": "^14.0.3",
-    "@types/mdx": "^2.0.10",
+    "@mdx-js/loader": "^3.0.1",
+    "@mdx-js/react": "^3.0.1",
+    "@next/mdx": "^14.2.3",
+    "@types/mdx": "^2.0.13",
     "@types/node": "20.8.4",
     "@types/react": "18.2.27",
     "@types/react-dom": "18.2.12",
-    "date-fns": "^3.3.1",
+    "date-fns": "^3.6.0",
     "eslint": "8.51.0",
     "eslint-config-next": "14.1.0",
-    "framer-motion": "^9.0.0",
+    "framer-motion": "^9.1.7",
     "next": "14.1.0",
     "next-mdx-remote": "^4.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "sass": "^1.0.0",
-    "typescript": "5.2.2"
+    "rehype-pretty-code": "^0.13.1",
+    "sass": "^1.75.0",
+    "typescript": "5.2.2",
+    "unist-util-remove": "^4.0.0"
   },
   "devDependencies": {
-    "@tanstack/react-query": "^4.0.0",
-    "@tanstack/react-query-devtools": "^4.0.0",
-    "eslint-config-prettier": "^8.0.0",
-    "husky": ">=7",
-    "lint-staged": ">=10",
-    "prettier": "^2.0.0",
-    "vercel": "^30.2.2"
+    "@tanstack/react-query": "^4.36.1",
+    "@tanstack/react-query-devtools": "^4.36.1",
+    "eslint-config-prettier": "^8.10.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "prettier": "^2.8.8",
+    "vercel": "^30.2.3"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
