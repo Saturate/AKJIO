@@ -58,7 +58,7 @@ export default function RootLayout({
 				</main>
 
 				<footer className={styles.footer}>
-					Copyright 2023 - Allan Kimmer Jensen
+					Copyright 2025 - Allan Kimmer Jensen
 				</footer>
 			</body>
 		</html>

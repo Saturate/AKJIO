@@ -15,8 +15,8 @@
     "deploy:vercel": "vercel"
   },
   "dependencies": {
-    "@mdx-js/loader": "^3.0.1",
-    "@mdx-js/react": "^3.0.1",
+    "@mdx-js/loader": "^3.1.0",
+    "@mdx-js/react": "^3.1.0",
     "@next/mdx": "^14.2.3",
     "@types/mdx": "^2.0.13",
     "@types/node": "20.8.4",
@@ -26,13 +26,13 @@
     "eslint": "8.51.0",
     "eslint-config-next": "14.1.0",
     "framer-motion": "^9.1.7",
-    "next": "14.1.0",
-    "next-mdx-remote": "^4.4.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "rehype-pretty-code": "^0.13.1",
+    "next": "15.2.2",
+    "next-mdx-remote": "^5.0.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "rehype-pretty-code": "^0.14.0",
     "sass": "^1.75.0",
-    "typescript": "5.2.2",
+    "typescript": "5.8.2",
     "unist-util-remove": "^4.0.0"
   },
   "devDependencies": {
@@ -46,5 +46,6 @@
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
-  }
+  },
+  "packageManager": "pnpm@10.6.2+sha512.47870716bea1572b53df34ad8647b42962bc790ce2bf4562ba0f643237d7302a3d6a8ecef9e4bdfc01d23af1969aa90485d4cebb0b9638fa5ef1daef656f6c1b"
 }
