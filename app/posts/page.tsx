@@ -35,11 +35,7 @@ function ArticleExcerpt({
 	);
 }
 
-export default async function TestPage({
-	params,
-}: {
-	params: { slug: string };
-}) {
+export default async function PostsOverviewPage({}) {
 	const { postIds } = await getPostsIds();
 
 	const teasers = await Promise.all(
