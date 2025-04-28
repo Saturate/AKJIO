@@ -1,15 +1,17 @@
 import { getPost } from "@/app/actions";
 
-export default async function TestPage({
-	params,
-}: {
-	params: { slug: string };
-}) {
-	const { content, frontmatter } = await getPost(params.slug);
+type PageProps = Readonly<{
+	params: Promise<{ slug: string; lang: string }>;
+	searchParams: Promise<{ [key: string]: string }>;
+}>;
+
+export default async function TestPage({ params }: PageProps) {
+	const slug = (await params).slug;
+	const { content, frontmatter } = await getPost(slug);
 
 	return (
 		<>
-			{params.slug}
+			{slug}
 			<h1>{frontmatter.title}</h1>
 			{content}
 		</>
