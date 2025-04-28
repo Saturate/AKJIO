@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = {
 	title: "AKJ.IO",
@@ -61,6 +62,7 @@ export default function RootLayout({
 					Copyright 2025 - Allan Kimmer Jensen
 				</footer>
 			</body>
+			<SpeedInsights />
 		</html>
 	);
 }
