@@ -17,14 +17,14 @@ export async function getPost(id: string) {
 
 	// Some old blogs (well not many), use .md ext check if it exists
 	const postFileExt = ["md", "mdx"].find((ext) => {
-		return fs.existsSync(`${postPath}.${ext}`);
+		console.log(path.join(process.cwd(), `./${postPath}.${ext}`));
+
+		return fs.existsSync(path.join(process.cwd(), `./${postPath}.${ext}`));
 	});
 
 	if (!postFileExt) {
 		notFound();
 	}
-
-	console.log(path.join(process.cwd(), `./${postPath}.${postFileExt}`));
 
 	const postFile = fs.readFileSync(
 		path.join(process.cwd(), `./${postPath}.${postFileExt}`),
