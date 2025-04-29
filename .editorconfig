@@ -5,7 +5,6 @@
 root = true
 
 [*]
-
 # Change these settings to your own preference
 indent_style = tab
 indent_size = 4
@@ -20,6 +19,6 @@ insert_final_newline = true
 trim_trailing_whitespace = false
 
 # Matches the exact files either package.json or .travis.yml
-[{package.json,.travis.yml}]
+[{package.json,.travis.yml,.ci.yml}]
 indent_style = space
 indent_size = 2

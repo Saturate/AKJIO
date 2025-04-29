@@ -13,11 +13,11 @@ A plugin for NemID. Now you can login the cool way!
 GitHub: https://github.com/Saturate/NemTerminal
 
 ## SongPopper
-A Chrome extension. It intercepts data requests and display's the correct awnser to the user, makes it really easy to win.
+A Chrome extension. It intercepts data requests and display's the correct anwser to the user, makes it really easy to win.
 They should really improve on how they handle their data.
 
-Google Store: https://chrome.google.com/webstore/detail/songpopper/ggajjiolijnoobokjaghfjhibpofamhh
-GitHub: https://github.com/Saturate/SongPopper
+- [Google Store](https://chrome.google.com/webstore/detail/songpopper/ggajjiolijnoobokjaghfjhibpofamhh) 
+- [Github](https://github.com/Saturate/SongPopper]) 
 
 ## LikeJacker
 It's a jQuery plugin for LikeJacking Facebook pages.
