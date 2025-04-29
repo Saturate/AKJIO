@@ -7,10 +7,12 @@ template: default.html
 
 This is a collection of what I use. I'm not sure why I like the idea, but I do so here it is.
 
-## Web Development
+## Development
 
--   Cmder, the windows command line is bad - this makes it better.
--   Atom, my primary editor
+I'm using all the operating systems, MacOS, Windows and Linux. But here are some things that I enjoy:
+
+-   [Cmder](https://cmder.app/), the windows command line is bad - this makes it better.
+-   Signal: the best messaging platform IMO, even my mom uses it.
 
 ## Photoghrapy
 
