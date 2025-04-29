@@ -32,7 +32,6 @@ export async function getPost(id: string) {
 		"utf8"
 	);
 
-	// Optionally provide a type for your frontmatter object
 	const { content, frontmatter } = await compileMDX<FrontmatterType>({
 		source: postFile,
 		options: { parseFrontmatter: true },
