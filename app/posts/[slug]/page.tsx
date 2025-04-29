@@ -5,14 +5,14 @@ type PageProps = Readonly<{
 	searchParams: Promise<{ [key: string]: string }>;
 }>;
 
-export default async function TestPage({ params }: PageProps) {
+export default async function BlogPostPage({ params }: PageProps) {
 	const slug = (await params).slug;
 	const { content, frontmatter } = await getPost(slug);
 
 	return (
 		<>
-			{slug}
 			<h1>{frontmatter.title}</h1>
+			<h2>{frontmatter.subtitle}</h2>
 			{content}
 		</>
 	);

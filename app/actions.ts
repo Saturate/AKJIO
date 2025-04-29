@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
 
@@ -12,18 +13,23 @@ const POST_CONTENT_PATH = "content/posts";
 
 export async function getPost(id: string) {
 	"use server";
-	const path = `${POST_CONTENT_PATH}/${id}/${id}`;
+	const postPath = `${POST_CONTENT_PATH}/${id}/${id}`;
 
 	// Some old blogs (well not many), use .md ext check if it exists
 	const postFileExt = ["md", "mdx"].find((ext) => {
-		return fs.existsSync(`${path}.${ext}`);
+		console.log(path.join(process.cwd(), `./${postPath}.${ext}`));
+
+		return fs.existsSync(path.join(process.cwd(), `./${postPath}.${ext}`));
 	});
 
 	if (!postFileExt) {
 		notFound();
 	}
 
-	const postFile = fs.readFileSync(`${path}.${postFileExt}`, "utf8");
+	const postFile = fs.readFileSync(
+		path.join(process.cwd(), `./${postPath}.${postFileExt}`),
+		"utf8"
+	);
 
 	// Optionally provide a type for your frontmatter object
 	const { content, frontmatter } = await compileMDX<FrontmatterType>({
