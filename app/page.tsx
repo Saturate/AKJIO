@@ -1,6 +1,4 @@
-import { PageProps } from "./types";
-
-export async function generateMetadata(props: Readonly<PageProps>) {
+export async function generateMetadata() {
 	return {
 		title: "AKJ.IO - Home of Allan Kimmer Jensen",
 	};
