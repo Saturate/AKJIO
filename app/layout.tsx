@@ -1,5 +1,10 @@
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Jersey_25 } from "next/font/google";
+import styles from "../styles/Home.module.scss";
+import "../styles/global-styles.scss";
+import Navigation from "@/components/Navigation/Navigation";
+import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
 
 const font = Jersey_25({
 	subsets: ["latin"],
@@ -12,12 +17,6 @@ export const metadata = {
 	title: "AKJ.IO",
 	description: "Allan Kimmer Jensen",
 };
-
-import styles from "../styles/Home.module.scss";
-
-import "../styles/global-styles.scss";
-import Navigation from "@/components/Navigation/Navigation";
-import Header from "@/components/Header/Header";
 
 export default function RootLayout({
 	children,
@@ -35,9 +34,7 @@ export default function RootLayout({
 					<section className={styles.content}>{children}</section>
 				</main>
 
-				<footer className={styles.footer}>
-					Copyright 2025 - Allan Kimmer Jensen
-				</footer>
+				<Footer />
 			</body>
 			<SpeedInsights />
 		</html>
