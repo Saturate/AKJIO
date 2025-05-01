@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Jersey_25 } from "next/font/google";
 
