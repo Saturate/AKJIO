@@ -5,42 +5,10 @@
 	flex-direction: column;
 }
 
-.websitetop {
-	background: #8fb8ea;
-	min-height: 100px;
-}
-
-.waterline {
-	height: 215px;
-	margin-top: -60px;
-	overflow: hidden;
-	background: url(/Ocean.png) 0% 0% repeat-x;
-}
-
 .content {
 	margin: 0 auto;
 	max-width: 600px;
 	flex: 1;
-}
-
-.header {
-	margin: 0 auto;
-	max-width: 600px;
-	flex: 1;
-	text-align: center;
-}
-.headerTitle {
-	font-family: var(--font-jersey-25);
-	font-size: 4.5em;
-	margin: 0.4em;
-	color: #fbf1f1;
-	text-shadow: 3px 3px 2px #0000002e;
-	span {
-		margin-top: -26px;
-		display: block;
-		font-size: 0.3em;
-		font-weight: 400;
-	}
 }
 
 .main {
@@ -62,42 +30,6 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-}
-
-.nav {
-	font-family: var(--font-jersey-25);
-	color: #fbf1f1;
-	display: flex;
-	font-size: 1.3em;
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.09);
-}
-
-.nav a {
-	text-decoration: none;
-	display: inline-block;
-	padding: 10px 20px;
-	text-align: center;
-	font-size: 1.1em;
-	flex-direction: column;
-	flex: 1;
-	line-height: 1;
-	&:after {
-		padding: 4px;
-		border-bottom: 1px solid #e0e0e0;
-		content: " ";
-		display: block;
-		width: 10%;
-		margin: auto;
-	}
-	&:hover,
-	&:focus {
-		text-decoration: none;
-		background-color: rgba(0, 0, 0, 0.08);
-	}
-	span {
-		font-size: 0.6em;
-		display: block;
-	}
 }
 
 .footer {
