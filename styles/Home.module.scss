@@ -30,11 +30,13 @@
 	text-align: center;
 }
 .headerTitle {
-	font-size: 3.5em;
+	font-family: var(--font-jersey-25);
+	font-size: 4.5em;
+	margin: 0.4em;
 	color: #fbf1f1;
 	text-shadow: 3px 3px 2px #0000002e;
 	span {
-		margin-top: -13px;
+		margin-top: -26px;
 		display: block;
 		font-size: 0.3em;
 		font-weight: 400;
@@ -63,9 +65,11 @@
 }
 
 .nav {
+	font-family: var(--font-jersey-25);
 	color: #fbf1f1;
 	display: flex;
 	font-size: 1.3em;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.09);
 }
 
 .nav a {
@@ -73,8 +77,10 @@
 	display: inline-block;
 	padding: 10px 20px;
 	text-align: center;
-	font-size: 0.9em;
+	font-size: 1.1em;
+	flex-direction: column;
 	flex: 1;
+	line-height: 1;
 	&:after {
 		padding: 4px;
 		border-bottom: 1px solid #e0e0e0;
@@ -90,7 +96,6 @@
 	}
 	span {
 		font-size: 0.6em;
-		clear: both;
 		display: block;
 	}
 }
@@ -146,8 +151,15 @@
 	border-radius: 5px;
 	padding: 0.75rem;
 	font-size: 1.1rem;
-	font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-		DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+	font-family:
+		Menlo,
+		Monaco,
+		Lucida Console,
+		Liberation Mono,
+		DejaVu Sans Mono,
+		Bitstream Vera Sans Mono,
+		Courier New,
+		monospace;
 }
 
 .grid {

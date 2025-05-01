@@ -1,5 +1,13 @@
 import Link from "next/link";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Jersey_25 } from "next/font/google";
+
+const font = Jersey_25({
+	subsets: ["latin"],
+	weight: "400",
+	variable: "--font-jersey-25",
+	display: "swap",
+});
 
 export const metadata = {
 	title: "AKJ.IO",
@@ -16,7 +24,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="en">
+		<html lang="en" className={font.variable}>
 			<body className={styles.page}>
 				<header className={styles.websitetop}>
 					<section className={styles.header}>
