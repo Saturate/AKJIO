@@ -14,7 +14,7 @@ const PAGE_CONTENT_PATH = "content/pages";
 
 export async function getPost(id: string) {
 	"use server";
-	const postPath = `${POST_CONTENT_PATH}/${id}/${id}`;
+	const postPath = `${POST_CONTENT_PATH}/${id}`;
 
 	// Some old blogs (well not many), use .md ext check if it exists
 	const postFileExt = ["md", "mdx"].find((ext) => {
@@ -24,12 +24,12 @@ export async function getPost(id: string) {
 	});
 
 	if (!postFileExt) {
-		notFound();
+		//notFound();
 	}
 
 	const postFile = fs.readFileSync(
 		path.join(process.cwd(), `./${postPath}.${postFileExt}`),
-		"utf8"
+		"utf8",
 	);
 
 	const { content, frontmatter } = await compileMDX<FrontmatterType>({
@@ -41,7 +41,7 @@ export async function getPost(id: string) {
 
 export async function getPage(id: string) {
 	"use server";
-	const postPath = `${PAGE_CONTENT_PATH}/${id}`;
+	const postPath = `${PAGE_CONTENT_PATH}/posts/${id}`;
 
 	// Some old blogs (well not many), use .md ext check if it exists
 	const postFileExt = ["md", "mdx"].find((ext) => {
@@ -56,7 +56,7 @@ export async function getPage(id: string) {
 
 	const postFile = fs.readFileSync(
 		path.join(process.cwd(), `./${postPath}.${postFileExt}`),
-		"utf8"
+		"utf8",
 	);
 
 	// Optionally provide a type for your frontmatter object

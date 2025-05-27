@@ -38,11 +38,16 @@ function ArticleExcerpt({
 export default async function PostsOverviewPage({}) {
 	const { postIds } = await getPostsIds();
 
+	console.log("hiihihihii");
+
 	const teasers = await Promise.all(
 		postIds.map(async (id) => {
+			console.log("mapping", id);
 			return await getPost(id);
-		})
+		}),
 	);
+
+	console.log(teasers);
 
 	const sortedByDateTeasers = teasers
 		.sort((a, b) => {
@@ -53,13 +58,11 @@ export default async function PostsOverviewPage({}) {
 		})
 		.map(({ frontmatter, link }) => {
 			return (
-				<ArticleExcerpt
-					key={frontmatter.title}
-					{...frontmatter}
-					link={link}
-				/>
+				<ArticleExcerpt key={frontmatter.title} {...frontmatter} link={link} />
 			);
 		});
+
+	console.log(postIds, sortedByDateTeasers);
 
 	return <>{sortedByDateTeasers}</>;
 }
