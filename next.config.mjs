@@ -6,7 +6,7 @@ import rehypePrettyCode from "rehype-pretty-code";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
-	pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+	pageExtensions: ["js", "jsx", "mdx", "md", "ts", "tsx"],
 	async headers() {
 		return [
 			{
@@ -39,7 +39,7 @@ const withMDX = createMDX({
 	// Add markdown plugins here, as desired
 	options: {
 		remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
-		rehypePlugins: [[rehypePrettyCode, { theme: "ayu-dark" }]],
+		//rehypePlugins: [[rehypePrettyCode, { theme: "ayu-dark" }]],
 	},
 });
 

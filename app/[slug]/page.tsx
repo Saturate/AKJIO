@@ -1,9 +1,9 @@
-import { getPage } from "../actions";
+import getPageFromSlug from "@/utils/getPageFromSlug";
 import { PageProps } from "@/app/types";
 
 export async function generateMetadata({ params }: PageProps) {
 	const slug = (await params).slug;
-	const { frontmatter } = await getPage(slug);
+	const { frontmatter } = await getPageFromSlug(slug);
 
 	return {
 		title: frontmatter.title,
@@ -13,9 +13,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function Page({ params }: PageProps) {
 	const slug = (await params).slug;
-	const { content, frontmatter } = await getPage(slug);
+	const page = await getPageFromSlug([slug]);
 
-	console.log("page", slug, content, frontmatter);
-
-	return <>{content}</>;
+	return <>{page.Component()}</>;
 }
