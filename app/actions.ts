@@ -23,7 +23,7 @@ export async function getPost(id: string) {
 	].find((filePath) => {
 		console.log(
 			path.join(process.cwd(), filePath),
-			fs.existsSync(path.join(process.cwd(), filePath)),
+			fs.existsSync(path.join(process.cwd(), filePath))
 		);
 
 		return fs.existsSync(path.join(process.cwd(), filePath));
@@ -37,7 +37,7 @@ export async function getPost(id: string) {
 
 	const postFile = fs.readFileSync(
 		path.join(process.cwd(), postFileExt),
-		"utf8",
+		"utf8"
 	);
 
 	const { content, frontmatter } = await compileMDX<FrontmatterType>({
@@ -52,10 +52,16 @@ export async function getPage(id: string) {
 	const postPath = `${PAGE_CONTENT_PATH}/posts/${id}`;
 
 	// Some old blogs (well not many), use .md ext check if it exists
-	const postFileExt = ["md", "mdx"].find((ext) => {
-		console.log(path.join(process.cwd(), `./${postPath}.${ext}`));
+	const postFileExt = [
+		`./${postPath}/${id}.mdx`,
+		`./${postPath}/index.mdx`,
+	].find((filePath) => {
+		console.log(
+			path.join(process.cwd(), filePath),
+			fs.existsSync(path.join(process.cwd(), filePath))
+		);
 
-		return fs.existsSync(path.join(process.cwd(), `./${postPath}.${ext}`));
+		return fs.existsSync(path.join(process.cwd(), filePath));
 	});
 
 	if (!postFileExt) {
@@ -63,8 +69,8 @@ export async function getPage(id: string) {
 	}
 
 	const postFile = fs.readFileSync(
-		path.join(process.cwd(), `./${postPath}.${postFileExt}`),
-		"utf8",
+		path.join(process.cwd(), postFileExt),
+		"utf8"
 	);
 
 	// Optionally provide a type for your frontmatter object

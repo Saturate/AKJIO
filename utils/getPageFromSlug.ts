@@ -3,6 +3,7 @@ import path from "path";
 import { notFound } from "next/navigation";
 import generateContentMap from "@/utils/generateContentMap";
 import { generateTableOfContentsFromMarkdown } from "@/utils/generateTableOfContentsFromMarkdown";
+import importifyPath from "./importifyPath";
 
 export default async function getPageFromSlug(slug: string[] | string) {
 	"use server";
@@ -27,12 +28,12 @@ export default async function getPageFromSlug(slug: string[] | string) {
 	try {
 		// Handle windows with replace for now
 		const mdxModule = await import(
-			`@/content/${page.relativeFilePath.replace("\\", "/")}`
+			`@/content/${importifyPath(page.relativeFilePath)}`
 		);
 
 		console.log(
 			"getting it...",
-			`@/content/${page.relativeFilePath.replace("\\", "/")}`,
+			`@/content/${importifyPath(page.relativeFilePath)}`
 		);
 
 		if (!mdxModule.default) {

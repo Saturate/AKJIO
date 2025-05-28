@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "path";
+import importifyPath from "./importifyPath";
 
 const PAGE_CONTENT_PATH = "content/";
 
@@ -26,7 +27,7 @@ export default async function generateContentMap() {
 		content
 			.filter((path) => !path.isDirectory())
 			.map(async (entry) => {
-				const relativePath = entry.path.replace(folderPath, "");
+				const relativePath = entry.path.replace(folderPath, "").split("\\").join("/");
 				const slugs =
 					relativePath !== ""
 						? relativePath.split("/").filter((slug) => slug !== "")
@@ -36,27 +37,33 @@ export default async function generateContentMap() {
 					slugs.push(removeContentOrdering(entry.name.replace(".mdx", "")));
 				}
 
-				const filePath = path.join(entry.path, entry.name);
+				try {
+					// Handle windows with replace for now
+					const { frontmatter } = await import(
+						`@/content/${importifyPath(path.join(relativePath, entry.name))}`
+					);
 
-				// Handle windows with replace for now
-				const { frontmatter } = await import(
-					`@/content/${path.join(relativePath, entry.name).replace("\\", "/")}`
-				);
+					const filePath = path.join(entry.path, entry.name);
 
-				return {
-					websitePath: "/" + slugs.join("/"),
-					slugs: [...slugs],
-					relativePath: relativePath,
-					entryName: entry.name,
-					data: {
-						frontmatter,
-						...frontmatter,
-					},
-					folderPath,
-					path: entry.path,
-					relativeFilePath: path.join(relativePath, entry.name),
-					filePath: filePath,
-				};
-			}),
+					return {
+						websitePath: "/" + slugs.join("/"),
+						slugs: [...slugs],
+						relativePath: relativePath,
+						entryName: entry.name,
+						data: {
+							frontmatter,
+							...frontmatter,
+						},
+						folderPath,
+						path: entry.path,
+						filePath: filePath,
+						relativeFilePath: path.join(relativePath, entry.name),
+					};
+
+			} catch (err) {
+				console.log('error laoding file',`@/content/${importifyPath(path.join(relativePath, entry.name))}`, relativePath, entry.name);
+				throw err;
+			}
+		}),
 	);
 }
