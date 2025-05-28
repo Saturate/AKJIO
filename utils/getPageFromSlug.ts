@@ -33,7 +33,7 @@ export default async function getPageFromSlug(slug: string[] | string) {
 
 		console.log(
 			"getting it...",
-			`@/content/${importifyPath(page.relativeFilePath)}`
+			`@/content/${importifyPath(page.relativeFilePath)}`,
 		);
 
 		if (!mdxModule.default) {
