@@ -45,7 +45,8 @@ export default async function getPageFromSlug(slug: string[] | string) {
 		return {
 			Component: mdxModule.default,
 			title: mdxModule.frontmatter?.title ?? page.entryName,
-			description: mdxModule.frontmatter?.description,
+			description:
+				mdxModule.frontmatter?.description ?? mdxModule.frontmatter?.subtitle,
 			page,
 			toc,
 			frontmatter: mdxModule.frontmatter,

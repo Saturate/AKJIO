@@ -31,7 +31,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 	return (
 		<>
 			<h1>{page.frontmatter.title}</h1>
-			<h2>{page.frontmatter.subtitle}</h2>
+			<h2>{page.frontmatter.subtitle ?? page.frontmatter.description}</h2>
 			{page.Component()}
 		</>
 	);
