@@ -1,4 +1,13 @@
 {
-  "tabWidth": 2,
-  "useTabs": true
+	"tabWidth": 2,
+	"useTabs": true,
+	"overrides": [
+		{
+			"files": ["package.json"],
+			"options": {
+				"tabWidth": 2,
+				"useTabs": false
+			}
+		}
+	]
 }

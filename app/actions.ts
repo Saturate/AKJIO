@@ -14,21 +14,29 @@ const PAGE_CONTENT_PATH = "content/pages";
 
 export async function getPost(id: string) {
 	"use server";
-	const postPath = `${POST_CONTENT_PATH}/${id}/${id}`;
+	const postPath = `${POST_CONTENT_PATH}/${id}`;
 
 	// Some old blogs (well not many), use .md ext check if it exists
-	const postFileExt = ["md", "mdx"].find((ext) => {
-		console.log(path.join(process.cwd(), `./${postPath}.${ext}`));
+	const postFileExt = [
+		`./${postPath}/${id}.mdx`,
+		`./${postPath}/index.mdx`,
+	].find((filePath) => {
+		console.log(
+			path.join(process.cwd(), filePath),
+			fs.existsSync(path.join(process.cwd(), filePath))
+		);
 
-		return fs.existsSync(path.join(process.cwd(), `./${postPath}.${ext}`));
+		return fs.existsSync(path.join(process.cwd(), filePath));
 	});
+
+	console.log("postFileExt", postFileExt);
 
 	if (!postFileExt) {
 		notFound();
 	}
 
 	const postFile = fs.readFileSync(
-		path.join(process.cwd(), `./${postPath}.${postFileExt}`),
+		path.join(process.cwd(), postFileExt),
 		"utf8"
 	);
 
@@ -41,13 +49,19 @@ export async function getPost(id: string) {
 
 export async function getPage(id: string) {
 	"use server";
-	const postPath = `${PAGE_CONTENT_PATH}/${id}`;
+	const postPath = `${PAGE_CONTENT_PATH}/posts/${id}`;
 
 	// Some old blogs (well not many), use .md ext check if it exists
-	const postFileExt = ["md", "mdx"].find((ext) => {
-		console.log(path.join(process.cwd(), `./${postPath}.${ext}`));
+	const postFileExt = [
+		`./${postPath}/${id}.mdx`,
+		`./${postPath}/index.mdx`,
+	].find((filePath) => {
+		console.log(
+			path.join(process.cwd(), filePath),
+			fs.existsSync(path.join(process.cwd(), filePath))
+		);
 
-		return fs.existsSync(path.join(process.cwd(), `./${postPath}.${ext}`));
+		return fs.existsSync(path.join(process.cwd(), filePath));
 	});
 
 	if (!postFileExt) {
@@ -55,7 +69,7 @@ export async function getPage(id: string) {
 	}
 
 	const postFile = fs.readFileSync(
-		path.join(process.cwd(), `./${postPath}.${postFileExt}`),
+		path.join(process.cwd(), postFileExt),
 		"utf8"
 	);
 

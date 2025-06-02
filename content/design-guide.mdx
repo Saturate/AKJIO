@@ -16,6 +16,16 @@ function fancyAlert(arg) {
 }
 ```
 
+```tsx
+type Props = { id: string, name: string };
+
+export default function coolStuff({ id, name }: Props) {
+	return (<div>
+	{id} - {name}
+	</div>)
+}
+```
+
 Now let's study some headlines. Look at them.
 
 # This is an `<h1>` tag
@@ -71,5 +81,5 @@ Also you can do ~~this~~... it's cool.
 
 We also have some qoutes:
 
-> Extinction is the rule. Survival is the exception.   
+> Extinction is the rule. Survival is the exception.
 > — Carl Sagan

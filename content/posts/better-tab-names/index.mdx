@@ -1,0 +1,26 @@
+---
+title: Better Editor Tab Names
+description: Get better visual overview of open tabs when developing with VS Code
+date: 2025-05-27
+tags:
+ - vscode
+ - editor
+ - nextjs
+---
+
+I've been working on NextJS code bases a lot, and one thing that has been annoying for me is that many files have the same name.
+
+You'll be seeing a lot of `page.tsx` files open as tabs. Luckily theres a quick and easy fix if you are using VSCode (I'm sure that your favorite editor can do the same thing, so look it up.)
+
+Heres a NextJS example, just add it to your `.vscode/settings.json` file.
+
+```json
+"workbench.editor.customLabels.patterns": {
+	"**/app/**/index.ts": "${dirname} <index.ts>",
+	"**/app/**/page.tsx": "${dirname} <page.tsx>",
+	"**/app/**/layout.tsx": "${dirname} <layout.tsx>",
+	"**/app/**/route.ts": "${dirname} <route.tsx>"
+}
+```
+
+Hope this helps you, enjoy!
