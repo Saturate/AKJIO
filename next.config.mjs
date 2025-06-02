@@ -39,7 +39,14 @@ const withMDX = createMDX({
 	// Add markdown plugins here, as desired
 	options: {
 		remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
-		//rehypePlugins: [[rehypePrettyCode, { theme: "ayu-dark" }]],
+		rehypePlugins: [
+			[
+				rehypePrettyCode,
+				{
+					theme: "ayu-dark",
+				},
+			],
+		],
 	},
 });
 

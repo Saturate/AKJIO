@@ -29,7 +29,8 @@
     "remark-frontmatter": "^5.0.0",
     "remark-mdx-frontmatter": "^5.1.0",
     "sass": "^1.87.0",
-    "unist-util-remove": "^4.0.0"
+    "unist-util-remove": "^4.0.0",
+    "shiki": "^3.4.2"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.1.4",
