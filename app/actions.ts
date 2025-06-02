@@ -21,15 +21,8 @@ export async function getPost(id: string) {
 		`./${postPath}/${id}.mdx`,
 		`./${postPath}/index.mdx`,
 	].find((filePath) => {
-		console.log(
-			path.join(process.cwd(), filePath),
-			fs.existsSync(path.join(process.cwd(), filePath))
-		);
-
 		return fs.existsSync(path.join(process.cwd(), filePath));
 	});
-
-	console.log("postFileExt", postFileExt);
 
 	if (!postFileExt) {
 		notFound();
@@ -37,7 +30,7 @@ export async function getPost(id: string) {
 
 	const postFile = fs.readFileSync(
 		path.join(process.cwd(), postFileExt),
-		"utf8"
+		"utf8",
 	);
 
 	const { content, frontmatter } = await compileMDX<FrontmatterType>({
@@ -56,11 +49,6 @@ export async function getPage(id: string) {
 		`./${postPath}/${id}.mdx`,
 		`./${postPath}/index.mdx`,
 	].find((filePath) => {
-		console.log(
-			path.join(process.cwd(), filePath),
-			fs.existsSync(path.join(process.cwd(), filePath))
-		);
-
 		return fs.existsSync(path.join(process.cwd(), filePath));
 	});
 
@@ -70,7 +58,7 @@ export async function getPage(id: string) {
 
 	const postFile = fs.readFileSync(
 		path.join(process.cwd(), postFileExt),
-		"utf8"
+		"utf8",
 	);
 
 	// Optionally provide a type for your frontmatter object
@@ -87,8 +75,6 @@ export async function getPostsIds() {
 		.readdirSync(`${POST_CONTENT_PATH}/`, { withFileTypes: true })
 		.filter((item) => item.isDirectory() && item.name !== "_drafts")
 		.map((item) => item.name);
-
-	console.log(postIds);
 
 	return { postIds };
 }
