@@ -44,6 +44,8 @@ const withMDX = createMDX({
 				rehypePrettyCode,
 				{
 					theme: "ayu-dark",
+					bypassInlineCode: false,
+					defaultLang: "plaintext",
 				},
 			],
 		],

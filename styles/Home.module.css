@@ -7,7 +7,7 @@
 
 .content {
 	margin: 0 auto;
-	max-width: 600px;
+	max-width: 690px;
 	flex: 1;
 }
 
@@ -23,7 +23,7 @@
 		rgba(55, 63, 78, 0.66) 100%
 	);
 
-	padding: 4rem 0;
+	padding: 2rem;
 	flex: 1;
 	color: #fbf1f1;
 
@@ -59,22 +59,6 @@
 	margin: 4rem 0;
 	line-height: 1.5;
 	font-size: 1.5rem;
-}
-
-.code {
-	background: #fafafa;
-	border-radius: 5px;
-	padding: 0.75rem;
-	font-size: 1.1rem;
-	font-family:
-		Menlo,
-		Monaco,
-		Lucida Console,
-		Liberation Mono,
-		DejaVu Sans Mono,
-		Bitstream Vera Sans Mono,
-		Courier New,
-		monospace;
 }
 
 .grid {

@@ -53,9 +53,7 @@ function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
 export function useMDXComponents(components: MDXComponents): MDXComponents {
 	return {
 		// Allows customizing built-in components, e.g. to add styling.
-		h1: ({}) => {
-			console.warn("Do not use h1 in content, use title field instead.");
-		},
+		h1: createHeading(1),
 		h2: createHeading(2),
 		h3: createHeading(3),
 		h4: createHeading(4),

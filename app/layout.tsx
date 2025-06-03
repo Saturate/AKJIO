@@ -1,7 +1,7 @@
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Jersey_25 } from "next/font/google";
-import styles from "../styles/Home.module.scss";
-import "../styles/global-styles.scss";
+import styles from "../styles/Home.module.css";
+import "../styles/global-styles.css";
 import Navigation from "@/components/Navigation/Navigation";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
