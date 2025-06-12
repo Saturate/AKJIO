@@ -1,5 +1,6 @@
 import getPageFromSlug from "@/utils/getPageFromSlug";
 import { PageProps } from "@/app/types";
+import styles from "../../styles/Home.module.css";
 
 export async function generateMetadata({ params }: PageProps) {
 	const slug = (await params).slug;
@@ -15,5 +16,9 @@ export default async function Page({ params }: PageProps) {
 	const slug = (await params).slug;
 	const page = await getPageFromSlug([slug]);
 
-	return <>{page.Component()}</>;
+	return (
+		<main>
+			<section className={styles.content}>{page.Component()}</section>
+		</main>
+	);
 }

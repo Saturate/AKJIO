@@ -1,5 +1,6 @@
 import getPageFromSlug from "@/utils/getPageFromSlug";
 import { PageProps } from "./types";
+import styles from "../styles/Home.module.css";
 
 export async function generateMetadata() {
 	return {
@@ -11,5 +12,9 @@ export default async function FrontPage({ params }: PageProps) {
 
 	const page = await getPageFromSlug([slug]);
 
-	return <>{page.Component()}</>;
+	return (
+		<main>
+			<section className={styles.content}>{page.Component()}</section>
+		</main>
+	);
 }

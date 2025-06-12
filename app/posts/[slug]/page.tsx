@@ -4,6 +4,8 @@ import getPageFromSlug from "@/utils/getPageFromSlug";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import styles from "./page.module.css";
+
 export async function generateMetadata({
 	params,
 }: PageProps): Promise<Metadata> {
@@ -33,12 +35,16 @@ export default async function BlogPostPage({ params }: PageProps) {
 	]);
 
 	return (
-		<>
-			<h1>{frontmatter.title}</h1>
-			<h2>{frontmatter.subtitle ?? frontmatter.description}</h2>
-			{Component()}
-
-			<TableOfContents tableOfContents={toc} />
-		</>
+		<article className={styles.main}>
+			<div className={styles.content} data-content="true">
+				<h1>{frontmatter.title}</h1>
+				<h2>{frontmatter.subtitle ?? frontmatter.description}</h2>
+				{frontmatter?.author ? <p>Author: {frontmatter?.author}</p> : null}
+				{Component()}
+			</div>
+			<aside>
+				<TableOfContents className={styles.stickyToc} tableOfContents={toc} />
+			</aside>
+		</article>
 	);
 }

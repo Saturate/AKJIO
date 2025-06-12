@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import styles from "./TableOfContents.module.css";
+import clsx from "clsx";
 
 export type TOCEntry = {
 	level: number;
@@ -12,8 +13,10 @@ export type TOCEntry = {
 
 export default function TableOfContents({
 	tableOfContents,
+	className,
 }: {
 	tableOfContents: TOCEntry[];
+	className: string;
 }) {
 	const [activeSection, setActiveSection] = useState<string | null>(null);
 	useEffect(() => {
@@ -61,8 +64,8 @@ export default function TableOfContents({
 	}, []);
 
 	return (
-		<div className={styles.toc}>
-			<h2>Table of Content</h2>
+		<div className={clsx(styles.toc, className)}>
+			<h2>Table of Contents</h2>
 			<ol data-toc="true">
 				{tableOfContents.map(({ text, slug, children }, i) => (
 					<li key={i}>

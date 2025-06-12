@@ -35,7 +35,7 @@ function slugify(str: React.ReactNode) {
 
 function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
 	return ({ children }: React.PropsWithChildren) => {
-		let slug = slugify(children);
+		const slug = slugify(children);
 		return React.createElement(`h${level}`, { id: slug }, [
 			React.createElement(
 				"a",
