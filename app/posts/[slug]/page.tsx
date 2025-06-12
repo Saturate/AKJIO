@@ -18,7 +18,7 @@ export async function generateMetadata({
 
 	const { title, description } = page;
 	return {
-		title: { default: title, template: "%s • Allan Kimmer Jensen" },
+		title: `${title} • Allan Kimmer Jensen`,
 		description: description,
 		openGraph: {
 			title,
