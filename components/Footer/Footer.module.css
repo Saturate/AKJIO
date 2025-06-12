@@ -7,11 +7,24 @@
 	border-top: 1px solid #271f22;
 	justify-content: center;
 	align-items: center;
-}
 
-.footer a {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-grow: 1;
+	.copyright {
+		font-size: 0.6875rem;
+	}
+
+	.content {
+		max-width: 700px;
+	}
+
+	.socials {
+		font-size: 1.125rem;
+		display: flex;
+		justify-content: center;
+		gap: 5px;
+		margin: 0;
+
+		.socialLink:hover {
+			color: #fff;
+		}
+	}
 }

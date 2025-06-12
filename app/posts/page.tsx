@@ -1,5 +1,6 @@
 import { getPost, getPostsIds } from "@/app/actions";
 import ArticleExcerpt from "@/components/ArticleExcerpt/ArticleExcerpt";
+import styles from "../../styles/Home.module.css";
 
 export default async function PostsOverviewPage({}) {
 	const { postIds } = await getPostsIds();
@@ -23,5 +24,9 @@ export default async function PostsOverviewPage({}) {
 			);
 		});
 
-	return <>{sortedByDateTeasers}</>;
+	return (
+		<main>
+			<section className={styles.content}>{sortedByDateTeasers}</section>
+		</main>
+	);
 }

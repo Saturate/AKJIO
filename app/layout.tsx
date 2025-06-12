@@ -30,9 +30,7 @@ export default function RootLayout({
 					<Navigation />
 				</Header>
 
-				<main className={styles.main}>
-					<section className={styles.content}>{children}</section>
-				</main>
+				<div className={styles.main}>{children}</div>
 
 				<Footer />
 			</body>

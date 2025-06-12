@@ -1,0 +1,15 @@
+.main {
+	display: flex;
+	gap: 60px;
+}
+
+.content {
+	margin: 0 auto;
+	max-width: 690px;
+	flex: 1;
+}
+
+.stickyToc {
+	position: sticky;
+	top: 60px;
+}

@@ -1,0 +1,25 @@
+.toc {
+	color: #ccc;
+
+	ol {
+		list-style: none;
+		border-left: 1px solid #292f3a;
+		padding: 0;
+		li a {
+			padding: 6px;
+			padding-left: 14px;
+			display: inline-block;
+		}
+		li li a {
+			padding-left: calc(14px * 2);
+		}
+		ol {
+			border: none;
+		}
+	}
+
+	[aria-current="location"] {
+		color: #fff;
+		border-left: 1px solid #fff;
+	}
+}

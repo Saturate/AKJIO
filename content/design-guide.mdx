@@ -1,6 +1,5 @@
 ---
 title: Design Guide
-template: debugging.html
 ---
 
 This is my design guide.
@@ -19,12 +18,23 @@ function fancyAlert(arg) {
 ```tsx
 type Props = { id: string, name: string };
 
-export default function coolStuff({ id, name }: Props) {
+export default function CoolStuff({ id, name }: Props) {
 	return (<div>
 	{id} - {name}
 	</div>)
 }
 ```
+
+```tsx filename="app/components/CoolStuff.tsx" showLineNumbers
+type Props = { id: string, name: string };
+
+export default function CoolStuff({ id, name }: Props) {
+	return (<div>
+	{id} - {name}
+	</div>)
+}
+```
+
 
 Now let's study some headlines. Look at them.
 

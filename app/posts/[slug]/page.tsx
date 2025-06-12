@@ -1,7 +1,10 @@
 import { PageProps } from "@/app/types";
+import TableOfContents from "@/components/TableOfContent/TableOfContents";
 import getPageFromSlug from "@/utils/getPageFromSlug";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+import styles from "./page.module.css";
 
 export async function generateMetadata({
 	params,
@@ -15,7 +18,7 @@ export async function generateMetadata({
 
 	const { title, description } = page;
 	return {
-		title: { default: title, template: "%s | AKJ.IO" },
+		title: `${title} • Allan Kimmer Jensen`,
 		description: description,
 		openGraph: {
 			title,
@@ -26,13 +29,22 @@ export async function generateMetadata({
 
 export default async function BlogPostPage({ params }: PageProps) {
 	const slug = (await params).slug;
-	const page = await getPageFromSlug(["posts", slug]);
+	const { Component, toc, frontmatter } = await getPageFromSlug([
+		"posts",
+		slug,
+	]);
 
 	return (
-		<>
-			<h1>{page.frontmatter.title}</h1>
-			<h2>{page.frontmatter.subtitle ?? page.frontmatter.description}</h2>
-			{page.Component()}
-		</>
+		<article className={styles.main}>
+			<div className={styles.content} data-content="true">
+				<h1>{frontmatter.title}</h1>
+				<h2>{frontmatter.subtitle ?? frontmatter.description}</h2>
+				{frontmatter?.author ? <p>Author: {frontmatter?.author}</p> : null}
+				{Component()}
+			</div>
+			<aside>
+				<TableOfContents className={styles.stickyToc} tableOfContents={toc} />
+			</aside>
+		</article>
 	);
 }
