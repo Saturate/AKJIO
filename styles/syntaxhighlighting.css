@@ -24,6 +24,7 @@ figure[data-rehype-pretty-code-figure] {
 	border-radius: 11px;
 	overflow: auto;
 	tab-size: 2;
+	box-shadow: 0 0 7px #000000a1;
 }
 
 code[data-line-numbers] {
