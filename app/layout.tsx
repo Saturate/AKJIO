@@ -5,6 +5,7 @@ import "../styles/global-styles.css";
 import Navigation from "@/components/Navigation/Navigation";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
+import OceanWater from "@/components/OceanWater/OceanWater";
 
 const font = Jersey_25({
 	subsets: ["latin"],
@@ -26,6 +27,8 @@ export default function RootLayout({
 	return (
 		<html lang="en" className={font.variable}>
 			<body className={styles.page}>
+				<OceanWater />
+
 				<Header>
 					<Navigation />
 				</Header>

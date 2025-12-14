@@ -1,6 +1,6 @@
 .page {
 	min-height: 100vh;
-	background: #8fb8ea;
+	background: transparent;
 	display: flex;
 	flex-direction: column;
 }
@@ -9,23 +9,16 @@
 	margin: 0 auto;
 	max-width: 690px;
 	flex: 1;
+	padding: 2rem;
 }
 
 .main {
-	background: #5e7eb5;
-	background: rgb(94, 126, 181);
-	background: rgb(94, 126, 181);
-	background: linear-gradient(
-		180deg,
-		rgba(94, 126, 181, 1) 0%,
-		rgb(59, 93, 151) 50px,
-		rgba(74, 99, 139, 1) calc(100% - 100px),
-		rgba(55, 63, 78, 0.66) 100%
-	);
-
+	background: transparent;
 	padding: 2rem;
 	flex: 1;
 	color: #fbf1f1;
+	position: relative;
+	z-index: 1;
 
 	display: flex;
 	flex-direction: column;
