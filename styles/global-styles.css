@@ -1,3 +1,39 @@
+:root {
+	/* Light mode (daytime) */
+	--sky-top: #8fb8ea;
+	--water-top: #4890c0;
+	--water-transition: #5a9fc7;
+	--water-medium: #87ceeb;
+	--water-bottom: #b8e3f5;
+	--water-body-top: #4a90c4;
+	--water-body-mid: #3b7db0;
+	--water-body-deep: #2d5a7b;
+	--particle-color: #a0c4e0;
+	--ripple-color: #cfe8fa;
+	--light-ray-color: #a0d4f0;
+	--text-primary: #fbf1f1;
+	--cloud-color: rgba(255, 255, 255, 0.5);
+}
+
+.dark {
+	/* Dark mode (nighttime) */
+	--sky-top: #0b1026;
+	--water-top: #1a2a4a;
+	--water-transition: #243556;
+	--water-medium: #2d4264;
+	--water-bottom: #385070;
+	--water-body-top: #2d4264;
+	--water-body-mid: #1e2f4d;
+	--water-body-deep: #0f1a2e;
+	--particle-color: #5a7c9a;
+	--ripple-color: #6b8aab;
+	--light-ray-color: #3d5a7c;
+	--text-primary: #fbf1f1;
+	--cloud-color: rgba(30, 40, 60, 0.3);
+	--moon-color: #f4f1de;
+	--star-color: rgba(255, 255, 255, 0.8);
+}
+
 * {
 	box-sizing: border-box;
 }

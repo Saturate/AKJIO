@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 import styles from "./OceanWater.module.css";
 
 interface Particle {
@@ -19,12 +20,49 @@ interface Ripple {
 	strength: number;
 }
 
+interface Star {
+	x: number;
+	y: number;
+	size: number;
+	opacity: number;
+	twinkleSpeed: number;
+	twinkleOffset: number;
+}
+
+// Helper function to get CSS variable value
+function getCSSVariable(name: string): string {
+	if (typeof window === "undefined") return "";
+	return getComputedStyle(document.documentElement)
+		.getPropertyValue(name)
+		.trim();
+}
+
 export default function OceanWater() {
+	const { resolvedTheme } = useTheme();
+	const [mounted, setMounted] = useState(false);
+	const [themeReady, setThemeReady] = useState(false);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const particlesRef = useRef<Particle[]>([]);
 	const ripplesRef = useRef<Ripple[]>([]);
+	const starsRef = useRef<Star[]>([]);
 	const mouseRef = useRef({ x: 0, y: 0 });
 	const timeRef = useRef(0);
+
+	// Prevent hydration mismatch
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	// Wait for theme to be ready (either resolvedTheme is set, or a short delay has passed)
+	useEffect(() => {
+		if (resolvedTheme) {
+			setThemeReady(true);
+		} else {
+			// Fallback: allow canvas to init after a short delay even if resolvedTheme is undefined
+			const timer = setTimeout(() => setThemeReady(true), 100);
+			return () => clearTimeout(timer);
+		}
+	}, [resolvedTheme]);
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
@@ -32,6 +70,11 @@ export default function OceanWater() {
 
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
+
+		// Wait for theme to be ready before initializing canvas
+		if (!themeReady) {
+			return;
+		}
 
 		// Set canvas size to viewport
 		const resizeCanvas = () => {
@@ -51,9 +94,25 @@ export default function OceanWater() {
 			particles.push({
 				x: Math.random() * canvas.width,
 				y: 100 + Math.random() * (docHeight - 100), // Y in document space
-				vy: -0.2 - Math.random() * 0.3, // Slow rise
+				vy: -0.1 - Math.random() * 0.15, // Slow rise
 				size: 1 + Math.random() * 2,
 				opacity: 0.3 + Math.random() * 0.4,
+			});
+		}
+
+		// Initialize stars for night mode
+		const stars = starsRef.current;
+		const header = document.querySelector("header");
+		const headerBottom = header ? header.getBoundingClientRect().bottom : 100;
+		const safeZone = 30; // Keep stars 30px away from waterline
+		for (let i = 0; i < 25; i++) {
+			stars.push({
+				x: Math.random() * canvas.width,
+				y: Math.random() * (headerBottom - safeZone), // Stay above waterline with safe zone
+				size: 0.5 + Math.random() * 1.5, // Smaller stars: 0.5-2px
+				opacity: 0.3 + Math.random() * 0.6,
+				twinkleSpeed: 0.3 + Math.random() * 0.8,
+				twinkleOffset: Math.random() * Math.PI * 2,
 			});
 		}
 
@@ -82,6 +141,7 @@ export default function OceanWater() {
 		canvas.addEventListener("mousemove", handleMouseMove);
 
 		// Animation loop
+		let animationFrameId: number;
 		const animate = () => {
 			timeRef.current += 0.016;
 			const time = timeRef.current;
@@ -95,13 +155,19 @@ export default function OceanWater() {
 			// === WATERLINE ZONE (Top 100px) ===
 			drawWaterline(ctx, canvas, time);
 
+			// === DARK MODE ELEMENTS (drawn after waterline so they're visible) ===
+			if (resolvedTheme === "dark") {
+				drawStars(ctx, time);
+				drawMoon(ctx, canvas);
+			}
+
 			// Update and draw particles
 			updateParticles(ctx, canvas);
 
 			// Update and draw ripples
 			updateRipples(ctx);
 
-			requestAnimationFrame(animate);
+			animationFrameId = requestAnimationFrame(animate);
 		};
 
 		animate();
@@ -109,8 +175,9 @@ export default function OceanWater() {
 		return () => {
 			window.removeEventListener("resize", resizeCanvas);
 			canvas.removeEventListener("mousemove", handleMouseMove);
+			cancelAnimationFrame(animationFrameId);
 		};
-	}, []);
+	}, [resolvedTheme, themeReady]);
 
 	function drawWaterBody(
 		ctx: CanvasRenderingContext2D,
@@ -126,20 +193,20 @@ export default function OceanWater() {
 
 		// Vertical gradient - continues from waterline gradient, darker at depth
 		const gradient = ctx.createLinearGradient(0, waterBodyStart, 0, canvas.height);
-		gradient.addColorStop(0, "#4a90c4"); // Matches waterline bottom color
-		gradient.addColorStop(0.4, "#3b7db0");
-		gradient.addColorStop(1, "#2d5a7b"); // Deep ocean at bottom
+		gradient.addColorStop(0, getCSSVariable("--water-body-top"));
+		gradient.addColorStop(0.4, getCSSVariable("--water-body-mid"));
+		gradient.addColorStop(1, getCSSVariable("--water-body-deep"));
 
 		ctx.fillStyle = gradient;
 		ctx.fillRect(0, waterBodyStart, canvas.width, canvas.height - waterBodyStart);
 
-		// Very subtle light rays
+		// Very subtle light/moonlight rays
 		ctx.save();
-		ctx.globalAlpha = 0.05;
+		ctx.globalAlpha = resolvedTheme === "dark" ? 0.03 : 0.05;
 		for (let i = 0; i < 3; i++) {
 			const x = (canvas.width / 4) * (i + 1) + Math.sin(time * 0.5 + i) * 50;
 			const rayGradient = ctx.createLinearGradient(x - 30, headerBottom, x + 30, canvas.height);
-			rayGradient.addColorStop(0, "#a0d4f0");
+			rayGradient.addColorStop(0, getCSSVariable("--light-ray-color"));
 			rayGradient.addColorStop(1, "transparent");
 			ctx.fillStyle = rayGradient;
 			ctx.fillRect(x - 30, headerBottom, 60, canvas.height - headerBottom);
@@ -165,16 +232,16 @@ export default function OceanWater() {
 		ctx.lineTo(canvas.width, 0);
 
 		// Draw right edge down to waterline
-		const rightWave1 = Math.sin(canvas.width * 0.02 + time * 1.5) * 6;
-		const rightWave2 = Math.cos(canvas.width * 0.015 - time * 1.2) * 4;
-		const rightWave3 = Math.sin(canvas.width * 0.03 + time * 1.8) * 3;
+		const rightWave1 = Math.sin(canvas.width * 0.02 + time * 0.8) * 6;
+		const rightWave2 = Math.cos(canvas.width * 0.015 - time * 0.6) * 4;
+		const rightWave3 = Math.sin(canvas.width * 0.03 + time * 1.0) * 3;
 		ctx.lineTo(canvas.width, headerBottom + rightWave1 + rightWave2 + rightWave3);
 
 		// Create smooth wave path at header bottom (right to left)
 		for (let x = canvas.width; x >= 0; x -= 1) {
-			const wave1 = Math.sin(x * 0.02 + time * 1.5) * 6;
-			const wave2 = Math.cos(x * 0.015 - time * 1.2) * 4;
-			const wave3 = Math.sin(x * 0.03 + time * 1.8) * 3;
+			const wave1 = Math.sin(x * 0.02 + time * 0.8) * 6;
+			const wave2 = Math.cos(x * 0.015 - time * 0.6) * 4;
+			const wave3 = Math.sin(x * 0.03 + time * 1.0) * 3;
 			const y = headerBottom + wave1 + wave2 + wave3;
 			ctx.lineTo(x, y);
 		}
@@ -182,12 +249,12 @@ export default function OceanWater() {
 		// Close path back to top-left
 		ctx.closePath();
 
-		// Fill with gradient from sky to water colors - darker at top, lighter near waterline
+		// Fill with gradient from sky to water colors using CSS variables
 		const waterGradient = ctx.createLinearGradient(0, 0, 0, headerBottom + 20);
-		waterGradient.addColorStop(0, "#4890c0"); // Darker blue at top
-		waterGradient.addColorStop(0.3, "#5a9fc7"); // Transition
-		waterGradient.addColorStop(0.7, "#87ceeb"); // Medium sky blue
-		waterGradient.addColorStop(1, "#b8e3f5"); // Light sky blue at waterline
+		waterGradient.addColorStop(0, getCSSVariable("--water-top"));
+		waterGradient.addColorStop(0.3, getCSSVariable("--water-transition"));
+		waterGradient.addColorStop(0.7, getCSSVariable("--water-medium"));
+		waterGradient.addColorStop(1, getCSSVariable("--water-bottom"));
 		ctx.fillStyle = waterGradient;
 		ctx.fill();
 
@@ -198,6 +265,9 @@ export default function OceanWater() {
 		ctx: CanvasRenderingContext2D,
 		canvas: HTMLCanvasElement,
 	) {
+		// Skip bubbles in dark mode (they could look like stars)
+		if (resolvedTheme === "dark") return;
+
 		const particles = particlesRef.current;
 		const header = document.querySelector("header");
 		const headerBottom = header ? header.getBoundingClientRect().bottom : 100;
@@ -224,7 +294,7 @@ export default function OceanWater() {
 			if (viewportY >= headerBottom && viewportY >= 0 && viewportY <= canvas.height) {
 				ctx.save();
 				ctx.globalAlpha = p.opacity;
-				ctx.fillStyle = "#a0c4e0";
+				ctx.fillStyle = getCSSVariable("--particle-color");
 				ctx.beginPath();
 				ctx.arc(p.x, viewportY, p.size, 0, Math.PI * 2);
 				ctx.fill();
@@ -240,7 +310,7 @@ export default function OceanWater() {
 			const ripple = ripples[i];
 
 			// Update
-			ripple.radius += 1.5;
+			ripple.radius += 1.0;
 			ripple.strength *= 0.95;
 
 			// Remove if done
@@ -252,13 +322,86 @@ export default function OceanWater() {
 			// Draw
 			ctx.save();
 			ctx.globalAlpha = ripple.strength * 0.5;
-			ctx.strokeStyle = "#cfe8fa";
+			ctx.strokeStyle = getCSSVariable("--ripple-color");
 			ctx.lineWidth = 2;
 			ctx.beginPath();
 			ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
 			ctx.stroke();
 			ctx.restore();
 		}
+	}
+
+	function drawStars(ctx: CanvasRenderingContext2D, time: number) {
+		const stars = starsRef.current;
+		const header = document.querySelector("header");
+		const headerBottom = header ? header.getBoundingClientRect().bottom : 100;
+
+		ctx.save();
+
+		stars.forEach((star) => {
+			// Only draw star if it's within the visible sky area (header)
+			if (star.y >= 0 && star.y <= headerBottom) {
+				// Twinkling effect
+				const twinkle = Math.sin(time * star.twinkleSpeed + star.twinkleOffset) * 0.3 + 0.7;
+				ctx.globalAlpha = star.opacity * twinkle;
+				ctx.fillStyle = getCSSVariable("--star-color");
+				ctx.beginPath();
+				ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+				ctx.fill();
+			}
+		});
+
+		ctx.restore();
+	}
+
+	function drawMoon(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
+		const header = document.querySelector("header");
+		const headerBottom = header ? header.getBoundingClientRect().bottom : 100;
+
+		const moonX = canvas.width * 0.8;
+		// Fixed position from top of viewport (no parallax effect)
+		const moonY = 80;
+		const moonRadius = 40;
+
+		// Only draw if moon is within header area
+		if (moonY + moonRadius < 0 || moonY - moonRadius > headerBottom) {
+			return;
+		}
+
+		ctx.save();
+
+		// Moon glow
+		const glowGradient = ctx.createRadialGradient(moonX, moonY, moonRadius * 0.5, moonX, moonY, moonRadius * 2);
+		glowGradient.addColorStop(0, "rgba(244, 241, 222, 0.3)");
+		glowGradient.addColorStop(1, "rgba(244, 241, 222, 0)");
+		ctx.fillStyle = glowGradient;
+		ctx.beginPath();
+		ctx.arc(moonX, moonY, moonRadius * 2, 0, Math.PI * 2);
+		ctx.fill();
+
+		// Moon body
+		ctx.fillStyle = getCSSVariable("--moon-color");
+		ctx.beginPath();
+		ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
+		ctx.fill();
+
+		// Moon craters (simple dark circles)
+		ctx.fillStyle = "rgba(200, 197, 180, 0.3)";
+		ctx.beginPath();
+		ctx.arc(moonX - 10, moonY - 5, 8, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.beginPath();
+		ctx.arc(moonX + 12, moonY + 8, 6, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.beginPath();
+		ctx.arc(moonX + 5, moonY - 15, 5, 0, Math.PI * 2);
+		ctx.fill();
+
+		ctx.restore();
+	}
+
+	if (!mounted) {
+		return null;
 	}
 
 	return (

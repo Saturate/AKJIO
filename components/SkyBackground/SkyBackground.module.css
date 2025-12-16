@@ -12,7 +12,7 @@
 	position: absolute;
 	width: 80px;
 	height: 30px;
-	background: rgba(255, 255, 255, 0.5);
+	background: var(--cloud-color);
 	border-radius: 50px;
 	animation: float 15s ease-in-out infinite;
 }
@@ -21,7 +21,7 @@
 .cloud::after {
 	content: "";
 	position: absolute;
-	background: rgba(255, 255, 255, 0.5);
+	background: var(--cloud-color);
 	border-radius: 50%;
 }
 

@@ -1,0 +1,82 @@
+.toggleBar {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	z-index: 20;
+	display: flex;
+	gap: 0;
+	background: rgba(255, 255, 255, 0.15);
+	border: 1px solid rgba(255, 255, 255, 0.25);
+	border-radius: 8px;
+	padding: 4px;
+	backdrop-filter: blur(10px);
+}
+
+.button {
+	background: transparent;
+	border: none;
+	border-radius: 6px;
+	padding: 0.5rem;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s ease;
+	min-width: 36px;
+	min-height: 36px;
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.button:hover {
+	background: rgba(255, 255, 255, 0.2);
+	color: rgba(255, 255, 255, 1);
+}
+
+.button:active {
+	transform: scale(0.95);
+}
+
+.button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.button.active {
+	background: rgba(255, 255, 255, 0.3);
+	color: rgba(255, 255, 255, 1);
+}
+
+/* Dark mode adjustments */
+:global(.dark) .toggleBar {
+	background: rgba(0, 0, 0, 0.2);
+	border-color: rgba(255, 255, 255, 0.15);
+}
+
+:global(.dark) .button {
+	color: rgba(255, 255, 255, 0.6);
+}
+
+:global(.dark) .button:hover {
+	background: rgba(255, 255, 255, 0.1);
+	color: rgba(255, 255, 255, 1);
+}
+
+:global(.dark) .button.active {
+	background: rgba(255, 255, 255, 0.2);
+	color: rgba(255, 255, 255, 1);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+	.toggleBar {
+		top: 0.75rem;
+		right: 0.75rem;
+		padding: 3px;
+	}
+
+	.button {
+		padding: 0.4rem;
+		min-width: 32px;
+		min-height: 32px;
+	}
+}
