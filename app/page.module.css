@@ -3,8 +3,12 @@
 	grid-template-columns: 1fr 320px;
 	gap: 2rem;
 	max-width: 1200px;
-	width: 100%;
 	align-items: start;
+	/* Center within viewport, not parent */
+	position: relative;
+	left: 50%;
+	transform: translateX(-50%);
+	width: calc(100vw - 4rem);
 }
 
 .mainContent {
