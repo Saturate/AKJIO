@@ -48,7 +48,6 @@ export default function OceanWater() {
 	const mouseRef = useRef({ x: 0, y: 0 });
 	const timeRef = useRef(0);
 
-	// Prevent hydration mismatch
 	useEffect(() => {
 		setMounted(true);
 	}, []);
@@ -88,7 +87,7 @@ export default function OceanWater() {
 		const particles = particlesRef.current;
 		const docHeight = Math.max(
 			document.documentElement.scrollHeight,
-			document.body.scrollHeight
+			document.body.scrollHeight,
 		);
 		for (let i = 0; i < 50; i++) {
 			particles.push({
@@ -116,7 +115,6 @@ export default function OceanWater() {
 			});
 		}
 
-		// Mouse move handler
 		const handleMouseMove = (e: MouseEvent) => {
 			const rect = canvas.getBoundingClientRect();
 			const x = e.clientX - rect.left;
@@ -140,13 +138,11 @@ export default function OceanWater() {
 
 		canvas.addEventListener("mousemove", handleMouseMove);
 
-		// Animation loop
 		let animationFrameId: number;
 		const animate = () => {
 			timeRef.current += 0.016;
 			const time = timeRef.current;
 
-			// Clear canvas
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 			// === WATER BODY ZONE (Below) ===
@@ -192,20 +188,35 @@ export default function OceanWater() {
 		const waterBodyStart = headerBottom - 25;
 
 		// Vertical gradient - continues from waterline gradient, darker at depth
-		const gradient = ctx.createLinearGradient(0, waterBodyStart, 0, canvas.height);
+		const gradient = ctx.createLinearGradient(
+			0,
+			waterBodyStart,
+			0,
+			canvas.height,
+		);
 		gradient.addColorStop(0, getCSSVariable("--water-body-top"));
 		gradient.addColorStop(0.4, getCSSVariable("--water-body-mid"));
 		gradient.addColorStop(1, getCSSVariable("--water-body-deep"));
 
 		ctx.fillStyle = gradient;
-		ctx.fillRect(0, waterBodyStart, canvas.width, canvas.height - waterBodyStart);
+		ctx.fillRect(
+			0,
+			waterBodyStart,
+			canvas.width,
+			canvas.height - waterBodyStart,
+		);
 
 		// Very subtle light/moonlight rays
 		ctx.save();
 		ctx.globalAlpha = resolvedTheme === "dark" ? 0.03 : 0.05;
 		for (let i = 0; i < 3; i++) {
 			const x = (canvas.width / 4) * (i + 1) + Math.sin(time * 0.5 + i) * 50;
-			const rayGradient = ctx.createLinearGradient(x - 30, headerBottom, x + 30, canvas.height);
+			const rayGradient = ctx.createLinearGradient(
+				x - 30,
+				headerBottom,
+				x + 30,
+				canvas.height,
+			);
 			rayGradient.addColorStop(0, getCSSVariable("--light-ray-color"));
 			rayGradient.addColorStop(1, "transparent");
 			ctx.fillStyle = rayGradient;
@@ -214,6 +225,12 @@ export default function OceanWater() {
 		ctx.restore();
 	}
 
+	/**
+	 * WaterLine Draw Function, using simple timed math.
+	 * @param ctx
+	 * @param canvas
+	 * @param time
+	 */
 	function drawWaterline(
 		ctx: CanvasRenderingContext2D,
 		canvas: HTMLCanvasElement,
@@ -235,7 +252,10 @@ export default function OceanWater() {
 		const rightWave1 = Math.sin(canvas.width * 0.02 + time * 0.8) * 6;
 		const rightWave2 = Math.cos(canvas.width * 0.015 - time * 0.6) * 4;
 		const rightWave3 = Math.sin(canvas.width * 0.03 + time * 1.0) * 3;
-		ctx.lineTo(canvas.width, headerBottom + rightWave1 + rightWave2 + rightWave3);
+		ctx.lineTo(
+			canvas.width,
+			headerBottom + rightWave1 + rightWave2 + rightWave3,
+		);
 
 		// Create smooth wave path at header bottom (right to left)
 		for (let x = canvas.width; x >= 0; x -= 1) {
@@ -265,7 +285,8 @@ export default function OceanWater() {
 		ctx: CanvasRenderingContext2D,
 		canvas: HTMLCanvasElement,
 	) {
-		// Skip bubbles in dark mode (they could look like stars)
+		// Skip bubbles in dark mode, we want it to be cleaner while dark as darkness hides details.
+		// Also they look a bit like stars.
 		if (resolvedTheme === "dark") return;
 
 		const particles = particlesRef.current;
@@ -274,7 +295,7 @@ export default function OceanWater() {
 		const scrollY = window.scrollY;
 		const docHeight = Math.max(
 			document.documentElement.scrollHeight,
-			document.body.scrollHeight
+			document.body.scrollHeight,
 		);
 
 		particles.forEach((p) => {
@@ -291,7 +312,11 @@ export default function OceanWater() {
 			const viewportY = p.y - scrollY;
 
 			// Only draw if particle is in viewport and below header
-			if (viewportY >= headerBottom && viewportY >= 0 && viewportY <= canvas.height) {
+			if (
+				viewportY >= headerBottom &&
+				viewportY >= 0 &&
+				viewportY <= canvas.height
+			) {
 				ctx.save();
 				ctx.globalAlpha = p.opacity;
 				ctx.fillStyle = getCSSVariable("--particle-color");
@@ -342,7 +367,8 @@ export default function OceanWater() {
 			// Only draw star if it's within the visible sky area (header)
 			if (star.y >= 0 && star.y <= headerBottom) {
 				// Twinkling effect
-				const twinkle = Math.sin(time * star.twinkleSpeed + star.twinkleOffset) * 0.3 + 0.7;
+				const twinkle =
+					Math.sin(time * star.twinkleSpeed + star.twinkleOffset) * 0.3 + 0.7;
 				ctx.globalAlpha = star.opacity * twinkle;
 				ctx.fillStyle = getCSSVariable("--star-color");
 				ctx.beginPath();
@@ -371,7 +397,14 @@ export default function OceanWater() {
 		ctx.save();
 
 		// Moon glow
-		const glowGradient = ctx.createRadialGradient(moonX, moonY, moonRadius * 0.5, moonX, moonY, moonRadius * 2);
+		const glowGradient = ctx.createRadialGradient(
+			moonX,
+			moonY,
+			moonRadius * 0.5,
+			moonX,
+			moonY,
+			moonRadius * 2,
+		);
 		glowGradient.addColorStop(0, "rgba(244, 241, 222, 0.3)");
 		glowGradient.addColorStop(1, "rgba(244, 241, 222, 0)");
 		ctx.fillStyle = glowGradient;
@@ -404,7 +437,5 @@ export default function OceanWater() {
 		return null;
 	}
 
-	return (
-		<canvas ref={canvasRef} className={styles.oceanCanvas} />
-	);
+	return <canvas ref={canvasRef} className={styles.oceanCanvas} />;
 }
