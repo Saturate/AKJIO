@@ -7,6 +7,7 @@ type FrontmatterType = {
 	title: string;
 	subtitle: string;
 	date: Date;
+	tags?: string[];
 };
 
 const POST_CONTENT_PATH = "content/posts";

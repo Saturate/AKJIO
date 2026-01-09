@@ -1,0 +1,39 @@
+.homeLayout {
+	display: grid;
+	grid-template-columns: 1fr 320px;
+	gap: 2rem;
+	max-width: 1200px;
+	width: 100%;
+	align-items: start;
+}
+
+.mainContent {
+	min-width: 0; /* Prevents grid overflow */
+}
+
+.sidebar {
+	min-width: 0;
+}
+
+/* Tablet and below: Stack sidebar below content */
+@media (max-width: 1024px) {
+	.homeLayout {
+		grid-template-columns: 1fr;
+		max-width: 690px;
+	}
+
+	.sidebar {
+		order: 2;
+	}
+
+	.mainContent {
+		order: 1;
+	}
+}
+
+/* Mobile: Reduce gaps and padding */
+@media (max-width: 768px) {
+	.homeLayout {
+		gap: 1.5rem;
+	}
+}
