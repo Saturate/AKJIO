@@ -101,10 +101,10 @@ export default function OceanWater() {
 
 		const stars = starsRef.current;
 		const header = document.querySelector("header");
-		const headerBottom = header ? header.getBoundingClientRect().bottom : 100;
+		const headerRect = header ? header.getBoundingClientRect().bottom : 100;
 		const safeZone = 30; // Keep stars 30px away from waterline
 		for (let i = 0; i < 25; i++) {
-			const baseY = Math.random() * (headerBottom - safeZone);
+			const baseY = Math.random() * (headerRect - safeZone);
 			stars.push({
 				x: Math.random() * canvas.width,
 				y: baseY,
@@ -196,95 +196,6 @@ export default function OceanWater() {
 
 		ctx.fillStyle = gradient;
 		ctx.fillRect(0, 0, canvas.width, headerBottom + safeMargin);
-	}
-
-	function drawWaterBody(
-		ctx: CanvasRenderingContext2D,
-		canvas: HTMLCanvasElement,
-		time: number,
-	) {
-		const header = document.querySelector("header");
-		const headerBottom = header ? header.getBoundingClientRect().bottom : 100;
-
-		// Start higher to overlap with wave oscillations (waves can go +/- 13px)
-		const waterBodyStart = headerBottom - 25;
-		const gradient = ctx.createLinearGradient(
-			0,
-			waterBodyStart,
-			0,
-			canvas.height,
-		);
-		gradient.addColorStop(0, getCSSVariable("--water-body-top"));
-		gradient.addColorStop(0.4, getCSSVariable("--water-body-mid"));
-		gradient.addColorStop(1, getCSSVariable("--water-body-deep"));
-
-		ctx.fillStyle = gradient;
-		ctx.fillRect(
-			0,
-			waterBodyStart,
-			canvas.width,
-			canvas.height - waterBodyStart,
-		);
-
-		ctx.save();
-		ctx.globalAlpha = resolvedTheme === "dark" ? 0.03 : 0.05;
-		for (let i = 0; i < 3; i++) {
-			const x = (canvas.width / 4) * (i + 1) + Math.sin(time * 0.5 + i) * 50;
-			const rayGradient = ctx.createLinearGradient(
-				x - 30,
-				headerBottom,
-				x + 30,
-				canvas.height,
-			);
-			rayGradient.addColorStop(0, getCSSVariable("--light-ray-color"));
-			rayGradient.addColorStop(1, "transparent");
-			ctx.fillStyle = rayGradient;
-			ctx.fillRect(x - 30, headerBottom, 60, canvas.height - headerBottom);
-		}
-		ctx.restore();
-	}
-
-	function drawWaterline(
-		ctx: CanvasRenderingContext2D,
-		canvas: HTMLCanvasElement,
-		time: number,
-	) {
-		const header = document.querySelector("header");
-		const headerBottom = header ? header.getBoundingClientRect().bottom : 100;
-
-		ctx.save();
-		ctx.beginPath();
-
-		ctx.moveTo(0, 0);
-		ctx.lineTo(canvas.width, 0);
-
-		const rightWave1 = Math.sin(canvas.width * 0.02 + time * 0.8) * 6;
-		const rightWave2 = Math.cos(canvas.width * 0.015 - time * 0.6) * 4;
-		const rightWave3 = Math.sin(canvas.width * 0.03 + time * 1.0) * 3;
-		ctx.lineTo(
-			canvas.width,
-			headerBottom + rightWave1 + rightWave2 + rightWave3,
-		);
-
-		for (let x = canvas.width; x >= 0; x -= 1) {
-			const wave1 = Math.sin(x * 0.02 + time * 0.8) * 6;
-			const wave2 = Math.cos(x * 0.015 - time * 0.6) * 4;
-			const wave3 = Math.sin(x * 0.03 + time * 1.0) * 3;
-			const y = headerBottom + wave1 + wave2 + wave3;
-			ctx.lineTo(x, y);
-		}
-
-		ctx.closePath();
-
-		const waterGradient = ctx.createLinearGradient(0, 0, 0, headerBottom + 20);
-		waterGradient.addColorStop(0, getCSSVariable("--water-top"));
-		waterGradient.addColorStop(0.3, getCSSVariable("--water-transition"));
-		waterGradient.addColorStop(0.7, getCSSVariable("--water-medium"));
-		waterGradient.addColorStop(1, getCSSVariable("--water-bottom"));
-		ctx.fillStyle = waterGradient;
-		ctx.fill();
-
-		ctx.restore();
 	}
 
 	function drawWaterSurface(
@@ -423,9 +334,6 @@ export default function OceanWater() {
 	}
 
 	function drawMoon(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
-		const header = document.querySelector("header");
-		const headerBottom = header ? header.getBoundingClientRect().bottom : 100;
-
 		const moonX = canvas.width * 0.8;
 		const moonBaseY = 80;
 		const moonY = moonBaseY + scrollYRef.current * 0.3;
