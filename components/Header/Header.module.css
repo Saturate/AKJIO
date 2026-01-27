@@ -3,7 +3,9 @@
 	max-width: 600px;
 	flex: 1;
 	text-align: center;
+	z-index: 10;
 }
+
 .headerTitle {
 	font-family: var(--font-jersey-25);
 	font-size: 4.5em;
@@ -19,13 +21,9 @@
 }
 
 .websitetop {
-	background: #8fb8ea;
+	position: relative;
+	background: transparent;
 	min-height: 100px;
-}
-
-.waterline {
-	height: 215px;
-	margin-top: -60px;
 	overflow: hidden;
-	background: url(/Ocean.png) 0% 0% repeat-x;
+	z-index: 1;
 }

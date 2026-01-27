@@ -5,6 +5,8 @@ import "../styles/global-styles.css";
 import Navigation from "@/components/Navigation/Navigation";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
+import OceanWater from "@/components/OceanWater/OceanWater";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 const font = Jersey_25({
 	subsets: ["latin"],
@@ -24,17 +26,26 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="en" className={font.variable}>
+		<html lang="en" className={font.variable} suppressHydrationWarning>
 			<body className={styles.page}>
-				<Header>
-					<Navigation />
-				</Header>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					<OceanWater />
 
-				<main className={styles.main}>
-					<section className={styles.content}>{children}</section>
-				</main>
+					<Header>
+						<Navigation />
+					</Header>
 
-				<Footer />
+					<main className={styles.main}>
+						<section className={styles.content}>{children}</section>
+					</main>
+
+					<Footer />
+				</ThemeProvider>
 			</body>
 			<SpeedInsights />
 		</html>

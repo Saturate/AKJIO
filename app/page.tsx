@@ -1,5 +1,8 @@
 import getPageFromSlug from "@/utils/getPageFromSlug";
 import { PageProps } from "./types";
+import RecentPosts from "@/components/RecentPosts/RecentPosts";
+import PopularTags from "@/components/PopularTags/PopularTags";
+import styles from "./page.module.css";
 
 export async function generateMetadata() {
 	return {
@@ -11,5 +14,13 @@ export default async function FrontPage({ params }: PageProps) {
 
 	const page = await getPageFromSlug([slug]);
 
-	return <>{page.Component()}</>;
+	return (
+		<div className={styles.homeLayout}>
+			<article className={styles.mainContent}>{page.Component()}</article>
+			<div className={styles.sidebar}>
+				<RecentPosts limit={3} />
+				<PopularTags limit={10} />
+			</div>
+		</div>
+	);
 }
