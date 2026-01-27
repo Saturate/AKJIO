@@ -24,4 +24,4 @@ You can link and quote it, but please include a link to my blog/site and my name
 
 Anything else? Just ask!
 
-Copyright 2025 - Allan Kimmer Jensen
+Copyright 2026 - Allan Kimmer Jensen
