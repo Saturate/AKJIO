@@ -5,14 +5,13 @@ export default function Navigation() {
 	return (
 		<nav className={styles.nav}>
 			<Link href={"/posts"}>
-				Posts <span>Solutions, Words, toughts</span>
+				Posts <span>Writing & Security</span>
 			</Link>
 			<Link href={"/about"}>
-				About <span>Stats, Level and Skills!</span>
+				About <span>Background & Experience</span>
 			</Link>
-			<Link href={"/labs"}>
-				Labs
-				<span>Insane Experiments, fun code, hacks</span>
+			<Link href={"/work"}>
+				Work <span>Projects & Domains</span>
 			</Link>
 		</nav>
 	);

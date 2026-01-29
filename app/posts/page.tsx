@@ -1,16 +1,27 @@
 import { getPost, getPostsIds } from "@/app/actions";
 import ArticleExcerpt from "@/components/ArticleExcerpt/ArticleExcerpt";
+import Link from "next/link";
 
-export default async function PostsOverviewPage({}) {
+type Props = {
+	searchParams: Promise<{ tag?: string }>;
+};
+
+export default async function PostsOverviewPage({ searchParams }: Props) {
+	const { tag } = await searchParams;
 	const { postIds } = await getPostsIds();
 
-	const teasers = await Promise.all(
+	const posts = await Promise.all(
 		postIds.map(async (id) => {
 			return await getPost(id);
 		}),
 	);
 
-	const sortedByDateTeasers = teasers
+	// Filter by tag if provided
+	const filteredPosts = tag
+		? posts.filter((post) => post.frontmatter.tags?.includes(tag))
+		: posts;
+
+	const sortedPosts = filteredPosts
 		.sort((a, b) => {
 			return (
 				new Date(b.frontmatter.date).getTime() -
@@ -23,5 +34,20 @@ export default async function PostsOverviewPage({}) {
 			);
 		});
 
-	return <>{sortedByDateTeasers}</>;
+	return (
+		<>
+			{tag && (
+				<div style={{ marginBottom: "2rem" }}>
+					<p>
+						Showing posts tagged with: <strong>{tag}</strong>
+					</p>
+					<Link href="/posts">← Clear filter</Link>
+				</div>
+			)}
+			{sortedPosts.length === 0 && (
+				<p>No posts found {tag && `with tag "${tag}"`}.</p>
+			)}
+			{sortedPosts}
+		</>
+	);
 }

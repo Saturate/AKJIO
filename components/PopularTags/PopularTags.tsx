@@ -1,4 +1,5 @@
 import { getPost, getPostsIds } from "@/app/actions";
+import Link from "next/link";
 import styles from "./PopularTags.module.css";
 
 export default async function PopularTags({ limit = 10 }: { limit?: number }) {
@@ -34,10 +35,10 @@ export default async function PopularTags({ limit = 10 }: { limit?: number }) {
 			<h3 className={styles.heading}>Popular Tags</h3>
 			<div className={styles.tagCloud}>
 				{sortedTags.map(([tag, count]) => (
-					<span key={tag} className={styles.tag}>
+					<Link key={tag} href={`/posts?tag=${tag}`} className={styles.tag}>
 						{tag}
 						<span className={styles.count}>{count}</span>
-					</span>
+					</Link>
 				))}
 			</div>
 		</aside>
