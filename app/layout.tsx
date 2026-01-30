@@ -1,5 +1,5 @@
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Jersey_25 } from "next/font/google";
+import { Jersey_25, Inter } from "next/font/google";
 import styles from "../styles/Home.module.css";
 import "../styles/global-styles.css";
 import Navigation from "@/components/Navigation/Navigation";
@@ -15,9 +15,20 @@ const font = Jersey_25({
 	display: "swap",
 });
 
+const inter = Inter({
+	subsets: ["latin"],
+	variable: "--font-inter",
+	display: "swap",
+});
+
 export const metadata = {
 	title: "AKJ.IO",
 	description: "Allan Kimmer Jensen",
+	alternates: {
+		types: {
+			"application/rss+xml": "/feed.xml",
+		},
+	},
 };
 
 export default function RootLayout({
@@ -26,7 +37,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="en" className={font.variable} suppressHydrationWarning>
+		<html lang="en" className={`${font.variable} ${inter.variable}`} suppressHydrationWarning>
 			<body className={styles.page}>
 				<ThemeProvider
 					attribute="class"
