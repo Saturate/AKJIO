@@ -1,6 +1,5 @@
 .sidebar {
-	position: sticky;
-	top: 2rem;
+	/* Removed sticky positioning - sidebar stickiness should be controlled at page level */
 }
 
 .heading {

@@ -2,13 +2,17 @@
 	display: grid;
 	grid-template-columns:
 		minmax(2rem, 1fr)
-		minmax(auto, calc(1200px - 320px - 2rem))
+		minmax(auto, calc(1000px - 320px - 2rem))
 		2rem
 		320px
 		minmax(2rem, 1fr);
 	align-items: start;
 	width: 100vw;
-	margin-left: calc(50% - 50vw);
+	position: relative;
+	left: 50%;
+	right: 50%;
+	margin-left: -50vw;
+	margin-right: -50vw;
 	box-sizing: border-box;
 }
 
@@ -20,6 +24,9 @@
 .sidebar {
 	grid-column: 4;
 	min-width: 0;
+	position: sticky;
+	top: 2rem;
+	align-self: start;
 }
 
 @media (max-width: 1024px) {
