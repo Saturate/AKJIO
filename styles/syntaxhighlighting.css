@@ -3,7 +3,7 @@
 	background: #fafafa;
 	border-radius: 5px;
 	padding: 0.75rem;
-	font-size: 1.1rem;
+	font-size: 0.875rem;
 	font-family:
 		Menlo,
 		Monaco,
@@ -19,11 +19,11 @@ figure[data-rehype-pretty-code-figure] {
 	background-color: #0b0e14;
 	padding: 5px 17px;
 	margin: 0;
-	margin-bottom: 0px;
 	margin-bottom: 1rem;
 	border-radius: 11px;
 	overflow: auto;
 	tab-size: 2;
+	font-size: 0.875rem;
 }
 
 code[data-line-numbers] {
@@ -58,4 +58,21 @@ code[data-line-numbers-max-digits="4"] > [data-line]::before {
 span[data-rehype-pretty-code-figure] > code {
 	padding: 2px 4px;
 	border-radius: 6px;
+}
+
+/* AI Prompt blocks - dark styling to differentiate from code */
+figure[data-rehype-pretty-code-figure]:has(code[data-language="prompt"]) {
+	background-color: rgba(20, 30, 45, 0.6);
+	border-left: 3px solid rgba(100, 120, 150, 0.5);
+	overflow: visible;
+}
+
+figure[data-rehype-pretty-code-figure]:has(code[data-language="prompt"]) pre {
+	background-color: transparent !important;
+}
+
+figure[data-rehype-pretty-code-figure]:has(code[data-language="prompt"]) code {
+	font-style: italic;
+	opacity: 0.9;
+	white-space: pre-wrap;
 }

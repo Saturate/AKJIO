@@ -1,10 +1,27 @@
 import { getPost, getPostsIds } from "@/app/actions";
 import ArticleExcerpt from "@/components/ArticleExcerpt/ArticleExcerpt";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 type Props = {
 	searchParams: Promise<{ tag?: string }>;
 };
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+	const { tag } = await searchParams;
+
+	if (tag) {
+		return {
+			title: `Posts tagged "${tag}" - AKJ.IO`,
+			description: `Blog posts and articles about ${tag} by Allan Kimmer Jensen`,
+		};
+	}
+
+	return {
+		title: "Posts - AKJ.IO",
+		description: "Writing about security, frontend development, architecture, and software engineering.",
+	};
+}
 
 export default async function PostsOverviewPage({ searchParams }: Props) {
 	const { tag } = await searchParams;

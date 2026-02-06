@@ -17,7 +17,7 @@
 
 .dark {
 	/* Dark mode (nighttime) */
-	--sky-top: #0b1026;
+	--sky-top: #050814;
 	--water-top: #1a2a4a;
 	--water-transition: #243556;
 	--water-medium: #2d4264;
@@ -29,7 +29,7 @@
 	--ripple-color: #6b8aab;
 	--light-ray-color: #3d5a7c;
 	--text-primary: #fbf1f1;
-	--cloud-color: rgba(30, 40, 60, 0.3);
+	--cloud-color: rgba(50, 60, 80, 0.4);
 	--moon-color: #f4f1de;
 	--star-color: rgba(255, 255, 255, 0.8);
 }
@@ -89,6 +89,10 @@ h1 {
 	line-height: 0.95em;
 }
 
+h2 {
+	font-size: 1.5em;
+}
+
 .page {
 	min-height: 100vh;
 	background: #8fb8ea;
@@ -122,6 +126,118 @@ h1 {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+}
+
+blockquote {
+	margin: 1.5rem 0;
+	padding: 1rem 1.5rem;
+	border-left: 4px solid rgba(74, 158, 255, 0.5);
+	background: rgba(255, 255, 255, 0.05);
+	border-radius: 0 4px 4px 0;
+}
+
+blockquote p {
+	margin: 0.5rem 0;
+}
+
+blockquote p:first-child {
+	margin-top: 0;
+}
+
+blockquote p:last-child {
+	margin-bottom: 0;
+}
+
+hr {
+	border: none;
+	height: 1px;
+	background: linear-gradient(
+		to right,
+		transparent,
+		rgba(74, 158, 255, 0.3) 20%,
+		rgba(74, 158, 255, 0.3) 80%,
+		transparent
+	);
+	margin: 2.5rem 0;
+}
+
+dl {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 0.5rem 1.5rem;
+	margin: 1.5rem 0;
+	padding: 1rem 1.5rem;
+	background: rgba(255, 255, 255, 0.05);
+	border-radius: 8px;
+	border-left: 4px solid rgba(255, 255, 255, 0.2);
+}
+
+dt {
+	font-weight: 600;
+	opacity: 0.7;
+}
+
+dd {
+	margin: 0;
+}
+
+dd a {
+	text-decoration: underline;
+	opacity: 0.8;
+}
+
+dd a:hover {
+	opacity: 1;
+}
+
+.spoiler {
+	background: rgba(0, 0, 0, 0.8);
+	color: transparent;
+	user-select: none;
+	cursor: pointer;
+	padding: 0.25rem 0.5rem;
+	border-radius: 4px;
+	transition: all 0.2s ease;
+	display: inline-block;
+	position: relative;
+	font-family: Menlo, Monaco, "Lucida Console", monospace;
+	font-size: 0.9em;
+}
+
+.spoiler::before {
+	content: "Click to reveal";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	color: rgba(255, 255, 255, 0.6);
+	font-size: 0.75rem;
+	font-weight: 500;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	pointer-events: none;
+	transition: opacity 0.2s ease;
+	font-family: var(--font-inter), sans-serif;
+}
+
+.spoiler:hover::before {
+	opacity: 0.8;
+}
+
+.spoiler:active,
+.spoiler.revealed {
+	background: rgba(0, 0, 0, 0.3);
+	color: inherit;
+	user-select: text;
+	cursor: text;
+	padding: 0.25rem 0.5rem;
+	border-radius: 4px;
+}
+
+.spoiler:active::before,
+.spoiler.revealed::before {
+	display: none;
 }
 
 @import url(./syntaxhighlighting.css);
