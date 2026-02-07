@@ -3,6 +3,11 @@ import { PageProps } from "./types";
 import RecentPosts from "@/components/RecentPosts/RecentPosts";
 import PopularTags from "@/components/PopularTags/PopularTags";
 import styles from "./page.module.css";
+import {
+	generatePersonSchema,
+	generateOrganizationSchema,
+	serializeJsonLd,
+} from "@/utils/generateJsonLd";
 
 export async function generateMetadata() {
 	return {
@@ -14,13 +19,26 @@ export default async function FrontPage({ params }: PageProps) {
 
 	const page = await getPageFromSlug([slug]);
 
+	const personJsonLd = generatePersonSchema();
+	const orgJsonLd = generateOrganizationSchema();
+
 	return (
-		<div className={styles.homeLayout}>
-			<article className={styles.mainContent}>{page.Component()}</article>
-			<div className={styles.sidebar}>
-				<RecentPosts limit={3} />
-				<PopularTags limit={10} />
+		<>
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: serializeJsonLd(personJsonLd) }}
+			/>
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: serializeJsonLd(orgJsonLd) }}
+			/>
+			<div className={styles.homeLayout}>
+				<article className={styles.mainContent}>{page.Component()}</article>
+				<div className={styles.sidebar}>
+					<RecentPosts limit={3} />
+					<PopularTags limit={10} />
+				</div>
 			</div>
-		</div>
+		</>
 	);
 }

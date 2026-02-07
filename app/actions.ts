@@ -6,7 +6,9 @@ import { notFound } from "next/navigation";
 type FrontmatterType = {
 	title: string;
 	subtitle: string;
+	description?: string;
 	date: Date;
+	updated?: Date;
 	tags?: string[];
 };
 

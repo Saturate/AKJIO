@@ -16,11 +16,7 @@ export default function ArticleExcerpt({
 	description?: string;
 }) {
 	return (
-		<article
-			className="post"
-			itemType="http://schema.org/BlogPosting"
-			role="article"
-		>
+		<article className="post" role="article">
 			<h1 className={style.heading}>
 				<Link href={link}>{title}</Link>
 			</h1>
@@ -30,7 +26,7 @@ export default function ArticleExcerpt({
 			>
 				{formatDate(date, "do LLLL yyyy")}
 			</time>
-			<p itemProp="description">
+			<p>
 				{description ?? subtitle}
 				<a className={style.readMore} href={link}>
 					»
