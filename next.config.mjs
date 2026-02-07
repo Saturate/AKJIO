@@ -8,6 +8,15 @@ import remarkAbbr from "./lib/remark-abbr.js";
 const nextConfig = {
 	reactStrictMode: true,
 	pageExtensions: ["js", "jsx", "mdx", "md", "ts", "tsx"],
+	async redirects() {
+		return [
+			{
+				source: "/security.txt",
+				destination: "/.well-known/security.txt",
+				permanent: true,
+			},
+		];
+	},
 	async headers() {
 		return [
 			{
