@@ -15,6 +15,7 @@ export default function Footer() {
 					aria-label="GitHub"
 				>
 					<GithubLogo weight="fill" />
+					<span>GitHub</span>
 				</a>
 				<a
 					href="https://www.linkedin.com/in/allankimmerjensen"
@@ -23,9 +24,11 @@ export default function Footer() {
 					aria-label="LinkedIn"
 				>
 					<LinkedinLogo weight="fill" />
+					<span>LinkedIn</span>
 				</a>
 				<a href="/feed.xml" aria-label="RSS Feed">
 					<RssSimple weight="fill" />
+					<span>RSS</span>
 				</a>
 			</div>
 		</footer>

@@ -23,9 +23,14 @@
 	color: #a0a0a0;
 	text-decoration: none;
 	transition: color 0.2s;
-	font-size: 1.5rem;
+	font-size: 0.9rem;
 	display: flex;
 	align-items: center;
+	gap: 0.5rem;
+}
+
+.links a svg {
+	font-size: 1.25rem;
 }
 
 .links a:hover {
