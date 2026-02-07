@@ -1,0 +1,5 @@
+Contact: mailto:security@akj.io
+Contact: https://github.com/Saturate/AKJIO/security/advisories/new
+Expires: 2027-02-07T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://akj.io/.well-known/security.txt
