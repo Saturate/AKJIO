@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, ReactElement } from "react";
 import Spoiler from "@/components/Spoiler/Spoiler";
 
 interface AutoSpoilerProps {
@@ -11,8 +11,8 @@ interface AutoSpoilerProps {
 // Matches common CTF flag patterns: THM{...}, FLAG{...}, CTF{...}, HTB{...}, etc.
 const FLAG_PATTERN = /\b([A-Z]{2,})\{([^}]+)\}/g;
 
-function processText(text: string): (string | JSX.Element)[] {
-	const parts: (string | JSX.Element)[] = [];
+function processText(text: string): (string | ReactElement)[] {
+	const parts: (string | ReactElement)[] = [];
 	let lastIndex = 0;
 	let match;
 	let keyCounter = 0;
