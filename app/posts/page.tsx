@@ -2,6 +2,8 @@ import { getPost, getPostsIds } from "@/app/actions";
 import ArticleExcerpt from "@/components/ArticleExcerpt/ArticleExcerpt";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { generateCollectionPageSchema } from "@/utils/generateJsonLd";
+import JsonLd from "@/components/JsonLd/JsonLd";
 
 type Props = {
 	searchParams: Promise<{ tag?: string }>;
@@ -38,18 +40,34 @@ export default async function PostsOverviewPage({ searchParams }: Props) {
 		? posts.filter((post) => post.frontmatter.tags?.includes(tag))
 		: posts;
 
-	const sortedPosts = filteredPosts
-		.sort((a, b) => {
-			return (
-				new Date(b.frontmatter.date).getTime() -
-				new Date(a.frontmatter.date).getTime()
-			);
-		})
-		.map(({ frontmatter, link }) => {
-			return (
-				<ArticleExcerpt key={frontmatter.title} {...frontmatter} link={link} />
-			);
-		});
+	const sortedPosts = filteredPosts.sort((a, b) => {
+		return (
+			new Date(b.frontmatter.date).getTime() -
+			new Date(a.frontmatter.date).getTime()
+		);
+	});
+
+	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
+
+	const jsonLd = generateCollectionPageSchema(
+		sortedPosts.map((post) => ({
+			title: post.frontmatter.title,
+			description: post.frontmatter.description,
+			subtitle: post.frontmatter.subtitle,
+			date:
+				post.frontmatter.date instanceof Date
+					? post.frontmatter.date.toISOString()
+					: post.frontmatter.date,
+			tags: post.frontmatter.tags,
+			url: `${siteUrl}${post.link}`,
+		})),
+	);
+
+	const sortedPostElements = sortedPosts.map(({ frontmatter, link }) => {
+		return (
+			<ArticleExcerpt key={frontmatter.title} {...frontmatter} link={link} />
+		);
+	});
 
 	return (
 		<>
@@ -61,10 +79,11 @@ export default async function PostsOverviewPage({ searchParams }: Props) {
 					<Link href="/posts">← Clear filter</Link>
 				</div>
 			)}
-			{sortedPosts.length === 0 && (
+			{sortedPostElements.length === 0 && (
 				<p>No posts found {tag && `with tag "${tag}"`}.</p>
 			)}
-			{sortedPosts}
+			{sortedPostElements}
+			<JsonLd data={jsonLd} />
 		</>
 	);
 }
