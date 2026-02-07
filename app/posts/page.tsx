@@ -2,10 +2,8 @@ import { getPost, getPostsIds } from "@/app/actions";
 import ArticleExcerpt from "@/components/ArticleExcerpt/ArticleExcerpt";
 import Link from "next/link";
 import type { Metadata } from "next";
-import {
-	generateCollectionPageSchema,
-	serializeJsonLd,
-} from "@/utils/generateJsonLd";
+import { generateCollectionPageSchema } from "@/utils/generateJsonLd";
+import JsonLd from "@/components/JsonLd/JsonLd";
 
 type Props = {
 	searchParams: Promise<{ tag?: string }>;
@@ -73,10 +71,6 @@ export default async function PostsOverviewPage({ searchParams }: Props) {
 
 	return (
 		<>
-			<script
-				type="application/ld+json"
-				dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-			/>
 			{tag && (
 				<div style={{ marginBottom: "2rem" }}>
 					<p>
@@ -89,6 +83,7 @@ export default async function PostsOverviewPage({ searchParams }: Props) {
 				<p>No posts found {tag && `with tag "${tag}"`}.</p>
 			)}
 			{sortedPostElements}
+			<JsonLd data={jsonLd} />
 		</>
 	);
 }

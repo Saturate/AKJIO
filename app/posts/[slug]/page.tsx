@@ -5,10 +5,8 @@ import { notFound } from "next/navigation";
 import TableOfContents from "@/components/TableOfContents/TableOfContents";
 import styles from "./page.module.css";
 import { format } from "date-fns";
-import {
-	generateBlogPostingSchema,
-	serializeJsonLd,
-} from "@/utils/generateJsonLd";
+import { generateBlogPostingSchema } from "@/utils/generateJsonLd";
+import JsonLd from "@/components/JsonLd/JsonLd";
 
 export async function generateMetadata({
 	params,
@@ -52,10 +50,6 @@ export default async function BlogPostPage({ params }: PageProps) {
 
 	return (
 		<>
-			<script
-				type="application/ld+json"
-				dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-			/>
 			<div className={styles.postLayout}>
 				<article className={styles.postContent}>
 					<h1>{page.frontmatter.title}</h1>
@@ -74,6 +68,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 					</aside>
 				)}
 			</div>
+			<JsonLd data={jsonLd} />
 		</>
 	);
 }

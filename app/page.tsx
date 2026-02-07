@@ -6,8 +6,8 @@ import styles from "./page.module.css";
 import {
 	generatePersonSchema,
 	generateOrganizationSchema,
-	serializeJsonLd,
 } from "@/utils/generateJsonLd";
+import JsonLd from "@/components/JsonLd/JsonLd";
 
 export async function generateMetadata() {
 	return {
@@ -24,14 +24,6 @@ export default async function FrontPage({ params }: PageProps) {
 
 	return (
 		<>
-			<script
-				type="application/ld+json"
-				dangerouslySetInnerHTML={{ __html: serializeJsonLd(personJsonLd) }}
-			/>
-			<script
-				type="application/ld+json"
-				dangerouslySetInnerHTML={{ __html: serializeJsonLd(orgJsonLd) }}
-			/>
 			<div className={styles.homeLayout}>
 				<article className={styles.mainContent}>{page.Component()}</article>
 				<div className={styles.sidebar}>
@@ -39,6 +31,8 @@ export default async function FrontPage({ params }: PageProps) {
 					<PopularTags limit={10} />
 				</div>
 			</div>
+			<JsonLd data={personJsonLd} />
+			<JsonLd data={orgJsonLd} />
 		</>
 	);
 }
