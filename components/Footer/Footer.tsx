@@ -1,8 +1,12 @@
+import { GithubLogo, LinkedinLogo, RssSimple } from "@phosphor-icons/react/dist/ssr";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
 	return (
 		<footer className={styles.footer}>
+			<div className={styles.copyright}>
+				© 1990-present Allan Kimmer Jensen. All Rights Reserved.
+			</div>
 			<div className={styles.links}>
 				<a
 					href="https://github.com/Saturate"
@@ -10,7 +14,7 @@ export default function Footer() {
 					rel="noopener noreferrer"
 					aria-label="GitHub"
 				>
-					GitHub
+					<GithubLogo weight="fill" />
 				</a>
 				<a
 					href="https://www.linkedin.com/in/allankimmerjensen"
@@ -18,14 +22,11 @@ export default function Footer() {
 					rel="noopener noreferrer"
 					aria-label="LinkedIn"
 				>
-					LinkedIn
+					<LinkedinLogo weight="fill" />
 				</a>
 				<a href="/feed.xml" aria-label="RSS Feed">
-					RSS
+					<RssSimple weight="fill" />
 				</a>
-			</div>
-			<div className={styles.copyright}>
-				© 2026 Allan Kimmer Jensen
 			</div>
 		</footer>
 	);

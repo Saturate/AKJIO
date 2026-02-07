@@ -23,8 +23,9 @@
 	color: #a0a0a0;
 	text-decoration: none;
 	transition: color 0.2s;
-	font-size: 0.9rem;
-	font-weight: normal;
+	font-size: 1.5rem;
+	display: flex;
+	align-items: center;
 }
 
 .links a:hover {
@@ -33,7 +34,7 @@
 
 .copyright {
 	color: #a0a0a0;
-	font-size: 0.9rem;
+	font-size: 0.6875rem;
 }
 
 @media (max-width: 640px) {
