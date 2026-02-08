@@ -23,7 +23,7 @@ export async function generateMetadata({
 	const postUrl = `${siteUrl}/posts/${slug}`;
 
 	return {
-		title,
+		title: { default: title, template: "%s | AKJ.IO" },
 		description,
 		authors: [{ name: "Allan Kimmer Jensen" }],
 		keywords: frontmatter.tags,
