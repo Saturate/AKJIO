@@ -2,7 +2,7 @@ import createMDX from "@next/mdx";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import rehypePrettyCode from "rehype-pretty-code";
-import remarkAbbr from "./lib/remark-abbr.js";
+import remarkAbbr from "./lib/remark-abbr.mjs";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

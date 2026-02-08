@@ -28,7 +28,8 @@ export default async function generateContentMap() {
 			.filter((path) => !path.isDirectory())
 			.map(async (entry) => {
 				// In newer Node.js versions, readdirSync with recursive returns parentPath instead of path
-				const entryPath = (entry as any).parentPath || (entry as any).path;
+				const entryWithPath = entry as fs.Dirent & { path?: string; parentPath?: string };
+				const entryPath = entryWithPath.parentPath || entryWithPath.path;
 				if (!entryPath) {
 					console.error("Entry has no path or parentPath:", entry);
 					throw new Error(`Content entry missing path property: ${JSON.stringify(entry)}`);

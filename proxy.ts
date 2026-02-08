@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
 	Content-Security-Policy: default-src 'self' *.akj.io googleapis.com fonts.googleapis.com fonts.gstatic.com 'sha256-nP0EI9B9ad8IoFUti2q7EQBabcE5MS5v0nkvRfUbYnM=' 'sha256-JG41RMQL8CqgkFKcSK/aphGI1C0di1CaK+aDwq8lJF4=' cdnjs.cloudflare.com www.google-analytics.com google-analytics.com; upgrade-insecure-requests; report-uri https://e3710ad22de216c6539627c47ee49254.report-uri.com/r/d/csp/enforce;
 */
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
 	const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 	const cspHeader = `
     default-src 'self';
