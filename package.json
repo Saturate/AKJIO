@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "echo 'Lint temporarily disabled due to Next.js 16 bug - see https://github.com/vercel/next.js/issues/64402'",
+    "lint": "eslint .",
     "test": "echo No tests found.",
     "format": "prettier --write --ignore-path=.gitignore .",
     "format:check": "prettier --check --ignore-path=.gitignore .",
