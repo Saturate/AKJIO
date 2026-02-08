@@ -22,11 +22,52 @@ const inter = Inter({
 });
 
 export const metadata = {
-	title: "AKJ.IO",
-	description: "Allan Kimmer Jensen",
+	metadataBase: new URL("https://akj.io"),
+	title: {
+		default: "AKJ.IO - Allan Kimmer Jensen",
+		template: "%s | AKJ.IO",
+	},
+	description:
+		"Software engineer and security enthusiast. Writing about CTF challenges, web security, frontend development, and software architecture.",
+	keywords: [
+		"security",
+		"CTF",
+		"web development",
+		"software engineering",
+		"Allan Kimmer Jensen",
+	],
+	authors: [{ name: "Allan Kimmer Jensen", url: "https://akj.io" }],
+	creator: "Allan Kimmer Jensen",
+	openGraph: {
+		type: "website",
+		locale: "en_US",
+		url: "https://akj.io",
+		siteName: "AKJ.IO",
+		title: "AKJ.IO - Allan Kimmer Jensen",
+		description:
+			"Software engineer and security enthusiast. Writing about CTF challenges, web security, frontend development, and software architecture.",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "AKJ.IO - Allan Kimmer Jensen",
+		description:
+			"Software engineer and security enthusiast. Writing about CTF challenges, web security, and software architecture.",
+		creator: "@allankimmer",
+	},
 	alternates: {
 		types: {
-			"application/rss+xml": "/feed.xml",
+			"application/rss+xml": "https://akj.io/feed",
+		},
+	},
+	robots: {
+		index: true,
+		follow: true,
+		googleBot: {
+			index: true,
+			follow: true,
+			"max-video-preview": -1,
+			"max-image-preview": "large",
+			"max-snippet": -1,
 		},
 	},
 };
