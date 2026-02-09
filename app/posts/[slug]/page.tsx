@@ -3,6 +3,7 @@ import getPageFromSlug from "@/utils/getPageFromSlug";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import TableOfContents from "@/components/TableOfContents/TableOfContents";
+import ResponsiveDetails from "@/components/ResponsiveDetails/ResponsiveDetails";
 import styles from "./page.module.css";
 import { format } from "date-fns";
 import { generateBlogPostingSchema } from "@/utils/generateJsonLd";
@@ -72,6 +73,17 @@ export default async function BlogPostPage({ params }: PageProps) {
 	return (
 		<>
 			<div className={styles.postLayout}>
+				<aside className={styles.postToc}>
+					<ResponsiveDetails className={styles.tocDetails}>
+						<summary className={styles.tocToggle}>Table of Contents</summary>
+						<div className={styles.tocContent}>
+							{page.toc && page.toc.length > 0 && (
+								<TableOfContents entries={page.toc} />
+							)}
+						</div>
+					</ResponsiveDetails>
+				</aside>
+
 				<article className={styles.postContent}>
 					<h1>{page.frontmatter.title}</h1>
 					<h2>{page.frontmatter.subtitle ?? page.frontmatter.description}</h2>
@@ -82,12 +94,6 @@ export default async function BlogPostPage({ params }: PageProps) {
 					)}
 					{page.Component()}
 				</article>
-
-				{page.toc && page.toc.length > 0 && (
-					<aside className={styles.postSidebar}>
-						<TableOfContents entries={page.toc} />
-					</aside>
-				)}
 			</div>
 			<JsonLd data={jsonLd} />
 		</>
