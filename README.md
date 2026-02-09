@@ -1,10 +1,25 @@
 # AKJ.IO
 
-The source and content for my site, view it here [https://akj.io](https://akj.io)
+Personal blog on security, software development, AI, and technology.
 
-## Mistakes?
+Hi, I'm Allan - Software engineer and security enthusiast with 15+ years experience. I write about CTF writeups, web security, software architecture, AI, and other tech topics that interest me.
 
-Found spelling or grammar hiccups? Feel free to make a [issue](https://github.com/Saturate/AKJIO/issues), and/or make a pull request.
+[Visit the site →](https://akj.io)
+
+## Connect
+
+- Twitter: [@allankimmer](https://twitter.com/allankimmer)
+- LinkedIn: [Allan Kimmer Jensen](https://linkedin.com/in/allankimmerjensen)
+- Email: hi@akj.io
+
+## Subscribe
+
+- [RSS Feed](https://akj.io/feed)
+- Watch this repo for new posts
+
+## Found a Bug?
+
+Typos or technical issues? [Open an issue](https://github.com/Saturate/AKJIO/issues) or submit a PR.
 
 ## History
 
@@ -19,9 +34,6 @@ Funnily enough this feels like v1 still, but just in the NextJS framework. MDX i
 
 ## Copyright
 
-Feel free to use any code snippets, but the blog content is mine.
-You can link and quote it, but please include a link to my blog/site and my name.
-
-Anything else? Just ask!
+Code is free to use. Content is mine - link back if you quote or reference it.
 
 Copyright 2026 - Allan Kimmer Jensen
