@@ -18,13 +18,34 @@ export async function generateMetadata({
 		return notFound();
 	}
 
-	const { title, description } = page;
+	const { title, description, frontmatter } = page;
+	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
+	const postUrl = `${siteUrl}/posts/${slug}`;
+
 	return {
 		title: { default: title, template: "%s | AKJ.IO" },
-		description: description,
+		description,
+		authors: [{ name: "Allan Kimmer Jensen" }],
+		keywords: frontmatter.tags,
 		openGraph: {
+			type: "article",
+			url: postUrl,
 			title,
-			description: description,
+			description,
+			publishedTime: frontmatter.date
+				? new Date(frontmatter.date).toISOString()
+				: undefined,
+			modifiedTime: frontmatter.updated
+				? new Date(frontmatter.updated).toISOString()
+				: undefined,
+			authors: ["Allan Kimmer Jensen"],
+			tags: frontmatter.tags,
+		},
+		twitter: {
+			card: "summary_large_image",
+			title,
+			description,
+			creator: "@allankimmer",
 		},
 	};
 }
