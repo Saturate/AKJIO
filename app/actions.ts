@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
+import calculateReadTime from "@/utils/calculateReadTime";
 
 type FrontmatterType = {
 	title: string;
@@ -40,7 +41,8 @@ export async function getPost(id: string) {
 		source: postFile,
 		options: { parseFrontmatter: true },
 	});
-	return { content, frontmatter, link: `/posts/${id}` };
+	const readTime = calculateReadTime(postFile);
+	return { content, frontmatter, link: `/posts/${id}`, readTime };
 }
 
 export async function getPage(id: string) {

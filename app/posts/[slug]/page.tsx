@@ -76,9 +76,12 @@ export default async function BlogPostPage({ params }: PageProps) {
 					<h1>{page.frontmatter.title}</h1>
 					<h2>{page.frontmatter.subtitle ?? page.frontmatter.description}</h2>
 					{page.frontmatter.date && (
-						<time className={styles.postDate} dateTime={page.frontmatter.date}>
-							{format(new Date(page.frontmatter.date), "EEEE, MMMM do, yyyy")}
-						</time>
+						<div className={styles.postMeta}>
+							<time dateTime={page.frontmatter.date}>
+								{format(new Date(page.frontmatter.date), "EEEE, MMMM do, yyyy")}
+							</time>
+							<span>{page.readTime} min read</span>
+						</div>
 					)}
 					{page.Component()}
 				</article>
