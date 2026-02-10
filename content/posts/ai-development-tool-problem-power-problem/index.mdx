@@ -34,7 +34,7 @@ The problem isn't the tool. It's assuming the tool removes your responsibility. 
 
 ## When AI Works (and When It Doesn't)
 
-AI coding assistance works when you know exactly what you want. I had a TypeScript codebase that needed OpenAPI implementation. Dozens of endpoints. Sure, there are code generators that spit out TypeScript from Swagger specs. But I wanted control over the structure, and I wanted to see if this Insane Automated Insecure Power Hammer everyone's talking about could actually save time.
+AI coding assistance works when you know exactly what you want. I had a TypeScript codebase that needed OpenAPI implementation. Dozens of endpoints. Sure, there are code generators that spit out TypeScript from Swagger specs. But I wanted control over the structure, and I wanted to see if this powerful but insecure automation everyone's hyping could actually save time.
 
 So I wrote one endpoint by hand. Got the types right, set up the validation, handled errors the way I wanted. Then I gave AI the pattern and the Swagger spec. "Here's the structure. Implement the rest following this exact pattern." It generated 30+ endpoints. I reviewed each one, fixed a few type mismatches, caught where it misread the spec format, adjusted error handling in three places. Still saved hours.
 
@@ -52,7 +52,7 @@ But it also makes up problems that don't exist. [cURL ended their bug bounty pro
 
 AI will confidently tell you about security issues that aren't there, race conditions in single-threaded code, memory leaks that can't happen. You need to know enough to filter the noise.
 
-The problem can be the tool. But it's also assuming the tool removes your responsibility. Some developers skip testing because they don't feel like they own the code, and they mighy be right, maybe they did a single prompt and did that PR that now I have to read, with 100 changed files, while trying not to cry. The code becomes something they transported, not something they built. That's a human cost that doesn't show up in productivity metrics.
+The problem can be the tool. But it's also assuming the tool removes your responsibility. Some developers skip testing because they don't feel like they own the code, and they might be right, maybe they did a single prompt and did that PR that now I have to read, with 100 changed files, while trying not to cry. The code becomes something they transported, not something they built. That's a human cost that doesn't show up in productivity metrics.
 
 ## The Control Plane Problem
 
@@ -110,7 +110,7 @@ Anthropic. OpenAI. Google. Meta. The companies that can afford the training infr
 
 And right now, none of them are profitable. They're running on subsidized pricing, venture capital, and the promise of future returns. At some point, that changes. When the real, unsubsidized costs hit, what happens?
 
-Three possible futures emerge, and none are great.
+Four possible futures emerge, and none are great.
 
 ## Four Futures, No Winners
 
@@ -144,7 +144,7 @@ Small models can run on consumer hardware. Llama 3.1, Mistral, and others prove 
 
 Big models require data centers, specialized hardware (H100s, A100s, TPUs), and massive operational costs. Only governments and large corporations can afford that infrastructure.
 
-And the costs are going up, not down.
+And the costs are going up, not down. This includes the [environmental costs that don't slow anyone down](https://news.mit.edu/2025/explained-generative-ai-environmental-impact-0117)—the energy consumption and water usage required to train and run these models at scale. The International Energy Agency predicts that data center electricity demand will more than double by 2030. Ed Zitron [calls it what it is](https://www.wheresyoured.at/subprimeai/): AI is "an unsustainable, unreliable, unprofitable, and environmentally-destructive boondoggle." The power bills alone make scaling prohibitive for most players.
 
 ### RAM: The 400% Problem
 
@@ -215,6 +215,7 @@ The tool problem is solvable. The power problem is just beginning.
 
 ## Sources
 
+- [MIT News: Explained: Generative AI's environmental impact](https://news.mit.edu/2025/explained-generative-ai-environmental-impact-0117)
 - [1Password: How OpenClaw's Agent Skills Become an Attack Surface](https://1password.com/blog/from-magic-to-malware-how-openclaws-agent-skills-become-an-attack-surface)
 - [When Will RAM Prices Drop? Global Memory Market Outlook 2024–2026](https://www.bacloud.com/en/blog/230/when-will-ram-prices-drop-global-memory-market-outlook-20242026.html)
 - [2025 Memory Price Trends: DDR4 Surge & DDR5 Growth Analysis](https://www.accio.com/business/memory-price-trend)
