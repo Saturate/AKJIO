@@ -114,6 +114,9 @@ importers:
       '@tanstack/react-query-devtools':
         specifier: ^5.91.3
         version: 5.91.3(@tanstack/react-query@5.90.20(react@19.2.4))(react@19.2.4)
+      '@types/d3-array':
+        specifier: ^3.2.2
+        version: 3.2.2
       '@types/mdx':
         specifier: ^2.0.13
         version: 2.0.13

@@ -91,7 +91,10 @@ function Chart({ type, width, height }: ChartProps) {
   const yMax = height - margin.top - margin.bottom;
 
   const xScale = scaleTime({
-    domain: [Math.min(...data.map(getDate)), Math.max(...data.map(getDate))],
+    domain: [
+      new Date(Math.min(...data.map(d => getDate(d).getTime()))),
+      new Date(Math.max(...data.map(d => getDate(d).getTime())))
+    ],
     range: [0, xMax],
   });
 
@@ -126,7 +129,8 @@ function Chart({ type, width, height }: ChartProps) {
     stroke: "rgba(255,255,255,0.7)",
     tickStroke: "rgba(255,255,255,0.7)",
     numTicks: isMobile ? 3 : 6,
-    tickFormat: (date: Date) => {
+    tickFormat: (value: Date | { valueOf(): number }) => {
+      const date = value instanceof Date ? value : new Date(value.valueOf());
       if (isMobile) {
         return date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
       }
