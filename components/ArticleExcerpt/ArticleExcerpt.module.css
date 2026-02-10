@@ -1,6 +1,14 @@
-.time {
+.meta {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
 	color: #bababa;
 	font-size: 0.8em;
+}
+
+.readTime::before {
+	content: "·";
+	margin-right: 0.5rem;
 }
 
 .heading {

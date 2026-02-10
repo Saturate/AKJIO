@@ -8,24 +8,26 @@ export default function ArticleExcerpt({
 	date,
 	subtitle,
 	description,
+	readTime,
 }: {
 	link: string;
 	title: string;
 	date: Date;
 	subtitle: string;
 	description?: string;
+	readTime?: number;
 }) {
 	return (
 		<article className="post" role="article">
 			<h1 className={style.heading}>
 				<Link href={link}>{title}</Link>
 			</h1>
-			<time
-				className={style.time}
-				dateTime="{{ post.data.date | date('Y-m-d') }}"
-			>
-				{formatDate(date, "do LLLL yyyy")}
-			</time>
+			<div className={style.meta}>
+				<time dateTime={new Date(date).toISOString()}>
+					{formatDate(date, "do LLLL yyyy")}
+				</time>
+				{readTime && <span className={style.readTime}>{readTime} min read</span>}
+			</div>
 			<p>
 				{description ?? subtitle}
 				<a className={style.readMore} href={link}>
