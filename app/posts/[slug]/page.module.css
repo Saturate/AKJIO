@@ -1,13 +1,68 @@
 .postLayout {
 	display: grid;
 	grid-template-columns: 1fr;
-	gap: 3rem;
+	grid-template-areas:
+		"toc"
+		"content";
+	gap: 2rem;
 	max-width: 690px;
 	margin: 0 auto;
 	width: 100%;
+	padding: 0 20px;
+	box-sizing: border-box;
+}
+
+.postToc {
+	grid-area: toc;
+}
+
+.tocDetails {
+	/* Collapsible on mobile */
+}
+
+.tocToggle {
+	display: block;
+	padding: 1rem 1.25rem;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 8px;
+	cursor: pointer;
+	user-select: none;
+	font-weight: 600;
+	font-size: 0.875rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: rgba(251, 241, 241, 0.9);
+	list-style: none;
+	margin-bottom: 0;
+}
+
+.tocToggle::-webkit-details-marker {
+	display: none;
+}
+
+.tocToggle::after {
+	content: "+";
+	float: right;
+	font-size: 1.25rem;
+	font-weight: 300;
+	line-height: 1;
+}
+
+.tocDetails[open] .tocToggle::after {
+	content: "−";
+}
+
+.tocToggle:hover {
+	background: rgba(255, 255, 255, 0.08);
+}
+
+.tocContent {
+	margin-top: 1rem;
 }
 
 .postContent {
+	grid-area: content;
 	min-width: 0;
 	width: 100%;
 }
@@ -43,28 +98,34 @@
 		margin-right: -50vw;
 		box-sizing: border-box;
 
-		grid-template-columns: 900px 280px;
-		gap: 4rem;
+		grid-template-columns: 690px 280px;
+		grid-template-areas: "content toc";
+		gap: 3rem;
 		justify-content: center;
-		padding: 0 max(2rem, calc((100vw - 1180px) / 2));
+		padding: 0 max(20px, calc((100vw - 970px) / 2));
 	}
 
 	.postContent {
 		max-width: 100%;
 	}
 
-	.postSidebar {
+	.postToc {
+		align-self: start; /* Prevent stretching to match article height */
+		position: sticky;
+		top: 2rem;
+	}
+
+	/* Desktop: always show ToC, hide toggle */
+	.tocDetails {
+		display: contents; /* Remove details wrapper from layout */
+	}
+
+	.tocToggle {
+		display: none; /* Hide the collapsible toggle */
+	}
+
+	.tocContent {
 		display: block;
-	}
-}
-
-@media (max-width: 1024px) {
-	.postLayout {
-		grid-template-columns: 1fr;
-		max-width: 690px;
-	}
-
-	.postContent {
-		margin: 0 auto;
+		margin-top: 0;
 	}
 }

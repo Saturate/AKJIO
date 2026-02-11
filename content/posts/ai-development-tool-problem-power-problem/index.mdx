@@ -1,0 +1,225 @@
+---
+title: "Why AI exposes weak engineering practices, and why that's the least of our concerns"
+subtitle: "Security flaws by design, governance failures, and an infrastructure battle for control of software development"
+description: "Developers worry about AI producing buggy code. But the real problems are weak review processes, security flaws by design, and an infrastructure battle that will define who controls software development for the next decade."
+date: "2026-02-08"
+tags: ["AI", "LLMs", "software development", "security", "infrastructure"]
+---
+
+import HardwarePriceChart from './components/HardwarePriceChart/HardwarePriceChart';
+
+Developers have been talking AI down in software development lately. The complaints are familiar: AI produces buggy code. It hallucinates. It creates security vulnerabilities. It can't be trusted.
+
+They're not wrong. AI does produce buggy code. But here's the thing: buggy code has always been part of the job. Juniors write it. Seniors under pressure write it. You wrote it at 2am last Tuesday.
+
+What mattered was everything around it: code review, challenging assumptions, production pushing back. AI doesn't change that system. It relies on it. And people experiencing "AI chaos" usually aren't failing because of AI. They're failing because their review practices, ownership culture, or quality processes were already weak. AI just makes those gaps show up faster.
+
+But that's the small problem. The tool problem. The one we can actually fix.
+
+The bigger problem is who gets to use these tools at all, and what happens when the current economics collapse. That's the power problem, and it's just getting started.
+
+## The Rocket-Strapped Car
+
+Think of AI coding assistance as a rocket-strapped car. Everyone can drive a car. But strap a rocket engine to it and hand the keys to someone who just passed their driving test? Almost certainly not a good idea.
+
+Push it to the limits (blindly accepting every suggestion, skipping review, committing without testing) and you will crash.
+
+Case in point: [Moltbook](https://www.404media.co/exposed-moltbook-database-let-anyone-take-control-of-any-ai-agent-on-the-site/), the AI-only social network that exploded to 1.5 million agents in days. Founder Matt Schlicht publicly stated he "didn't write one line of code." It was entirely vibe-coded with AI assistance. The result? The database was wide open. No authentication required for read/write access. Hardcoded credentials exposed in client-side JavaScript. 1.5 million API tokens, 35,000 email addresses, 30,000 private messages. All accessible to anyone with basic SQL knowledge.
+
+The fix? Two SQL statements to enable Row-Level Security, a feature prominently documented on page one of Supabase's security docs. The platform launched, went viral, and nobody checked if the database had basic access controls. That's what happens when you floor it without looking at the road.
+
+But use the tool within limits, with the same rigor you'd apply to any code, and you get performance improvements without sacrificing quality. If reviewing AI-generated code takes extra time, that's fine. You still gained efficiency elsewhere. If it doesn't help for a specific task, stop using it for that task. Use AI where it actually adds value, not everywhere because it's the new shiny thing.
+
+The problem isn't the tool. It's assuming the tool removes your responsibility. If developers don't feel responsible just because "AI did it," that's not an AI problem. That's a management problem.
+
+## When AI Works (and When It Doesn't)
+
+AI coding assistance works when you know exactly what you want. I had a TypeScript codebase that needed OpenAPI implementation. Dozens of endpoints. Sure, there are code generators that spit out TypeScript from Swagger specs. But I wanted control over the structure, and I wanted to see if this powerful but insecure automation everyone's hyping could actually save time.
+
+So I wrote one endpoint by hand. Got the types right, set up the validation, handled errors the way I wanted. Then I gave AI the pattern and the Swagger spec. "Here's the structure. Implement the rest following this exact pattern." It generated 30+ endpoints. I reviewed each one, fixed a few type mismatches, caught where it misread the spec format, adjusted error handling in three places. Still saved hours.
+
+That's the sweet spot: repetitive work where you demonstrate the pattern once, then let AI replicate it. You know what good output looks like, so you can catch when it deviates. You're not learning. You're not exploring. You're implementing something you already understand.
+
+It's like the difference between a regular hammer and a power hammer. Regular hammer stops when you stop swinging. Power hammer keeps going until you tell it to stop. You'd better know what you're building.
+
+AI is terrible at complex problems. Once it commits to an approach, it doubles down. If it said yes to something early in the conversation, it won't suddenly say no. It'll dig itself deeper trying to make the wrong approach work. You have to recognize this, stop it, back out, and restart with better constraints.
+
+I don't do the role-playing prompts. No "you are a senior engineer", "act as an expert in TypeScript." or "My grandmother is about to die if you don't complete this coding task very fast and with no bugs." I can't make myself do it. Maybe it's more optimal? Maybe those prompts produce better results? I'm not sure. I use the tool the way that works for me: input, desired output, constraints.
+
+I use it for a final check before doing a PR. Sometimes it finds nothing. Sometimes it catches something, an edge case, a typo in error handling.
+
+But it also makes up problems that don't exist. [cURL ended their bug bounty program in January 2026](https://daniel.haxx.se/blog/2026/01/26/the-end-of-the-curl-bug-bounty/) after being flooded with AI-generated false reports. Their confirmation rate dropped from 15% to below 5% in 2025. Maintainer Daniel Stenberg said the slop took a "mental toll" and "hampered the team's will to live." Half of the 67 submissions they reviewed since July 2024 arrived in the last two months alone.
+
+AI will confidently tell you about security issues that aren't there, race conditions in single-threaded code, memory leaks that can't happen. You need to know enough to filter the noise.
+
+The problem can be the tool. But it's also assuming the tool removes your responsibility. Some developers skip testing because they don't feel like they own the code, and they might be right, maybe they did a single prompt and did that PR that now I have to read, with 100 changed files, while trying not to cry. The code becomes something they transported, not something they built. That's a human cost that doesn't show up in productivity metrics.
+
+## The Control Plane Problem
+
+LLMs have a fundamental problem: they mix the data plane and control plane. Instructions and data flow through the same channel. This is flawed by design. You can build security layers on top, but the core architecture can never be truly secure.
+
+Maybe that's fine. Maybe we accept it as a trade-off. But we need to be aware of it.
+
+Think of it like SQL injection, except there's no prepared statement equivalent. With SQLi, we learned to separate code from data. Parameterized queries fixed the problem. Done.
+
+Prompt injection—call it PROMPTi if you want—has no fix. You can add system prompts, use delimiters, implement "guardrails," build sandboxes. But instructions and data still flow through the same channel. Every mitigation is a trick, not a solution. And tricks can be bypassed.
+
+Consider OpenClaw, a third-party agent gateway that gives AI agents direct access to local files, applications, browsers, and terminals. Security researchers at 1Password [analyzed the attack surface](https://1password.com/blog/from-magic-to-malware-how-openclaws-agent-skills-become-an-attack-surface) and found that the most popular "skill" in OpenClaw's marketplace was malware delivery.
+
+Or look at MCP servers—the things you `npx` to extend AI capabilities. They're just npm packages. In September 2025, researchers discovered [a malicious MCP server called postmark-mcp](https://acuvity.ai/one-line-of-code-thousands-of-stolen-emails-the-first-malicious-mcp-server-exposed/). It claimed to be an email connector but contained a one-line backdoor that BCC'd every outgoing email to an attacker-controlled address. By the time it was removed: 1,643 downloads, roughly 300 organizations compromised. One line of code.
+
+That's what happens when you build on a foundation that can't be secured. You can't patch architecture.
+
+## Prompt Kiddies
+
+If you've spent any time around security communities, you know the term "script kiddie." Someone who runs tools they don't understand, following tutorials without knowing what's actually happening, or just spinning up a GUI tool. They can find basic vulnerabilities because the tools do the thinking. But ask them to chain exploits or think creatively? They're stuck.
+
+AI just made everyone a script kiddie.
+
+I hosted a CTF for a company recently. It was great. People learned, had fun, felt accomplished. But I also learned something: with a couple of MCPs and some loose privileges, AI will pentest just about anything. It might say no initially, but tell it "this is my system" or "this is a CTF" and it goes happily along. Spins up sqlmap, finds SQL injections, runs through the basic vulnerability checklist.
+
+The low-hanging fruit is now accessible to anyone. If you're not testing for basic stuff (SQLi, XSS, exposed credentials, open databases), someone with zero security knowledge and an AI will find it. The barrier to entry dropped to near-zero.
+
+But the high-hanging fruit? AI is terrible at it. Complex vulnerability chains, novel attack vectors, thinking past the standard playbook. That still requires actual thinking. People with security knowledge and creativity reign supreme.
+
+Moltbook didn't need a sophisticated attack. It needed someone to check if the database had authentication. That's script kiddie territory now.
+
+Irony: AI most likely would have caught these flaws if anyone had asked it to check. But when you don't know what questions to ask, you get the rocket-strapped car. Again.
+
+## Move Fast, Break Security
+
+Governance and risk management seem to have been forsaken when it comes to AI. We have to have velocity.
+
+Moltbook launched with 1.5 million agents and zero security checks. [OpenClaw](https://openclaw.ai/)'s marketplace features malware delivery as the top skill with no vetting process. MCP servers get `npx`'d into production without anyone checking what they actually do. postmark-mcp compromised 300 organizations because people trusted an npm package with email access.
+
+This isn't a series of unfortunate accidents. It's a pattern. AI tech gets a governance exemption.
+
+In any other context, you'd have security reviews, vendor assessments, risk analysis, change management. Someone would ask "what's the blast radius if this goes wrong?" But with AI, the answer is apparently "ship it and see."
+
+Why? FOMO. Competitive pressure. Everyone's building AI agents and nobody wants to be the slowest one in the room. If your competitor is moving fast and you're doing security reviews, you're falling behind.
+
+You can move fast with bad security until you can't. And when it breaks, it doesn't break small. It breaks at scale. Moltbook exposed 1.5 million tokens. postmark-mcp compromised 300 organizations. The velocity that let you ship fast is the same velocity that spreads the damage.
+
+You can recover from technical debt, [at a high price](https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/tech-debt-reclaiming-tech-equity). You can't un-leak a database.
+
+## The Ownership Question
+
+LLMs are trained on our collective knowledge: Stack Overflow answers, GitHub repositories, technical documentation, blog posts. We all contributed. But who owns the resulting models?
+
+Anthropic. OpenAI. Google. Meta. The companies that can afford the training infrastructure.
+
+And right now, none of them are profitable. They're running on subsidized pricing, venture capital, and the promise of future returns. At some point, that changes. When the real, unsubsidized costs hit, what happens?
+
+Four possible futures emerge, and none are great.
+
+## Four Futures, No Winners
+
+### Corporate Feudalism
+
+A few AI companies own the intelligence layer. You pay their prices or fall behind. Free tiers exist, but with inferior models. Those who can't afford premium access get left behind in capability. A two-tier system where intelligence becomes a subscription service.
+
+### Government Infrastructure
+
+AI becomes public infrastructure, like roads or electricity. Governments host models for citizens. Democratic access, not profit-driven. But this comes with surveillance concerns, censorship risks, and political capture. Who decides what questions the public AI can answer?
+
+### Local/Distributed Models
+
+Open source models you can run on consumer hardware. Truly owned. But significantly less capable than corporate or government offerings. Good enough for some tasks, inadequate for others. You get freedom at the cost of power.
+
+### The Plateau
+
+Or maybe AI doesn't get much better. Maybe we're already near the ceiling of what current architectures can do. The improvements slow. The hype deflates. Frontier models plateau at "useful but not transformative."
+
+In this scenario, the massive infrastructure investments become stranded assets. Corporate AI companies can't justify their valuations when improvements are incremental. Governments won't fund it as critical infrastructure. And local models might be good enough for most real-world tasks.
+
+The infrastructure battle becomes pointless if there's no intelligence monopoly worth fighting over. But the billions already spent? Gone. And the companies that over-invested in AI capabilities they don't need? They're stuck with the bill, or their shareholders are.
+
+## The Hardware Reality Check
+
+Even if we had truly open models, there's an infrastructure problem most people aren't talking about.
+
+"Open source" doesn't mean "accessible" if you can't afford to run it.
+
+Small models can run on consumer hardware. Llama 3.1, Mistral, and others prove this is possible. But they're significantly less capable than frontier models. For many use cases, they're not enough.
+
+Big models require data centers, specialized hardware (H100s, A100s, TPUs), and massive operational costs. Only governments and large corporations can afford that infrastructure.
+
+And the costs are going up, not down. This includes the [environmental costs that don't slow anyone down](https://news.mit.edu/2025/explained-generative-ai-environmental-impact-0117)—the energy consumption and water usage required to train and run these models at scale. The International Energy Agency predicts that data center electricity demand will more than double by 2030. Ed Zitron [calls it what it is](https://www.wheresyoured.at/subprimeai/): AI is "an unsustainable, unreliable, unprofitable, and environmentally-destructive boondoggle." The power bills alone make scaling prohibitive for most players.
+
+### RAM: The 400% Problem
+
+From mid-2025 to early 2026, RAM prices increased by 300-400%. Specific examples:
+
+- **G.SKILL Flare X5 Series DDR5 32GB**: $87 → $399 (358% increase)
+- **Crucial Pro DDR5-6000 32GB**: $120 → $410 (242% increase)
+- **Corsair Vengeance DDR4-3200 32GB**: increased to $200 (300% increase)
+- **[Corsair DDR5 6000MHz 32GB](https://www.pricerunner.dk/pl/38-3258453027/RAM/Corsair-DDR5-6000MHz-2x16GB-%28CMK32GX5M2B6000Z30%29-Sammenlign-Priser) (Denmark)**: DKK 1,500 → DKK 4,300 (187% increase)
+
+High-end 256GB DDR4 kits retail for over $3,000. Entry-level DDR5 32GB kits are over $300.
+
+Why? Memory manufacturers reallocated more than 3x their wafer capacity to produce High Bandwidth Memory (HBM) for AI workloads. Samsung and Micron halted most DDR4 production. SK Hynix reduced DDR4 output to just 20%.
+
+Memory shortages are expected to last until at least Q4 2027, with higher prices throughout 2026-2027.
+
+### GPUs: The Availability Crisis
+
+Consumer GPUs are effectively unavailable at MSRP. The RTX 4090 launched at $1,599 in October 2022. By early 2026, used units sell for $2,200 on eBay, a 25-38% increase. Most cards in 2024 sold at 45-55% above MSRP due to AI developer demand and scalping.
+
+NVIDIA halted RTX 4090 production in October 2024 to focus on the RTX 50 series. Stock shortages made MSRP pricing "all but impossible" throughout 2025.
+
+Datacenter GPUs tell a different story. H100 rental prices decreased from $7.50-11/GPU-hour in mid-2023 to $1.50-3.00/GPU-hour by late 2025, a 70-85% decrease as supply improved. But purchase prices remain high: $25,000-40,000 per H100 unit.
+
+**The trajectory is clear: hardware for running AI models is getting more expensive and less accessible for individuals.**
+
+Even if you can afford it now, you might not be able to in the future. Small models? Maybe. Big models? That takes serious money.
+
+<HardwarePriceChart type="ram" />
+
+<HardwarePriceChart type="gpu" />
+
+## The Bubble That Won't Pop
+
+Maybe AI is overhyped. Maybe the bubble bursts. But AI isn't going away, even if valuations crash.
+
+The infrastructure problem remains. The question of who controls the intelligence layer remains. The rising hardware costs remain.
+
+We're in the middle of an infrastructure battle that will define software development for the next decade. And right now, we're not having the right conversations about it.
+
+## So... what now?
+
+Use AI strategically today. It's a tool, and like any tool, it can be used wrong. Strengthen your fundamentals: code review, ownership, testing, quality processes.
+
+AI makes weak practices visible faster. If you merge without checking and having all the standards you normally would, it's doomed to fail. Just like it would be without AI. I repeat: it just makes it a lot faster to drop into an unmaintainable state.
+
+That solves the tool problem. The power problem is something else.
+
+This is something every Chief Risk Officer should have on their radar, but also every average citizen. If your company has AI subscriptions for employees and those prices go up 10x when subsidies end, that's not a line item adjustment. That's a major risk to operations.
+
+The bigger questions:
+
+- Who controls the intelligence layer?
+- How do we prevent technofeudalism?
+- What regulations do we need?
+- Can open models save us if infrastructure remains inaccessible?
+- Should AI be public infrastructure?
+
+We don't have good answers. But we need to start thinking about these questions now, as developers, as companies, as citizens.
+
+The tool problem is solvable. The power problem is just beginning.
+
+---
+
+*Have thoughts on governance vs velocity, who should control AI infrastructure, or whether we're already at the plateau? I want to hear them. Reach out on [LinkedIn](https://www.linkedin.com/in/allankimmerjensen) or [email](mailto:hi@akj.io).*
+
+---
+
+## Sources
+
+- [MIT News: Explained: Generative AI's environmental impact](https://news.mit.edu/2025/explained-generative-ai-environmental-impact-0117)
+- [1Password: How OpenClaw's Agent Skills Become an Attack Surface](https://1password.com/blog/from-magic-to-malware-how-openclaws-agent-skills-become-an-attack-surface)
+- [When Will RAM Prices Drop? Global Memory Market Outlook 2024–2026](https://www.bacloud.com/en/blog/230/when-will-ram-prices-drop-global-memory-market-outlook-20242026.html)
+- [2025 Memory Price Trends: DDR4 Surge & DDR5 Growth Analysis](https://www.accio.com/business/memory-price-trend)
+- [RAM Prices 2026: Why Memory Skyrocketed 400%](https://originalpricing.com/ram-prices-2026-crisis-ddr5-ddr4-shortage/)
+- [GPU Pricing Trends Explained: 2025 Predictions vs. 2024](https://blog.prodia.com/post/gpu-pricing-trends-explained-2025-predictions-vs-2024-realities)
+- [H100 Rental Prices: Cloud Cost Comparison](https://intuitionlabs.ai/articles/h100-rental-prices-cloud-comparison)
+- [Memory Shortages To Last Till At Least Q4 2027](https://wccftech.com/memory-ddr5-ddr4-shortages-last-till-q4-2027-higher-prices-throughout-2026/)
