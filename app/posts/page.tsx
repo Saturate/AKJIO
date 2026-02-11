@@ -63,9 +63,9 @@ export default async function PostsOverviewPage({ searchParams }: Props) {
 		})),
 	);
 
-	const sortedPostElements = sortedPosts.map(({ frontmatter, link }) => {
+	const sortedPostElements = sortedPosts.map(({ frontmatter, link, readTime }) => {
 		return (
-			<ArticleExcerpt key={frontmatter.title} {...frontmatter} link={link} />
+			<ArticleExcerpt key={frontmatter.title} {...frontmatter} link={link} readTime={readTime} />
 		);
 	});
 

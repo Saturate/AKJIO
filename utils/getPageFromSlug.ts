@@ -3,6 +3,7 @@ import path from "path";
 import { notFound } from "next/navigation";
 import generateContentMap from "@/utils/generateContentMap";
 import { generateTableOfContentsFromMarkdown } from "@/utils/generateTableOfContentsFromMarkdown";
+import calculateReadTime from "@/utils/calculateReadTime";
 import importifyPath from "./importifyPath";
 
 export default async function getPageFromSlug(slug: string[] | string) {
@@ -41,6 +42,7 @@ export default async function getPageFromSlug(slug: string[] | string) {
 		}
 
 		const toc = await generateTableOfContentsFromMarkdown(contentFile);
+		const readTime = calculateReadTime(contentFile);
 
 		return {
 			Component: mdxModule.default,
@@ -49,6 +51,7 @@ export default async function getPageFromSlug(slug: string[] | string) {
 				mdxModule.frontmatter?.description ?? mdxModule.frontmatter?.subtitle,
 			page,
 			toc,
+			readTime,
 			frontmatter: mdxModule.frontmatter,
 			link: `/${page.websitePath}`,
 		};

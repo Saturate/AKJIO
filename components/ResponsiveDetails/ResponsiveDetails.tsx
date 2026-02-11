@@ -11,7 +11,7 @@ interface ResponsiveDetailsProps {
 export default function ResponsiveDetails({
 	children,
 	className,
-	breakpoint = 1100,
+	breakpoint = 1024,
 }: ResponsiveDetailsProps) {
 	const detailsRef = useRef<HTMLDetailsElement>(null);
 
