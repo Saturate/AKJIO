@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-const POST_CONTENT_PATH = "content/posts";
+const POST_CONTENT_PATH = path.join(process.cwd(), "content/posts");
 
 export interface PostFrontmatter {
 	title: string;
