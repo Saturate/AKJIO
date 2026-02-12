@@ -10,7 +10,6 @@ Hi, I'm Allan - Software engineer and security enthusiast with 15+ years experie
 
 - Twitter: [@allankimmer](https://twitter.com/allankimmer)
 - LinkedIn: [Allan Kimmer Jensen](https://linkedin.com/in/allankimmerjensen)
-- Email: hi@akj.io
 
 ## Subscribe
 
