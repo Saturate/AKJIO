@@ -39,6 +39,10 @@ const nextConfig = {
 						key: "Referrer-Policy",
 						value: "origin-when-cross-origin",
 					},
+					{
+						key: "Reporting-Endpoints",
+						value: 'default="https://reports.akj.io"',
+					},
 				],
 			},
 		];
