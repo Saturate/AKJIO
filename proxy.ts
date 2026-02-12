@@ -24,6 +24,7 @@ export function proxy(request: NextRequest) {
     frame-ancestors 'none';
     block-all-mixed-content;
     upgrade-insecure-requests;
+    report-to default;
 `;
 	// Replace newline characters and spaces
 	const contentSecurityPolicyHeaderValue = cspHeader
@@ -31,21 +32,20 @@ export function proxy(request: NextRequest) {
 		.trim();
 
 	const requestHeaders = new Headers(request.headers);
-
-	if (process.env.NODE_ENV !== "development") {
-		requestHeaders.set("x-nonce", nonce);
-
-		requestHeaders.set(
-			"Content-Security-Policy",
-			contentSecurityPolicyHeaderValue
-		);
-	}
+	requestHeaders.set("x-nonce", nonce);
 
 	const response = NextResponse.next({
 		request: {
 			headers: requestHeaders,
 		},
 	});
+
+	if (process.env.NODE_ENV !== "development") {
+		response.headers.set(
+			"Content-Security-Policy",
+			contentSecurityPolicyHeaderValue
+		);
+	}
 
 	return response;
 }
