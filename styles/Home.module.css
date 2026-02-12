@@ -16,7 +16,7 @@
 	background: transparent;
 	padding: 2rem 0;
 	flex: 1;
-	color: #fbf1f1;
+	color: var(--text-primary);
 	position: relative;
 	z-index: 1;
 

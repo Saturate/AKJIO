@@ -37,7 +37,7 @@
 .tocHighlight {
 	position: absolute;
 	width: 100%;
-	background: rgba(74, 158, 255, 0.8);
+	background: var(--toc-active);
 	transition: top 0.2s ease, height 0.2s ease;
 	will-change: top, height;
 }
@@ -71,13 +71,13 @@
 
 .tocItem:hover {
 	opacity: 0.8;
-	color: rgba(74, 158, 255, 0.9);
+	color: var(--toc-active);
 }
 
 .tocItemActive {
 	opacity: 1;
 	font-weight: 500;
-	color: rgba(74, 158, 255, 1);
+	color: var(--toc-active);
 }
 
 .tocItemIntro {
