@@ -6,7 +6,7 @@ import { generateTableOfContentsFromMarkdown } from "@/utils/generateTableOfCont
 import calculateReadTime from "@/utils/calculateReadTime";
 import importifyPath from "./importifyPath";
 
-export default async function getPageFromSlug(slug: string[] | string) {
+export async function findPageBySlug(slug: string[] | string) {
 	"use server";
 
 	const contentMap = await generateContentMap();
@@ -20,25 +20,18 @@ export default async function getPageFromSlug(slug: string[] | string) {
 	});
 
 	if (!page) {
-		console.warn("PAGE 404", slug, contentMap, slugPath);
-		notFound();
+		return null;
 	}
 
 	const contentFile = fs.readFileSync(path.join(page.filePath), "utf8");
 
 	try {
-		// Handle windows with replace for now
 		const mdxModule = await import(
 			`@/content/${importifyPath(page.relativeFilePath)}`
 		);
 
-		console.log(
-			"getting it...",
-			`@/content/${importifyPath(page.relativeFilePath)}`,
-		);
-
 		if (!mdxModule.default) {
-			notFound();
+			return null;
 		}
 
 		const toc = await generateTableOfContentsFromMarkdown(contentFile);
@@ -62,4 +55,17 @@ export default async function getPageFromSlug(slug: string[] | string) {
 		});
 		throw err;
 	}
+}
+
+export default async function getPageFromSlug(slug: string[] | string) {
+	"use server";
+
+	const result = await findPageBySlug(slug);
+
+	if (!result) {
+		console.warn("PAGE 404", slug);
+		notFound();
+	}
+
+	return result;
 }

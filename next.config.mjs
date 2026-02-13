@@ -15,6 +15,11 @@ const nextConfig = {
 				destination: "/.well-known/security.txt",
 				permanent: true,
 			},
+			{
+				source: "/posts/:slug",
+				destination: "/:slug",
+				permanent: true,
+			},
 		];
 	},
 	async headers() {

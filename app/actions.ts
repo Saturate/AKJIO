@@ -42,7 +42,7 @@ export async function getPost(id: string) {
 		options: { parseFrontmatter: true },
 	});
 	const readTime = calculateReadTime(postFile);
-	return { content, frontmatter, link: `/posts/${id}`, readTime };
+	return { content, frontmatter, link: `/${id}`, readTime };
 }
 
 export async function getPage(id: string) {

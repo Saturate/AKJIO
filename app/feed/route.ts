@@ -70,8 +70,8 @@ export async function GET() {
 				(post) => `
     <item>
       <title>${escapeXml(post.title)}</title>
-      <link>${siteUrl}/posts/${post.id}</link>
-      <guid>${siteUrl}/posts/${post.id}</guid>
+      <link>${siteUrl}/${post.id}</link>
+      <guid>${siteUrl}/${post.id}</guid>
       <pubDate>${post.date.toUTCString()}</pubDate>
       ${post.subtitle ? `<description>${escapeXml(post.subtitle)}</description>` : ""}
       ${post.tags?.map((tag) => `<category>${escapeXml(tag)}</category>`).join("\n      ") || ""}
