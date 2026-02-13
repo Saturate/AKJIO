@@ -15,18 +15,20 @@ export default function Comments() {
 	if (!mounted) return null;
 
 	return (
-		<Giscus
-			repo="Saturate/AKJIO"
-			repoId="MDEwOlJlcG9zaXRvcnkzMTU1MjM3NA=="
-			category="Announcements"
-			categoryId="DIC_kwDOAeFzds4Cq96j"
-			mapping="pathname"
-			reactionsEnabled="1"
-			emitMetadata="0"
-			inputPosition="top"
-			theme={resolvedTheme === "dark" ? "dark" : "light"}
-			lang="en"
-			loading="lazy"
-		/>
+		<div style={{ marginTop: "4rem" }}>
+			<Giscus
+				repo="Saturate/AKJIO"
+				repoId="MDEwOlJlcG9zaXRvcnkzMTU1MjM3NA=="
+				category="Announcements"
+				categoryId="DIC_kwDOAeFzds4Cq96j"
+				mapping="pathname"
+				reactionsEnabled="1"
+				emitMetadata="0"
+				inputPosition="top"
+				theme={resolvedTheme === "dark" ? "dark" : "light"}
+				lang="en"
+				loading="lazy"
+			/>
+		</div>
 	);
 }
