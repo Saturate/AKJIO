@@ -106,7 +106,7 @@ export default function MobileTocPopover({ entries, introLabel }: MobileTocPopov
 						/>
 						<span className={styles.labelWrapper}>
 							<span
-								className={`${styles.label} ${open ? styles.labelActive : ""} ${showItem || atIntro ? styles.labelHidden : ""} ${styles.labelTitle}`}
+								className={`${styles.label} ${open ? styles.labelActive : ""} ${showItem || (atIntro && !open) ? styles.labelHidden : ""} ${styles.labelTitle}`}
 							>
 								Table of Contents
 							</span>
