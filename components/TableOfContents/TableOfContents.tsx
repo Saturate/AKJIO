@@ -7,15 +7,18 @@ import styles from "./TableOfContents.module.css";
 
 interface TableOfContentsProps {
 	entries: TOCEntry[];
+	activeIds?: Set<string>;
+	hideHeader?: boolean;
 }
 
 function getLineOffset(depth: number): number {
 	return depth >= 3 ? 10 : 0;
 }
 
-export default function TableOfContents({ entries }: TableOfContentsProps) {
+export default function TableOfContents({ entries, activeIds: externalActiveIds, hideHeader }: TableOfContentsProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
-	const [activeIds, setActiveIds] = useState<Set<string>>(new Set());
+	const [internalActiveIds, setInternalActiveIds] = useState<Set<string>>(new Set());
+	const activeIds = externalActiveIds ?? internalActiveIds;
 	const [svg, setSvg] = useState<{
 		path: string;
 		width: number;
@@ -40,42 +43,52 @@ export default function TableOfContents({ entries }: TableOfContentsProps) {
 	}, [entries]);
 
 	useEffect(() => {
+		if (externalActiveIds) return;
+
+		const headingIds = allEntries.map((e) => e.slug.slice(1));
+		const visible = new Set<string>();
+
 		const observer = new IntersectionObserver(
 			(entries) => {
-				setActiveIds((prev) => {
-					const newSet = new Set(prev);
-					entries.forEach((entry) => {
-						const id = entry.target.id;
-						const rect = entry.boundingClientRect;
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						visible.add(entry.target.id);
+					} else {
+						visible.delete(entry.target.id);
+					}
+				}
 
-						// Calculate the active zone (matching rootMargin: "-10% 0px -50% 0px")
-						const viewportHeight = window.innerHeight;
-						const activeZoneTop = viewportHeight * 0.10;
-						const activeZoneBottom = viewportHeight * 0.50;
+				if (visible.size === 0) {
+					const viewTop = entries[0]?.rootBounds?.top ?? 0;
+					let fallback: string | undefined;
+					let min = -1;
 
-						// Check if the heading is actually in the active zone
-						const inActiveZone = rect.top >= activeZoneTop && rect.top <= activeZoneBottom;
-
-						if (entry.isIntersecting && inActiveZone) {
-							newSet.add(id);
-						} else {
-							newSet.delete(id);
+					for (const id of headingIds) {
+						const el = document.getElementById(id);
+						if (!el) continue;
+						const d = Math.abs(viewTop - el.getBoundingClientRect().top);
+						if (min === -1 || d < min) {
+							fallback = id;
+							min = d;
 						}
-					});
-					return newSet;
-				});
+					}
+
+					setInternalActiveIds(new Set(fallback ? [fallback] : []));
+				} else {
+					setInternalActiveIds(new Set(headingIds.filter((id) => visible.has(id))));
+				}
 			},
 			{
-				rootMargin: "-10% 0px -50% 0px",
-				threshold: [0, 0.5, 1],
-			}
+				rootMargin: "0px",
+				threshold: 0.98,
+			},
 		);
 
-		const headings = document.querySelectorAll("h2[id], h3[id], h4[id], h5[id], h6[id]");
-		headings.forEach((heading) => observer.observe(heading));
+		const elements = headingIds.flatMap((id) => document.getElementById(id) ?? []);
+		elements.forEach((el) => observer.observe(el));
 
 		return () => observer.disconnect();
-	}, []);
+	}, [allEntries, externalActiveIds]);
 
 	// Update active highlight position
 	useEffect(() => {
@@ -165,7 +178,7 @@ export default function TableOfContents({ entries }: TableOfContentsProps) {
 
 	return (
 		<nav className={styles.toc}>
-			<h3 className={styles.tocHeader}>On this page</h3>
+			{!hideHeader && <h3 className={styles.tocHeader}>On this page</h3>}
 			<div className={styles.tocContainer}>
 				{svg && (
 					<div

@@ -1,0 +1,29 @@
+.content {
+	overflow: hidden;
+}
+
+.animated[data-state="open"] {
+	animation: collapsibleDown 150ms ease-out;
+}
+
+.animated[data-state="closed"] {
+	animation: collapsibleUp 150ms ease-out;
+}
+
+@keyframes collapsibleDown {
+	from {
+		height: 0;
+	}
+	to {
+		height: var(--radix-collapsible-content-height);
+	}
+}
+
+@keyframes collapsibleUp {
+	from {
+		height: var(--radix-collapsible-content-height);
+	}
+	to {
+		height: 0;
+	}
+}

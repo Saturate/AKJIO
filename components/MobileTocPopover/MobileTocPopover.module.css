@@ -1,0 +1,167 @@
+/* Wrapper stays in flow to reserve space when popover goes fixed */
+.wrapper {
+	width: 100%;
+	max-width: 690px;
+}
+
+.wrapperStuck {
+	height: 2.5rem;
+}
+
+/* Default: in-flow, content-width, subtle */
+.popover {
+	z-index: 15;
+}
+
+/* Stuck: fixed at viewport top, full width */
+.stuck {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+
+@media (min-width: 1024px) {
+	.wrapper {
+		display: none;
+	}
+}
+
+/* Default: subtle, no border */
+.header {
+	transition:
+		background-color 0.15s ease,
+		box-shadow 0.15s ease,
+		border-color 0.15s ease;
+	background: rgba(0, 0, 0, 0.13);
+	border-bottom: 1px solid transparent;
+	border-radius: 8px;
+}
+
+/* When stuck: full treatment */
+.stuck .header {
+	background: rgba(15, 15, 15, 0.8);
+	backdrop-filter: blur(12px);
+	border-bottom-color: rgba(255, 255, 255, 0.1);
+	border-radius: 0;
+}
+
+.headerOpen {
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+.trigger {
+	display: flex;
+	width: 100%;
+	height: 2.5rem;
+	align-items: center;
+	gap: 0.625rem;
+	padding: 0.625rem 1rem;
+	font-size: 0.875rem;
+	color: rgba(251, 241, 241, 0.6);
+	text-align: start;
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-family: inherit;
+}
+
+.trigger:focus-visible {
+	outline: none;
+}
+
+.progressCircle {
+	flex-shrink: 0;
+	color: rgba(251, 241, 241, 0.6);
+}
+
+.progressCircleOpen {
+	color: rgba(74, 158, 255, 1);
+}
+
+.labelWrapper {
+	display: grid;
+	flex: 1;
+	min-width: 0;
+}
+
+.labelWrapper > * {
+	grid-row: 1;
+	grid-column: 1;
+	margin-block: auto;
+}
+
+.label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	transition:
+		opacity 0.15s ease,
+		transform 0.15s ease,
+		color 0.15s ease;
+}
+
+.labelActive {
+	color: var(--text-primary);
+}
+
+.labelHidden {
+	opacity: 0;
+	pointer-events: none;
+}
+
+.labelTitle.labelHidden {
+	transform: translateY(-100%);
+}
+
+.labelHeading.labelHidden {
+	transform: translateY(100%);
+}
+
+.chevron {
+	flex-shrink: 0;
+	width: 1rem;
+	height: 1rem;
+	transition: transform 0.15s ease;
+	margin-inline: 0.125rem;
+}
+
+.chevronOpen {
+	transform: rotate(180deg);
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	padding: 0.5rem 1rem 1rem;
+	max-height: 50vh;
+	overflow-y: auto;
+	background: rgba(15, 15, 15, 0.9);
+	backdrop-filter: blur(12px);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tocLink {
+	padding: 0.375rem 0;
+	font-size: 0.875rem;
+	color: var(--text-primary);
+	opacity: 0.5;
+	text-decoration: none;
+	transition:
+		opacity 0.15s ease,
+		color 0.15s ease;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tocLink:hover {
+	opacity: 0.8;
+	color: rgba(74, 158, 255, 0.9);
+}
+
+.tocLinkActive {
+	opacity: 1;
+	font-weight: 500;
+	color: rgba(74, 158, 255, 1);
+}

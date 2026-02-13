@@ -3,7 +3,8 @@ import getPageFromSlug from "@/utils/getPageFromSlug";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import TableOfContents from "@/components/TableOfContents/TableOfContents";
-import ResponsiveDetails from "@/components/ResponsiveDetails/ResponsiveDetails";
+import MobileTocPopover from "@/components/MobileTocPopover/MobileTocPopover";
+import { AnchorProvider } from "@/hooks/useActiveHeading";
 import styles from "./page.module.css";
 import { format } from "date-fns";
 import { generateBlogPostingSchema } from "@/utils/generateJsonLd";
@@ -72,32 +73,28 @@ export default async function BlogPostPage({ params }: PageProps) {
 
 	return (
 		<>
-			<div className={styles.postLayout}>
-				<aside className={styles.postToc}>
-					<ResponsiveDetails className={styles.tocDetails}>
-						<summary className={styles.tocToggle}>Table of Contents</summary>
-						<div className={styles.tocContent}>
-							{page.toc && page.toc.length > 0 && (
-								<TableOfContents entries={page.toc} />
-							)}
-						</div>
-					</ResponsiveDetails>
-				</aside>
+			<AnchorProvider toc={page.toc ?? []}>
+				<MobileTocPopover entries={page.toc ?? []} />
+				<div className={styles.postLayout}>
+					<aside className={styles.postToc}>
+						<TableOfContents entries={page.toc ?? []} />
+					</aside>
 
-				<article className={styles.postContent}>
-					<h1>{page.frontmatter.title}</h1>
-					<h2>{page.frontmatter.subtitle ?? page.frontmatter.description}</h2>
-					{page.frontmatter.date && (
-						<div className={styles.postMeta}>
-							<time dateTime={page.frontmatter.date}>
-								{format(new Date(page.frontmatter.date), "EEEE, MMMM do, yyyy")}
-							</time>
-							<span>{page.readTime} min read</span>
-						</div>
-					)}
-					{page.Component()}
-				</article>
-			</div>
+					<article className={styles.postContent}>
+						<h1>{page.frontmatter.title}</h1>
+						<h2>{page.frontmatter.subtitle ?? page.frontmatter.description}</h2>
+						{page.frontmatter.date && (
+							<div className={styles.postMeta}>
+								<time dateTime={page.frontmatter.date}>
+									{format(new Date(page.frontmatter.date), "EEEE, MMMM do, yyyy")}
+								</time>
+								<span>{page.readTime} min read</span>
+							</div>
+						)}
+						{page.Component()}
+					</article>
+				</div>
+			</AnchorProvider>
 			<JsonLd data={jsonLd} />
 		</>
 	);
