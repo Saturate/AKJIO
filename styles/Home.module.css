@@ -9,12 +9,12 @@
 	margin: 0 auto;
 	max-width: 690px;
 	flex: 1;
-	padding: 2rem;
+	padding: 0 1.5rem;
 }
 
 .main {
 	background: transparent;
-	padding: 2rem;
+	padding: 2rem 0;
 	flex: 1;
 	color: #fbf1f1;
 	position: relative;
