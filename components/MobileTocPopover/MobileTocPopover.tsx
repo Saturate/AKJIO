@@ -26,9 +26,10 @@ function flattenEntries(entries: TOCEntry[]): TOCEntry[] {
 
 interface MobileTocPopoverProps {
 	entries: TOCEntry[];
+	introLabel: string;
 }
 
-export default function MobileTocPopover({ entries }: MobileTocPopoverProps) {
+export default function MobileTocPopover({ entries, introLabel }: MobileTocPopoverProps) {
 	const headerRef = useRef<HTMLElement>(null);
 	const placeholderRef = useRef<HTMLDivElement>(null);
 	const [open, setOpen] = useState(false);
@@ -42,7 +43,8 @@ export default function MobileTocPopover({ entries }: MobileTocPopoverProps) {
 		[allEntries, active],
 	);
 
-	const showItem = selectedIndex !== -1 && !open;
+	const atIntro = selectedIndex === -1;
+	const showItem = !atIntro && !open;
 
 	useEffect(() => {
 		const placeholder = placeholderRef.current;
@@ -104,7 +106,7 @@ export default function MobileTocPopover({ entries }: MobileTocPopoverProps) {
 						/>
 						<span className={styles.labelWrapper}>
 							<span
-								className={`${styles.label} ${open ? styles.labelActive : ""} ${showItem ? styles.labelHidden : ""} ${styles.labelTitle}`}
+								className={`${styles.label} ${open ? styles.labelActive : ""} ${showItem || atIntro ? styles.labelHidden : ""} ${styles.labelTitle}`}
 							>
 								Table of Contents
 							</span>
@@ -112,6 +114,11 @@ export default function MobileTocPopover({ entries }: MobileTocPopoverProps) {
 								className={`${styles.label} ${!showItem ? styles.labelHidden : ""} ${styles.labelHeading}`}
 							>
 								{allEntries[selectedIndex]?.text}
+							</span>
+							<span
+								className={`${styles.label} ${!atIntro || open ? styles.labelHidden : ""} ${styles.labelHeading}`}
+							>
+								{introLabel}
 							</span>
 						</span>
 						<ChevronDown
@@ -121,6 +128,17 @@ export default function MobileTocPopover({ entries }: MobileTocPopoverProps) {
 				</header>
 				<CollapsibleContent>
 					<div className={styles.content}>
+						<a
+							href="#"
+							onClick={(e) => {
+								e.preventDefault();
+								window.scrollTo({ top: 0, behavior: "smooth" });
+								setOpen(false);
+							}}
+							className={`${styles.tocLink} ${styles.tocLinkIntro} ${atIntro ? styles.tocLinkActive : ""}`}
+						>
+							{introLabel}
+						</a>
 						{allEntries.map((entry) => (
 							<a
 								key={entry.slug}

@@ -64,7 +64,10 @@ function useAnchorObserver(headingIds: string[]): string[] {
 					for (const id of headingIds) {
 						const el = document.getElementById(id);
 						if (!el) continue;
-						const d = Math.abs(viewTop - el.getBoundingClientRect().top);
+						const top = el.getBoundingClientRect().top;
+						// Only consider headings above the viewport
+						if (top >= viewTop) continue;
+						const d = viewTop - top;
 						if (min === -1 || d < min) {
 							fallback = id;
 							min = d;

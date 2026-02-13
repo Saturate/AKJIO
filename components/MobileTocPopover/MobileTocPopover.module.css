@@ -165,3 +165,11 @@
 	font-weight: 500;
 	color: rgba(74, 158, 255, 1);
 }
+
+.tocLinkIntro {
+	white-space: normal;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+}

@@ -74,10 +74,16 @@ export default async function BlogPostPage({ params }: PageProps) {
 	return (
 		<>
 			<AnchorProvider toc={page.toc ?? []}>
-				<MobileTocPopover entries={page.toc ?? []} />
+				<MobileTocPopover
+					entries={page.toc ?? []}
+					introLabel={page.frontmatter.subtitle ?? page.frontmatter.description}
+				/>
 				<div className={styles.postLayout}>
 					<aside className={styles.postToc}>
-						<TableOfContents entries={page.toc ?? []} />
+						<TableOfContents
+						entries={page.toc ?? []}
+						introLabel={page.frontmatter.subtitle ?? page.frontmatter.description}
+					/>
 					</aside>
 
 					<article className={styles.postContent}>
