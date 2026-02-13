@@ -13,7 +13,7 @@ export function proxy(request: NextRequest) {
 	const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 	const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-inline' 'unsafe-eval';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live;
     style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data:;
     font-src 'self';
