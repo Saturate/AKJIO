@@ -136,9 +136,15 @@
 	padding: 0.5rem 1rem 1rem;
 	max-height: 50vh;
 	overflow-y: auto;
+	background: rgba(0, 0, 0, 0.13);
+	border-radius: 0 0 8px 8px;
+}
+
+.stuck .content {
 	background: rgba(15, 15, 15, 0.9);
 	backdrop-filter: blur(12px);
 	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 0;
 }
 
 .tocLink {
