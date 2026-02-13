@@ -7,15 +7,19 @@ import styles from "./TableOfContents.module.css";
 
 interface TableOfContentsProps {
 	entries: TOCEntry[];
+	introLabel?: string;
+	activeIds?: Set<string>;
+	hideHeader?: boolean;
 }
 
 function getLineOffset(depth: number): number {
 	return depth >= 3 ? 10 : 0;
 }
 
-export default function TableOfContents({ entries }: TableOfContentsProps) {
+export default function TableOfContents({ entries, introLabel, activeIds: externalActiveIds, hideHeader }: TableOfContentsProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
-	const [activeIds, setActiveIds] = useState<Set<string>>(new Set());
+	const [internalActiveIds, setInternalActiveIds] = useState<Set<string>>(new Set());
+	const activeIds = externalActiveIds ?? internalActiveIds;
 	const [svg, setSvg] = useState<{
 		path: string;
 		width: number;
@@ -40,51 +44,82 @@ export default function TableOfContents({ entries }: TableOfContentsProps) {
 	}, [entries]);
 
 	useEffect(() => {
+		if (externalActiveIds) return;
+
+		const headingIds = allEntries.map((e) => e.slug.slice(1));
+		const visible = new Set<string>();
+
 		const observer = new IntersectionObserver(
 			(entries) => {
-				setActiveIds((prev) => {
-					const newSet = new Set(prev);
-					entries.forEach((entry) => {
-						const id = entry.target.id;
-						const rect = entry.boundingClientRect;
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						visible.add(entry.target.id);
+					} else {
+						visible.delete(entry.target.id);
+					}
+				}
 
-						// Calculate the active zone (matching rootMargin: "-10% 0px -50% 0px")
-						const viewportHeight = window.innerHeight;
-						const activeZoneTop = viewportHeight * 0.10;
-						const activeZoneBottom = viewportHeight * 0.50;
+				if (visible.size === 0) {
+					const viewTop = entries[0]?.rootBounds?.top ?? 0;
+					let fallback: string | undefined;
+					let min = -1;
 
-						// Check if the heading is actually in the active zone
-						const inActiveZone = rect.top >= activeZoneTop && rect.top <= activeZoneBottom;
-
-						if (entry.isIntersecting && inActiveZone) {
-							newSet.add(id);
-						} else {
-							newSet.delete(id);
+					for (const id of headingIds) {
+						const el = document.getElementById(id);
+						if (!el) continue;
+						const top = el.getBoundingClientRect().top;
+						// Only consider headings above the viewport
+						if (top >= viewTop) continue;
+						const d = viewTop - top;
+						if (min === -1 || d < min) {
+							fallback = id;
+							min = d;
 						}
-					});
-					return newSet;
-				});
+					}
+
+					setInternalActiveIds(new Set(fallback ? [fallback] : []));
+				} else {
+					setInternalActiveIds(new Set(headingIds.filter((id) => visible.has(id))));
+				}
 			},
 			{
-				rootMargin: "-10% 0px -50% 0px",
-				threshold: [0, 0.5, 1],
-			}
+				rootMargin: "0px",
+				threshold: 0.98,
+			},
 		);
 
-		const headings = document.querySelectorAll("h2[id], h3[id], h4[id], h5[id], h6[id]");
-		headings.forEach((heading) => observer.observe(heading));
+		const elements = headingIds.flatMap((id) => document.getElementById(id) ?? []);
+		elements.forEach((el) => observer.observe(el));
 
 		return () => observer.disconnect();
-	}, []);
+	}, [allEntries, externalActiveIds]);
+
+	const atIntro = activeIds.size === 0;
 
 	// Update active highlight position
 	useEffect(() => {
-		if (!containerRef.current || activeIds.size === 0) {
+		if (!containerRef.current) {
 			setActiveHighlight(null);
 			return;
 		}
 
 		const container = containerRef.current;
+
+		if (atIntro) {
+			if (introLabel) {
+				const introLink = container.querySelector("a[data-intro]") as HTMLElement | null;
+				if (introLink) {
+					setActiveHighlight({
+						top: introLink.offsetTop,
+						height: introLink.offsetHeight,
+					});
+					return;
+				}
+			}
+			setActiveHighlight(null);
+			return;
+		}
+
 		const activeLinks = Array.from(activeIds)
 			.map(id => container.querySelector(`a[href="#${id}"]`))
 			.filter(Boolean) as HTMLElement[];
@@ -107,7 +142,7 @@ export default function TableOfContents({ entries }: TableOfContentsProps) {
 			top,
 			height: bottom - top
 		});
-	}, [Array.from(activeIds).sort().join(',')]);
+	}, [Array.from(activeIds).sort().join(','), atIntro, introLabel]);
 
 	useEffect(() => {
 		if (!containerRef.current) return;
@@ -117,6 +152,21 @@ export default function TableOfContents({ entries }: TableOfContentsProps) {
 			if (container.clientHeight === 0) return;
 			let w = 0, h = 0;
 			const d: string[] = [];
+			let isFirst = true;
+
+			const introEl = container.querySelector("a[data-intro]") as HTMLElement | null;
+			if (introEl) {
+				const introStyles = getComputedStyle(introEl);
+				const offset = getLineOffset(2) + 1;
+				const top = introEl.offsetTop + parseFloat(introStyles.paddingTop);
+				const bottom = introEl.offsetTop + introEl.clientHeight - parseFloat(introStyles.paddingBottom);
+
+				w = Math.max(offset, w);
+				h = Math.max(h, bottom);
+				d.push(`M${offset} ${top}`);
+				d.push(`L${offset} ${bottom}`);
+				isFirst = false;
+			}
 
 			for (let i = 0; i < allEntries.length; i++) {
 				const element: HTMLElement | null = container.querySelector(
@@ -132,8 +182,9 @@ export default function TableOfContents({ entries }: TableOfContentsProps) {
 				w = Math.max(offset, w);
 				h = Math.max(h, bottom);
 
-				d.push(`${i === 0 ? 'M' : 'L'}${offset} ${top}`);
+				d.push(`${isFirst ? 'M' : 'L'}${offset} ${top}`);
 				d.push(`L${offset} ${bottom}`);
+				isFirst = false;
 			}
 
 			setSvg({
@@ -165,7 +216,7 @@ export default function TableOfContents({ entries }: TableOfContentsProps) {
 
 	return (
 		<nav className={styles.toc}>
-			<h3 className={styles.tocHeader}>On this page</h3>
+			{!hideHeader && <h3 className={styles.tocHeader}>On this page</h3>}
 			<div className={styles.tocContainer}>
 				{svg && (
 					<div
@@ -193,13 +244,27 @@ export default function TableOfContents({ entries }: TableOfContentsProps) {
 					</div>
 				)}
 				<div ref={containerRef} className={styles.tocList}>
+					{introLabel && (
+						<a
+							href="#"
+							data-intro
+							onClick={(e) => {
+								e.preventDefault();
+								window.scrollTo({ top: 0, behavior: "smooth" });
+							}}
+							style={{ paddingInlineStart: "14px" }}
+							className={`${styles.tocItem} ${styles.tocItemIntro} ${atIntro ? styles.tocItemActive : ""}`}
+						>
+							{introLabel}
+						</a>
+					)}
 					{allEntries.map((entry, i) => (
 						<TOCItem
 							key={entry.slug}
 							entry={entry}
 							isActive={activeIds.has(entry.slug.substring(1))}
 							onClick={handleClick}
-							upperDepth={allEntries[i - 1]?.level ?? entry.level}
+							upperDepth={introLabel && i === 0 ? 2 : (allEntries[i - 1]?.level ?? entry.level)}
 							lowerDepth={allEntries[i + 1]?.level ?? entry.level}
 						/>
 					))}
