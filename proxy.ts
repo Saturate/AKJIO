@@ -20,7 +20,7 @@ export function proxy(request: NextRequest) {
     object-src 'none';
     base-uri 'self';
     form-action 'self';
-    frame-src https://vercel.live;
+    frame-src https://vercel.live https://giscus.app;
     frame-ancestors 'none';
     block-all-mixed-content;
     upgrade-insecure-requests;
