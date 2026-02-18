@@ -1,6 +1,6 @@
 .nav {
 	font-family: var(--font-jersey-25);
-	color: #fbf1f1;
+	color: var(--text-primary);
 	display: flex;
 	font-size: 1.3em;
 	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.09);

@@ -10,7 +10,7 @@
 	font-family: var(--font-jersey-25);
 	font-size: 4.5em;
 	margin: 0.4em;
-	color: #fbf1f1;
+	color: var(--text-primary);
 	text-shadow: 3px 3px 2px #0000002e;
 	span {
 		margin-top: -26px;
