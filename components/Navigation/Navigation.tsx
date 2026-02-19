@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./Navigation.module.css";
+import Search from "@/components/Search/Search";
 
 export default function Navigation() {
 	return (
@@ -13,6 +14,7 @@ export default function Navigation() {
 			<Link href={"/work"}>
 				Work <span>Projects & Domains</span>
 			</Link>
+			<Search />
 		</nav>
 	);
 }
