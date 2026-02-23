@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type React from "react";
 import { create, insertMultiple, search as oramaSearch } from "@orama/orama";
-import Link from "next/link";
 import { Search as SearchIcon } from "lucide-react";
+import Link from "next/link";
 import styles from "./Search.module.css";
 import type { SearchDocument } from "@/lib/search/extract";
 
@@ -146,10 +146,7 @@ export default function Search() {
 	return (
 		<>
 			<button className={styles.trigger} onClick={openDialog} aria-label="Open search">
-				<span className={styles.triggerLabel}>
-					<SearchIcon size={14} />
-					<span>Search</span>
-				</span>
+				Search
 				<kbd>{isMac ? "⌘K" : "Ctrl+K"}</kbd>
 			</button>
 

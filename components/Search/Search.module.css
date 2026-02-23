@@ -30,12 +30,6 @@
 	}
 }
 
-.triggerLabel {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-}
-
 .trigger kbd {
 	font-family: var(--font-inter), sans-serif;
 	font-size: 0.55em;
