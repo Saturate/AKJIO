@@ -8,7 +8,6 @@ Hi, I'm Allan - Software engineer and security enthusiast with 15+ years experie
 
 ## Connect
 
-- Twitter: [@allankimmer](https://twitter.com/allankimmer)
 - LinkedIn: [Allan Kimmer Jensen](https://linkedin.com/in/allankimmerjensen)
 
 ## Subscribe
