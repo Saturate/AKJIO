@@ -1,0 +1,88 @@
+---
+title: "Building native SBOM support for pnpm"
+subtitle: "First-party Software Bill of Materials generation, supporting CycloneDX and SPDX"
+description: "pnpm now has a built-in sbom command for generating Software Bill of Materials in CycloneDX 1.7 and SPDX 2.3 formats. No external tools needed."
+date: "2026-02-25"
+tags: ["pnpm", "sbom", "software supply chain", "open source", "security"]
+---
+
+I shipped my first contribution to pnpm: a native `pnpm sbom` command. [PR #10592](https://github.com/pnpm/pnpm/pull/10592) is merged and should be available in an upcoming release.
+
+A Software Bill of Materials is an ingredient list for your software. Every library, every dependency, every version; documented and traceable. Think of it as a nutrition label, but for code.
+
+## Regulations caught up
+
+The concept of a software bill of materials has been around for over a decade. What changed is that regulators started paying attention.
+
+The [EU Cyber Resilience Act](https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act) mandates vulnerability handling and software transparency for products sold in the EU. [US Executive Order 14028](https://www.nist.gov/system/files/documents/2022/02/04/software-supply-chain-security-guidance-under-EO-14028-section-4e.pdf) requires SBOMs for software sold to the federal government. These aren't future plans. They're actively being enforced.
+
+Beyond compliance, SBOMs are a practical security tool. When a vulnerability like [React2Shell](https://react.dev/blog/2025/12/11/denial-of-service-and-source-code-exposure-in-react-server-components) (CVE-2025-55182, CVSS 10.0) drops and is being actively exploited within hours, organizations with SBOMs can answer "are we affected?" in minutes. Without one, it's days of manual investigation across every service, every deployment, every transitive dependency tree.
+
+And as software supply chain attacks grow more sophisticated (compromised packages, typosquatting, dependency confusion), knowing exactly what's in your dependency tree is a fundamental practice.
+
+## The gap
+
+npm has had `npm sbom` [since v9](https://docs.npmjs.com/cli/v11/commands/npm-sbom). pnpm users had to rely on external tools: [Trivy](https://trivy.dev/), [cdxgen](https://cyclonedx.github.io/cdxgen/), [Syft](https://github.com/anchore/syft). Each with their own quirks around pnpm support. Incomplete dependency trees, issues with workspaces, devDependencies showing up where they shouldn't.
+
+The [feature request](https://github.com/pnpm/pnpm/issues/9088) had been open since February 2025. Users needed SBOMs for [Dependency-Track](https://dependencytrack.org/) pipelines, JFrog audits, and general SCA workflows. All the information was already there in `pnpm-lock.yaml`. It just needed a proper command to extract and format it.
+
+## Getting it right
+
+I initially used `npm sbom` as a reference implementation. That turned out to be a mistake, but I learned something new.
+
+[Jan Kowalleck](https://github.com/jkowalleck), [OWASP CycloneDX](https://cyclonedx.org/) Project Co-Lead, reviewed the PR and pointed out that `npm sbom` "does not respect the CycloneDX specification" and "just follows some uneducated ideas and tries to be JSON schema valid." Specifically, npm puts registry integrity hashes directly on components when they're actually distribution metadata (they belong in `externalReferences`), and silently drops licenses it can't parse instead of falling back to `license.name`.
+
+After the review, the [CycloneDX pnpm plugin](https://github.com/CycloneDX/cyclonedx-node-pnpm) was archived in favor of this native implementation. And Jan opened a [new issue](https://github.com/CycloneDX/cyclonedx-javascript-library/issues/1371) on the CycloneDX library to better support pnpm's use case going forward.
+
+## Usage
+
+```bash
+pnpm sbom --sbom-format cyclonedx
+pnpm sbom --sbom-format spdx
+```
+
+Both major industry standards are supported: [CycloneDX 1.7](https://cyclonedx.org/docs/1.7/json/) and [SPDX 2.3](https://spdx.github.io/spdx-spec/v2.3/). Output is validated against the official JSON schemas.
+
+Filter by dependency type:
+
+```bash
+pnpm sbom --sbom-format cyclonedx --prod
+pnpm sbom --sbom-format spdx --dev
+pnpm sbom --sbom-format cyclonedx --no-optional
+```
+
+If you only have the lockfile available and no store, `--lockfile-only` skips reading package metadata from the content-addressable store entirely. The resulting SBOM will be missing license details and author information, so treat this as a fallback, not the default:
+
+```bash
+pnpm sbom --sbom-format cyclonedx --lockfile-only
+```
+
+Workspace support with `--filter`:
+
+```bash
+pnpm sbom --sbom-format spdx --filter my-package
+```
+
+Pipe to a file for your compliance tooling:
+
+```bash
+pnpm sbom --sbom-format cyclonedx > sbom.json
+```
+
+The command should land in an upcoming pnpm release. If you're running compliance workflows or vulnerability management pipelines, this gives you first-party SBOM generation without external tooling dependencies.
+
+
+---
+
+## Sources
+
+- [EU Cyber Resilience Act](https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act)
+- [NIST: Software Supply Chain Security Guidance Under EO 14028](https://www.nist.gov/system/files/documents/2022/02/04/software-supply-chain-security-guidance-under-EO-14028-section-4e.pdf)
+- [React: Denial of Service and Source Code Exposure in React Server Components (React2Shell)](https://react.dev/blog/2025/12/11/denial-of-service-and-source-code-exposure-in-react-server-components)
+- [npm sbom documentation](https://docs.npmjs.com/cli/v11/commands/npm-sbom)
+- [pnpm/pnpm#9088: Generate sbom files](https://github.com/pnpm/pnpm/issues/9088)
+- [pnpm/pnpm#10592: feat(sbom): add pnpm sbom command](https://github.com/pnpm/pnpm/pull/10592)
+- [CycloneDX 1.7 JSON Schema](https://cyclonedx.org/docs/1.7/json/)
+- [SPDX 2.3 Specification](https://spdx.github.io/spdx-spec/v2.3/)
+- [Package URL (purl) Specification](https://github.com/package-url/purl-spec)
+- [SPDX License List](https://spdx.org/licenses/)
