@@ -32,6 +32,9 @@ export async function generateMetadata({
 		return {
 			title: { default: title, template: "%s | AKJ.IO" },
 			description,
+			alternates: {
+				canonical: `/${slug}`,
+			},
 			authors: [{ name: "Allan Kimmer Jensen" }],
 			keywords: frontmatter.tags,
 			openGraph: {
@@ -60,6 +63,9 @@ export async function generateMetadata({
 	return {
 		title: frontmatter.title,
 		description: frontmatter.subtitle,
+		alternates: {
+			canonical: `/${slug}`,
+		},
 	};
 }
 

@@ -32,7 +32,7 @@ export default async function PopularTags({ limit = 10 }: { limit?: number }) {
 
 	return (
 		<aside className={styles.tags}>
-			<h3 className={styles.heading}>Popular Tags</h3>
+			<h2 className={styles.heading}>Popular Tags</h2>
 			<div className={styles.tagCloud}>
 				{sortedTags.map(([tag, count]) => (
 					<Link key={tag} href={`/posts?tag=${tag}`} className={styles.tag}>

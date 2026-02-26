@@ -12,6 +12,9 @@ import JsonLd from "@/components/JsonLd/JsonLd";
 export async function generateMetadata() {
 	return {
 		title: "AKJ.IO - Home of Allan Kimmer Jensen",
+		alternates: {
+			canonical: "/",
+		},
 	};
 }
 export default async function FrontPage({ params }: PageProps) {

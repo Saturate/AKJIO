@@ -7,3 +7,36 @@
 	z-index: 0;
 	pointer-events: auto;
 }
+
+/* Static CSS fallback shown while the canvas JS loads.
+   Colors match OceanWater.tsx drawSkyGradient + drawWaterSurface.
+   Sky extends 25px past header (~310px) as safeMargin.
+   Water 30% stop approximated as calc(235px + 30%) ≈ 30% of water area. */
+.oceanPlaceholder {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+	pointer-events: none;
+	background: linear-gradient(
+		180deg,
+		#87CEEB 0%,
+		#B0E2FF 310px,
+		var(--water-top) 335px,
+		var(--water-medium) calc(235px + 30%),
+		var(--water-body-deep) 100%
+	);
+}
+
+:global(.dark) .oceanPlaceholder {
+	background: linear-gradient(
+		180deg,
+		#0a1628 0%,
+		#1a2a3a 310px,
+		var(--water-top) 335px,
+		var(--water-medium) calc(235px + 30%),
+		var(--water-body-deep) 100%
+	);
+}

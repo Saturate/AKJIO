@@ -2,10 +2,11 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Jersey_25, Inter } from "next/font/google";
 import styles from "../styles/Home.module.css";
 import "../styles/global-styles.css";
+import "../styles/syntaxhighlighting.css";
 import Navigation from "@/components/Navigation/Navigation";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
-import OceanWater from "@/components/OceanWater/OceanWater";
+import OceanWaterLazy from "@/components/OceanWater/OceanWaterLazy";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 
 const font = Jersey_25({
@@ -86,7 +87,7 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<OceanWater />
+					<OceanWaterLazy />
 
 					<Header>
 						<Navigation />
