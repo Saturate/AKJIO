@@ -15,6 +15,7 @@
 	background: var(--cloud-color);
 	border-radius: 50px;
 	animation: float 15s ease-in-out infinite;
+	will-change: transform;
 }
 
 .cloud::before,

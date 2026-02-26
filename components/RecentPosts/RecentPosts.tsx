@@ -23,7 +23,7 @@ export default async function RecentPosts({ limit = 3 }: { limit?: number }) {
 
 	return (
 		<aside className={styles.sidebar}>
-			<h3 className={styles.heading}>Recent Posts</h3>
+			<h2 className={styles.heading}>Recent Posts</h2>
 			<ul className={styles.postList}>
 				{recentPosts.map(({ frontmatter, link }) => (
 					<li key={link} className={styles.postItem}>

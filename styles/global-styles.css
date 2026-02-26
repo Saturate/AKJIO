@@ -246,5 +246,3 @@ dd a:hover {
 .spoiler.revealed::before {
 	display: none;
 }
-
-@import url(./syntaxhighlighting.css);

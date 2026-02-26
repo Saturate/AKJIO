@@ -16,12 +16,18 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 		return {
 			title: `Posts tagged "${tag}" - AKJ.IO`,
 			description: `Blog posts and articles about ${tag} by Allan Kimmer Jensen`,
+			alternates: {
+				canonical: `/posts?tag=${tag}`,
+			},
 		};
 	}
 
 	return {
 		title: "Posts - AKJ.IO",
 		description: "Writing about security, frontend development, architecture, and software engineering.",
+		alternates: {
+			canonical: "/posts",
+		},
 	};
 }
 
