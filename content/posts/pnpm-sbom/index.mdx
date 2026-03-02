@@ -4,6 +4,27 @@ subtitle: "First-party Software Bill of Materials generation, supporting Cyclone
 description: "pnpm now has a built-in sbom command for generating Software Bill of Materials in CycloneDX 1.7 and SPDX 2.3 formats. No external tools needed."
 date: "2026-02-25"
 tags: ["pnpm", "sbom", "software supply chain", "open source", "security"]
+sources:
+  - title: "EU Cyber Resilience Act"
+    url: "https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act"
+  - title: "NIST: Software Supply Chain Security Guidance Under EO 14028"
+    url: "https://www.nist.gov/system/files/documents/2022/02/04/software-supply-chain-security-guidance-under-EO-14028-section-4e.pdf"
+  - title: "React: Denial of Service and Source Code Exposure in React Server Components (React2Shell)"
+    url: "https://react.dev/blog/2025/12/11/denial-of-service-and-source-code-exposure-in-react-server-components"
+  - title: "npm sbom documentation"
+    url: "https://docs.npmjs.com/cli/v11/commands/npm-sbom"
+  - title: "pnpm/pnpm#9088: Generate sbom files"
+    url: "https://github.com/pnpm/pnpm/issues/9088"
+  - title: "pnpm/pnpm#10592: feat(sbom): add pnpm sbom command"
+    url: "https://github.com/pnpm/pnpm/pull/10592"
+  - title: "CycloneDX 1.7 JSON Schema"
+    url: "https://cyclonedx.org/docs/1.7/json/"
+  - title: "SPDX 2.3 Specification"
+    url: "https://spdx.github.io/spdx-spec/v2.3/"
+  - title: "Package URL (purl) Specification"
+    url: "https://github.com/package-url/purl-spec"
+  - title: "SPDX License List"
+    url: "https://spdx.org/licenses/"
 ---
 
 I shipped my first contribution to pnpm: a native `pnpm sbom` command. [PR #10592](https://github.com/pnpm/pnpm/pull/10592) is merged and should be available in an upcoming release.
@@ -71,18 +92,3 @@ pnpm sbom --sbom-format cyclonedx > sbom.json
 
 The command should land in an upcoming pnpm release. If you're running compliance workflows or vulnerability management pipelines, this gives you first-party SBOM generation without external tooling dependencies.
 
-
----
-
-## Sources
-
-- [EU Cyber Resilience Act](https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act)
-- [NIST: Software Supply Chain Security Guidance Under EO 14028](https://www.nist.gov/system/files/documents/2022/02/04/software-supply-chain-security-guidance-under-EO-14028-section-4e.pdf)
-- [React: Denial of Service and Source Code Exposure in React Server Components (React2Shell)](https://react.dev/blog/2025/12/11/denial-of-service-and-source-code-exposure-in-react-server-components)
-- [npm sbom documentation](https://docs.npmjs.com/cli/v11/commands/npm-sbom)
-- [pnpm/pnpm#9088: Generate sbom files](https://github.com/pnpm/pnpm/issues/9088)
-- [pnpm/pnpm#10592: feat(sbom): add pnpm sbom command](https://github.com/pnpm/pnpm/pull/10592)
-- [CycloneDX 1.7 JSON Schema](https://cyclonedx.org/docs/1.7/json/)
-- [SPDX 2.3 Specification](https://spdx.github.io/spdx-spec/v2.3/)
-- [Package URL (purl) Specification](https://github.com/package-url/purl-spec)
-- [SPDX License List](https://spdx.org/licenses/)

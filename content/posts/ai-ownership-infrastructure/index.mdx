@@ -1,0 +1,92 @@
+---
+title: "Who owns the intelligence layer"
+subtitle: "Infrastructure battles, hardware economics, and four futures for AI that all have trade-offs"
+description: "AI models are trained on our collective knowledge, but owned by a handful of companies running on subsidized pricing. When the real costs hit, the question of who controls the intelligence layer will reshape software development."
+date: "2026-02-08T11:00:00"
+series: "AI and Engineering"
+tags: ["AI", "infrastructure", "economics", "open source"]
+sources:
+  - title: "MIT News: Explained: Generative AI's environmental impact"
+    url: "https://news.mit.edu/2025/explained-generative-ai-environmental-impact-0117"
+  - title: "Ed Zitron: Subprime AI"
+    url: "https://www.wheresyoured.at/subprimeai/"
+  - title: "When Will RAM Prices Drop? Global Memory Market Outlook 2024-2026"
+    url: "https://www.bacloud.com/en/blog/230/when-will-ram-prices-drop-global-memory-market-outlook-20242026.html"
+  - title: "2025 Memory Price Trends: DDR4 Surge & DDR5 Growth Analysis"
+    url: "https://www.accio.com/business/memory-price-trend"
+  - title: "RAM Prices 2026: Why Memory Skyrocketed 400%"
+    url: "https://originalpricing.com/ram-prices-2026-crisis-ddr5-ddr4-shortage/"
+  - title: "GPU Pricing Trends Explained: 2025 Predictions vs. 2024"
+    url: "https://blog.prodia.com/post/gpu-pricing-trends-explained-2025-predictions-vs-2024-realities"
+  - title: "H100 Rental Prices: Cloud Cost Comparison"
+    url: "https://intuitionlabs.ai/articles/h100-rental-prices-cloud-comparison"
+  - title: "Memory Shortages To Last Till At Least Q4 2027"
+    url: "https://wccftech.com/memory-ddr5-ddr4-shortages-last-till-q4-2027-higher-prices-throughout-2026/"
+---
+
+import HardwarePriceChart from './components/HardwarePriceChart/HardwarePriceChart';
+
+In [Part 1](/ai-coding-security-infrastructure), I wrote about how AI amplifies existing engineering weaknesses: sloppy review processes, missing security checks, governance vacuums. Those are tool problems, and tool problems have solutions. Enforce code review. Test before you merge. Run security scans.
+
+This part is about the problem that doesn't have a clean solution: who owns the models, who can afford to run them, and what happens when the money runs out.
+
+## The Ownership Question
+
+LLMs are trained on our collective knowledge: Stack Overflow answers, GitHub repositories, technical documentation, blog posts. We all contributed. But the resulting models belong to Anthropic, OpenAI, Google, and Meta, the companies that can afford the training infrastructure.
+
+And right now, none of them are profitable. They're running on subsidized pricing, venture capital, and the promise of future returns. At some point, that changes. When the real, unsubsidized costs hit, the dynamics shift in ways we should be thinking about now.
+
+## Four Futures
+
+### Corporate Feudalism
+
+A few AI companies own the intelligence layer. You pay their prices or fall behind. Free tiers exist, but with inferior models. Those who can't afford premium access get left behind in capability. A two-tier system where intelligence becomes a subscription service.
+
+This is the one I think is most likely in the near term. The pattern is already established. GitHub Copilot went from free preview to $10/month to $19/month in three years. Claude Pro, ChatGPT Plus, these prices are introductory. Once the venture money dries up and the compute bills come due, we'll see what the real prices look like. I wouldn't be surprised if the serious professional tiers land somewhere around $100-200/month within a few years, and at that point your employer picks who gets access and who doesn't.
+
+### Government Infrastructure
+
+AI becomes public infrastructure, like roads or electricity. Governments host models for citizens. Democratic access, not profit-driven. But this comes with surveillance concerns, censorship risks, and political capture. Who decides what questions the public AI can answer? And given how most government IT projects go, I'm not optimistic about the execution.
+
+### Local and Distributed Models
+
+Open source models you can run on consumer hardware. Truly owned. Small models can already run locally; Llama 3.1, Mistral, and others prove the concept. But they're significantly less capable than frontier models, and the hardware to close that gap is moving in the wrong direction (more on that below).
+
+### The Plateau
+
+Maybe AI doesn't get much better. Maybe we're already near the ceiling of what current architectures can do. The improvements slow. The hype deflates. Frontier models plateau at "useful but not transformative."
+
+In that case, the massive infrastructure investments become stranded assets. Corporate AI companies can't justify their valuations when improvements are incremental. Governments won't fund it as critical infrastructure. And local models might be good enough for most real-world tasks. The infrastructure battle becomes pointless if there's no intelligence monopoly worth fighting over. But the billions already spent are gone, and the companies that over-invested are stuck with the bill.
+
+I'd like this to be the outcome, honestly. A world where local models are good enough for 90% of tasks and the corporate lock-in never fully materializes. But the investment momentum points elsewhere, and I don't think the big labs are going to plateau quietly.
+
+## The Hardware Reality Check
+
+Even with truly open models, there's an infrastructure problem most people aren't talking about. "Open source" doesn't mean "accessible" if you can't afford to run it.
+
+I watched the Corsair DDR5 kit I bought for 1,500 DKK hit [4,300 DKK on PriceRunner](https://www.pricerunner.dk/pl/38-3258453027/RAM/Corsair-DDR5-6000MHz-2x16GB-%28CMK32GX5M2B6000Z30%29-Sammenlign-Priser) in under a year. That's a 187% increase on a 32GB kit. And it's not just Danish pricing weirdness. G.SKILL Flare X5 DDR5 32GB went from $87 to $399 in the US. Crucial Pro DDR5-6000 32GB jumped from $120 to $410.
+
+The reason is straightforward: memory manufacturers reallocated more than 3x their wafer capacity to produce High Bandwidth Memory for AI workloads. Samsung and Micron halted most DDR4 production. SK Hynix reduced DDR4 output to just 20%. The AI training pipeline is literally cannibalizing consumer hardware supply, and memory shortages are expected to last until at least Q4 2027.
+
+GPUs tell a similar story. The RTX 4090 launched at $1,599 in October 2022. By early 2026, used units sell for $2,200 on eBay. NVIDIA halted production in October 2024 to focus on the RTX 50 series, and stock shortages made MSRP pricing nearly impossible throughout 2025. Datacenter GPU rental prices have dropped (H100s went from $7.50-11/GPU-hour in mid-2023 to $1.50-3.00 by late 2025), but purchase prices remain at $25,000-40,000 per unit. That's accessible to companies, not individuals.
+
+The trajectory is clear: hardware for running AI models is getting more expensive and less accessible for individuals, even as the "open source" models themselves get better. And the [environmental costs](https://news.mit.edu/2025/explained-generative-ai-environmental-impact-0117) compound it further. The International Energy Agency predicts data center electricity demand will more than double by 2030. Ed Zitron [called it](https://www.wheresyoured.at/subprimeai/) "an unsustainable, unreliable, unprofitable, and environmentally-destructive boondoggle." The power bills alone make scaling prohibitive for most players.
+
+<HardwarePriceChart type="ram" />
+
+<HardwarePriceChart type="gpu" />
+
+## The Bubble That Won't Pop
+
+AI might be overhyped. The bubble might burst. But the technology isn't going away, even if valuations crash. The infrastructure problem, the ownership question, the rising hardware costs, all of those persist regardless of what happens to stock prices.
+
+We're in the middle of an infrastructure battle that will define software development for the next decade. Every Chief Risk Officer should have this on their radar, but so should every developer and every average citizen. If your company has AI subscriptions for employees and those prices go up 10x when subsidies end, that's not a line item adjustment. That's a major operational risk.
+
+I don't have clean answers. But I know that the people building their entire workflow around $20/month AI access are making a bet on pricing that has no historical precedent for holding. And the people ignoring the ownership question because "open source will save us" are underestimating how much the hardware economics work against that narrative.
+
+The conversation we should be having isn't about whether AI-generated code has bugs. It's about who controls the infrastructure, what happens when the subsidies end, and whether we're building dependencies we can't walk back from.
+
+---
+
+*Have thoughts on who should control AI infrastructure, or whether we're already at the plateau? Reach out on [LinkedIn](https://www.linkedin.com/in/allankimmerjensen) or [email](mailto:hi@akj.io).*
+
