@@ -6,6 +6,8 @@ import { format } from "date-fns";
 import { generateBlogPostingSchema } from "@/utils/generateJsonLd";
 import JsonLd from "@/components/JsonLd/JsonLd";
 import Comments from "@/components/Comments/Comments";
+import SeriesNav from "@/components/SeriesNav/SeriesNav";
+import Sources from "@/components/Sources/Sources";
 import type { TOCEntry } from "@/utils/generateTableOfContentsFromMarkdown";
 
 type PostLayoutProps = {
@@ -17,7 +19,9 @@ type PostLayoutProps = {
 		description?: string;
 		date: string;
 		updated?: string;
+		series?: string;
 		tags?: string[];
+		sources?: Array<{ title: string; url: string }>;
 	};
 	toc: TOCEntry[];
 	readTime: number;
@@ -69,10 +73,27 @@ export default function PostLayout({
 								<time dateTime={frontmatter.date}>
 									{format(new Date(frontmatter.date), "EEEE, MMMM do, yyyy")}
 								</time>
+								{frontmatter.updated && frontmatter.updated !== frontmatter.date && (
+									<span>
+										Updated{" "}
+										<time dateTime={frontmatter.updated}>
+											{format(new Date(frontmatter.updated), "MMMM do, yyyy")}
+										</time>
+									</span>
+								)}
 								<span>{readTime} min read</span>
 							</div>
 						)}
 						<Component />
+						{frontmatter.sources && frontmatter.sources.length > 0 && (
+							<Sources sources={frontmatter.sources} />
+						)}
+						{frontmatter.series && (
+							<SeriesNav
+								seriesName={frontmatter.series}
+								currentSlug={slug}
+							/>
+						)}
 						<Comments />
 					</article>
 				</div>

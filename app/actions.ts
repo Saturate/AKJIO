@@ -10,7 +10,9 @@ type FrontmatterType = {
 	description?: string;
 	date: Date;
 	updated?: Date;
+	series?: string;
 	tags?: string[];
+	sources?: Array<{ title: string; url: string }>;
 };
 
 const POST_CONTENT_PATH = "content/posts";

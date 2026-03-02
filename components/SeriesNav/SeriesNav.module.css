@@ -1,0 +1,44 @@
+.seriesNav {
+	margin: 2rem 0;
+	padding: 1.25rem 1.5rem;
+	background: rgba(55, 63, 78, 0.3);
+	border-radius: 8px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.seriesLabel {
+	margin: 0 0 0.75rem 0;
+	font-weight: 600;
+	font-size: 0.95rem;
+	color: var(--text-primary);
+}
+
+.partCount {
+	font-weight: 400;
+	color: color-mix(in srgb, currentColor 60%, transparent);
+}
+
+.seriesList {
+	margin: 0;
+	padding: 0 0 0 1.25rem;
+	list-style: decimal;
+}
+
+.seriesList li {
+	padding: 0.25rem 0;
+	font-size: 0.9rem;
+}
+
+.seriesList li a {
+	color: var(--text-primary);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.seriesList li a:hover {
+	opacity: 0.8;
+}
+
+.current span {
+	color: color-mix(in srgb, currentColor 60%, transparent);
+}
