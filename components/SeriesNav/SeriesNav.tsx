@@ -41,7 +41,7 @@ export default async function SeriesNav({
 				</span>
 			</p>
 			<ol className={styles.seriesList}>
-				{seriesPosts.map((post, i) => {
+				{seriesPosts.map((post) => {
 					const isCurrent = post.id === currentSlug;
 					return (
 						<li key={post.id} className={isCurrent ? styles.current : undefined}>
