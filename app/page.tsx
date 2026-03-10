@@ -14,6 +14,10 @@ export async function generateMetadata() {
 		title: "AKJ.IO - Home of Allan Kimmer Jensen",
 		alternates: {
 			canonical: "/",
+			types: {
+				"application/rss+xml": "https://akj.io/feed",
+				"text/markdown": "https://akj.io/llm.txt",
+			},
 		},
 	};
 }

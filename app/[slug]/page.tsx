@@ -34,6 +34,9 @@ export async function generateMetadata({
 			description,
 			alternates: {
 				canonical: `/${slug}`,
+				types: {
+					"text/markdown": `/${slug}/llm.txt`,
+				},
 			},
 			authors: [{ name: "Allan Kimmer Jensen" }],
 			keywords: frontmatter.tags,
@@ -65,6 +68,9 @@ export async function generateMetadata({
 		description: frontmatter.subtitle,
 		alternates: {
 			canonical: `/${slug}`,
+			types: {
+				"text/markdown": `/${slug}/llm.txt`,
+			},
 		},
 	};
 }
