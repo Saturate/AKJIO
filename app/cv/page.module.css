@@ -1,0 +1,346 @@
+.cv {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 4rem;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  color: var(--color-text-secondary, #bababa);
+  font-size: 1.1rem;
+}
+
+.section {
+  margin-bottom: 4rem;
+}
+
+.sectionTitle {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border, #333);
+}
+
+/* Work Experience */
+.workItem {
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+  border-left: 3px solid var(--color-accent, #4a9eff);
+  background: var(--color-card-bg, rgba(255, 255, 255, 0.02));
+  border-radius: 4px;
+}
+
+.workHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 2rem;
+}
+
+.workTitle {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.workTitle a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.workTitle a:hover {
+  color: var(--color-accent, #4a9eff);
+}
+
+.workPosition {
+  font-size: 1.2rem;
+  color: var(--color-text-secondary, #bababa);
+  margin-bottom: 0.25rem;
+}
+
+.workLocation {
+  font-size: 0.9rem;
+  color: var(--color-text-tertiary, #888);
+}
+
+.dateRange {
+  color: var(--color-text-secondary, #bababa);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.summary {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.highlights {
+  list-style: none;
+  padding-left: 0;
+  margin: 1rem 0;
+}
+
+.highlights li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.highlights li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--color-accent, #4a9eff);
+}
+
+.technologies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--color-tag-bg, rgba(74, 158, 255, 0.1));
+  border: 1px solid var(--color-tag-border, rgba(74, 158, 255, 0.3));
+  border-radius: 3px;
+  font-size: 0.85rem;
+  color: var(--color-accent, #4a9eff);
+}
+
+.projects {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border, #333);
+}
+
+.projects summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-accent, #4a9eff);
+  margin-bottom: 1rem;
+}
+
+.projects summary:hover {
+  text-decoration: underline;
+}
+
+.projects ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.projects li {
+  margin-bottom: 1.5rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--color-border, #333);
+}
+
+.projects li p {
+  margin-top: 0.5rem;
+  color: var(--color-text-secondary, #bababa);
+}
+
+/* Featured Projects */
+.projectItem {
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  border-left: 3px solid var(--color-secondary, #ff6b6b);
+  background: var(--color-card-bg, rgba(255, 255, 255, 0.02));
+  border-radius: 4px;
+}
+
+.projectHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 2rem;
+}
+
+.projectTitle {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.projectTitle a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.projectTitle a:hover {
+  color: var(--color-secondary, #ff6b6b);
+}
+
+/* Skills */
+.skillsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.skillCategory {
+  padding: 1.5rem;
+  background: var(--color-card-bg, rgba(255, 255, 255, 0.02));
+  border-radius: 4px;
+  border: 1px solid var(--color-border, #333);
+}
+
+.skillCategoryTitle {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: var(--color-accent, #4a9eff);
+}
+
+.skillList {
+  list-style: none;
+  padding-left: 0;
+}
+
+.skillList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.05));
+}
+
+.skillList li:last-child {
+  border-bottom: none;
+}
+
+.skillName {
+  font-weight: 500;
+}
+
+.proficiency {
+  font-size: 0.8rem;
+  color: var(--color-text-tertiary, #888);
+  text-transform: capitalize;
+}
+
+/* Education */
+.educationItem {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--color-card-bg, rgba(255, 255, 255, 0.02));
+  border-radius: 4px;
+}
+
+.educationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 2rem;
+}
+
+.educationTitle {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.educationTitle a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.educationTitle a:hover {
+  color: var(--color-accent, #4a9eff);
+}
+
+.educationDegree {
+  color: var(--color-text-secondary, #bababa);
+}
+
+/* Certifications */
+.certItem {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--color-card-bg, rgba(255, 255, 255, 0.02));
+  border-radius: 4px;
+}
+
+.certTitle {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.certTitle a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.certTitle a:hover {
+  color: var(--color-accent, #4a9eff);
+}
+
+.certIssuer {
+  color: var(--color-text-secondary, #bababa);
+  font-size: 0.9rem;
+}
+
+/* Publications */
+.publicationItem {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--color-card-bg, rgba(255, 255, 255, 0.02));
+  border-radius: 4px;
+}
+
+.publicationTitle {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.publicationTitle a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.publicationTitle a:hover {
+  color: var(--color-accent, #4a9eff);
+}
+
+.publicationVenue {
+  color: var(--color-text-secondary, #bababa);
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 2.5rem;
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+  }
+
+  .workHeader,
+  .projectHeader,
+  .educationHeader {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .dateRange {
+    align-self: flex-start;
+  }
+
+  .skillsGrid {
+    grid-template-columns: 1fr;
+  }
+}
