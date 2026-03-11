@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { getMoonPhase, getIlluminationFraction } from "@/lib/moonPhase";
 import styles from "./OceanWater.module.css";
 
 interface Particle {
@@ -343,8 +344,13 @@ export default function OceanWater() {
 			return;
 		}
 
+		const phase = getMoonPhase();
+		const illumination = getIlluminationFraction(phase);
+
 		ctx.save();
 
+		// Glow — intensity scales with illumination
+		const glowAlpha = 0.08 + 0.22 * illumination;
 		const glowGradient = ctx.createRadialGradient(
 			moonX,
 			moonY,
@@ -353,19 +359,19 @@ export default function OceanWater() {
 			moonY,
 			moonRadius * 2,
 		);
-		glowGradient.addColorStop(0, "rgba(244, 241, 222, 0.3)");
+		glowGradient.addColorStop(0, `rgba(244, 241, 222, ${glowAlpha})`);
 		glowGradient.addColorStop(1, "rgba(244, 241, 222, 0)");
 		ctx.fillStyle = glowGradient;
 		ctx.beginPath();
 		ctx.arc(moonX, moonY, moonRadius * 2, 0, Math.PI * 2);
 		ctx.fill();
 
+		// Lit surface + craters
 		ctx.fillStyle = getCSSVariable("--moon-color");
 		ctx.beginPath();
 		ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
 		ctx.fill();
 
-		// Craters
 		ctx.fillStyle = "rgba(200, 197, 180, 0.3)";
 		ctx.beginPath();
 		ctx.arc(moonX - 10, moonY - 5, 8, 0, Math.PI * 2);
@@ -376,6 +382,38 @@ export default function OceanWater() {
 		ctx.beginPath();
 		ctx.arc(moonX + 5, moonY - 15, 5, 0, Math.PI * 2);
 		ctx.fill();
+
+		// Phase shadow overlay — clip to moon circle, then draw the unlit portion
+		if (illumination < 0.99) {
+			ctx.save();
+			ctx.beginPath();
+			ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
+			ctx.clip();
+
+			// Terminator ellipse x-radius shrinks/grows with phase
+			const terminatorRx = moonRadius * Math.abs(Math.cos(phase * 2 * Math.PI));
+
+			ctx.fillStyle = "rgba(10, 22, 40, 0.85)";
+			ctx.beginPath();
+
+			if (phase < 0.5) {
+				// Waxing: shadow on the left side
+				// Left half-circle (fully dark)
+				ctx.arc(moonX, moonY, moonRadius, Math.PI * 0.5, Math.PI * 1.5);
+				// Terminator edge back across (ellipse from bottom to top)
+				ctx.ellipse(moonX, moonY, terminatorRx, moonRadius, 0, Math.PI * 1.5, Math.PI * 0.5);
+			} else {
+				// Waning: shadow on the right side
+				// Right half-circle (fully dark)
+				ctx.arc(moonX, moonY, moonRadius, Math.PI * 1.5, Math.PI * 0.5);
+				// Terminator edge back across (ellipse from top to bottom)
+				ctx.ellipse(moonX, moonY, terminatorRx, moonRadius, 0, Math.PI * 0.5, Math.PI * 1.5);
+			}
+
+			ctx.closePath();
+			ctx.fill();
+			ctx.restore();
+		}
 
 		ctx.restore();
 	}
