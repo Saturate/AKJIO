@@ -2,6 +2,7 @@ import createMDX from "@next/mdx";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import rehypePrettyCode from "rehype-pretty-code";
+import remarkGfm from "remark-gfm";
 import remarkAbbr from "./lib/remark-abbr.mjs";
 
 /** @type {import('next').NextConfig} */
@@ -16,7 +17,7 @@ const nextConfig = {
 				permanent: true,
 			},
 			{
-				source: "/posts/:slug",
+				source: "/posts/:slug((?!llm\\.txt$).*)",
 				destination: "/:slug",
 				permanent: true,
 			},
@@ -65,7 +66,7 @@ const nextConfig = {
 const withMDX = createMDX({
 	// Add markdown plugins here, as desired
 	options: {
-		remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter, remarkAbbr],
+		remarkPlugins: [remarkGfm, remarkFrontmatter, remarkMdxFrontmatter, remarkAbbr],
 		rehypePlugins: [
 			[
 				rehypePrettyCode,

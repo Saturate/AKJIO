@@ -1,0 +1,127 @@
+---
+title: "Speeding up my terminal"
+description: "How I went from 1.2s to 0.15s shell startup by lazy-loading conda"
+date: 2026-03-16
+tags:
+  - terminal
+  - performance
+  - zsh
+  - ghostty
+---
+
+Recently I got a bit annoyed, sometimes it took ages to start up a new terminal on my macbook pro. Pretty annoying, sitting there waiting for something as basic as a terminal to startup.
+
+## My Setup
+
+- macOS
+- Ghostty terminal
+- oh-my-zsh with powerlevel10k
+- Only plugin: `git`
+
+Pretty basic, right? Should be fast enough.
+
+## Profiling
+
+So the first thing I went ahead with, was some profiling. Pretty standard when you are working with performance issues, but to be honest, I've never had to profile my shell before.
+
+First, I got a rough number:
+
+```shell
+$ time zsh -i -c exit
+zsh -i -c exit  0.58s user 0.26s system 69% cpu 1.219 total
+```
+
+1.2 seconds. Well that seems faster than what I was experiencing, but still; that's an insane amount for a shell.
+
+I then generated a breakdown by adding zsh's built-in profiler to `~/.zshrc`:
+
+```shell
+# add to the very top of .zshrc
+zmodload zsh/zprof
+
+# add to the very bottom of .zshrc
+zprof
+```
+
+Restart the shell and you get a function-level breakdown:
+
+```
+num  calls        time            self            name
+-------------------------------------------------------------------
+ 1)    1     539.93   87.63%   539.90   87.63%   __conda_activate
+ 2)   22      36.39    5.91%    31.56    5.12%   _omz_source
+ 3)    2      17.18    2.79%    17.18    2.79%   compaudit
+ 4)    1      10.93    1.77%     5.77    0.94%   powerlevel10k
+ 5)    1      22.90    3.72%     5.71    0.93%   compinit
+```
+
+Conda was the culprit; 540ms, 87.6% of total startup. Turns out it runs `conda shell.zsh hook` on every shell start, even if you haven't touched conda in weeks... and I just use it for some AI work.
+
+## Applying some fixes
+
+### 1. Lazy-load conda
+
+Instead of running conda init on every shell startup, I wrap it so it only initializes when you actually run `conda` or `activate`:
+
+```zsh
+# Lazy conda - only init when needed
+lazy_conda() {
+  unfunction conda activate 2>/dev/null
+  __conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+  if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+  else
+    if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
+      . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
+    else
+      export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
+    fi
+  fi
+  unset __conda_setup
+}
+conda() { lazy_conda && conda "$@" }
+activate() { lazy_conda && conda activate "$@" }
+```
+
+This saved around ~540ms, and really solved all my issues. A tool I used a few times, was dragging down my normal workflow. And with lazy loading it still works, so nothing lost, but gained A LOT!
+
+### 2. Lazy-load bun completions
+
+Bun completions were sourced eagerly on every shell start. Wrapped them with `compdef` so they only load when you actually tab-complete a `bun` command.
+
+```zsh
+_lazy_bun_completion() {
+  unfunction _lazy_bun_completion 2>/dev/null
+  [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+}
+compdef _lazy_bun_completion bun
+```
+
+### 3. Housekeeping
+
+Consolidated 6 separate `export PATH=...` lines (including a duplicate `$HOME/.local/bin`) into a single declaration at the top. This happens when tools add their own PATH exports, you might not want to do this.
+
+Also removed ~50 lines of commented-out oh-my-zsh template comments. Doesn't affect performance, but makes the config actually readable.
+
+## Results
+
+So my final profiling showed `~0.15s` might seem bad, but seems instant for me, and...
+
+**1.2s → 0.15s, that's 8x faster.**
+
+The entire win came from one fix; lazy-loading conda. The rest (bun completions, PATH consolidation, boilerplate cleanup) were just some clean up, while I was touching this file. Only the bun one might have some effect.
+
+| Component       | Before | After  |
+| --------------- | ------ | ------ |
+| Conda           | 540ms  | 0ms (deferred) |
+| oh-my-zsh       | 36ms   | 32ms   |
+| compinit        | 23ms   | 15ms   |
+| powerlevel10k   | 11ms   | 17ms   |
+| Other           | 590ms  | 86ms   |
+| **Total**       | **1.2s** | **0.15s** |
+
+I expected to dig deep to fix some issue but luckily it was just one very slow thing, that I use rarely.
+
+In the future I might dig deeper in optimizing my shell, but for now it works again. The "Other" component is also mostly a mystery, but zprof only tracks the top level functions; I have no need to dig deeper now, maybe you can enlighten me about optimizing my shell in the comments!
+
+Thanks for reading.
