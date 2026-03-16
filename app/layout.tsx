@@ -58,6 +58,7 @@ export const metadata = {
 	alternates: {
 		types: {
 			"application/rss+xml": "https://akj.io/feed",
+			"text/markdown": "https://akj.io/llms.txt",
 		},
 	},
 	robots: {
