@@ -43,6 +43,7 @@
     "recharts": "^3.7.0",
     "rehype-pretty-code": "^0.14.1",
     "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
     "remark-mdx-frontmatter": "^5.2.0",
     "sass": "^1.97.3",
     "shiki": "^3.22.0",
