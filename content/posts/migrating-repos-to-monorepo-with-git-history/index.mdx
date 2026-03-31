@@ -1,0 +1,167 @@
+---
+title: "Migrating Multiple Repositories to a Monorepo While Preserving Git History"
+description: "How to consolidate multiple repositories into a monorepo using git-filter-repo while keeping complete git history, blame, and authorship intact"
+date: "2026-02-06"
+tags:
+  - git
+  - monorepo
+  - devops
+  - pnpm
+---
+
+We had two separate repositories, `project-x` (91 commits) and `project-y` (225 commits), that shared enough dependencies to justify a monorepo. The obvious approach is copying the files over, but that nukes all git history: no blame, no commit messages, no tracing back why something was done. For 316 commits worth of context, that wasn't acceptable.
+
+`git-filter-repo` is the modern replacement for the deprecated `git-filter-branch`. It rewrites history so every commit looks like it always lived in a subdirectory.
+
+```bash
+# macOS
+brew install git-filter-repo
+
+# Linux
+sudo apt install git-filter-repo    # Debian/Ubuntu
+sudo pacman -S git-filter-repo      # Arch
+```
+
+### 1. Prepare the Monorepo Structure
+
+Create the workspace configuration first:
+
+```yaml
+# pnpm-workspace.yaml
+packages:
+  - 'apps/*'
+```
+
+```json
+// package.json
+{
+  "name": "my-monorepo",
+  "private": true,
+  "packageManager": "pnpm@10.28.2"
+}
+```
+
+Commit this structure:
+
+```bash
+git add pnpm-workspace.yaml package.json
+git commit -m "chore: initialize pnpm workspace structure"
+```
+
+### 2. Clone and Filter Each Repository
+
+For each repository you want to migrate:
+
+```bash
+# Clone to temporary location
+cd /tmp/monorepo-migration
+git clone <source-repo-url> repo-temp
+
+# Remove the origin remote (required for filter-repo)
+cd repo-temp
+git remote remove origin
+
+# Rewrite history to move all files into subdirectory
+git filter-repo --to-subdirectory-filter apps/project-x --force
+```
+
+### 3. Merge Into Monorepo
+
+```bash
+cd /path/to/monorepo
+git checkout -b migration/add-project-x
+
+# Add filtered repo as remote
+git remote add project-x-temp /tmp/monorepo-migration/repo-temp
+
+# Fetch the rewritten history
+git fetch project-x-temp
+
+# Merge with --no-ff to preserve merge commit
+git merge project-x-temp/main --allow-unrelated-histories --no-ff -m "feat(project-x): merge into monorepo
+
+All files moved to apps/project-x/ with complete git history preserved.
+Original repository: [original-repo-url]"
+
+# Clean up
+git remote remove project-x-temp
+```
+
+**Key flags:**
+- `--allow-unrelated-histories`: Required since the repos have no common ancestor
+- `--no-ff`: Creates merge commit instead of fast-forward (preserves history structure)
+
+### 4. Verify and Merge
+
+```bash
+# Check commit count for the app
+git log --oneline apps/project-x/ | wc -l
+
+# Verify file history works
+git log --follow apps/project-x/package.json
+
+# View the merge structure
+git log --graph --oneline | head -20
+```
+
+You can merge directly to main if you're comfortable with it. I used a PR for visibility, but with `--no-ff` the merge commit is the same either way.
+
+```bash
+# Option A: merge directly
+git checkout main
+git merge migration/add-project-x --no-ff
+
+# Option B: PR (what I did)
+git push -u origin migration/add-project-x
+gh pr create \
+  --title "feat(project-x): Merge into monorepo" \
+  --body "Migration with full history preserved"
+```
+
+If you go the PR route, make sure it's merged with "no fast-forward", not squashed.
+
+## Syncing Updates from Original Repos
+
+After migration, you can continue to sync new commits from the original repositories:
+
+```bash
+# Clone original repo
+git clone <source-repo-url> /tmp/sync-temp
+cd /tmp/sync-temp
+git remote remove origin
+
+# Filter again (includes new commits)
+git filter-repo --to-subdirectory-filter apps/project-x --force
+
+# In monorepo
+cd /path/to/monorepo
+git checkout -b sync/project-x-updates
+git remote add project-x-sync /tmp/sync-temp
+git fetch project-x-sync
+
+# Merge only new commits
+git merge project-x-sync/main --no-ff -m "feat(project-x): sync latest updates
+
+Synced 3 new commits from original repository"
+
+git remote remove project-x-sync
+```
+
+## Gotchas
+
+When merging the PR, you must use "Merge (no fast-forward)". Squash or rebase flattens the imported history into a single commit, which defeats the entire point.
+
+`filter-repo` also refuses to run if a remote exists; you have to `git remote remove origin` first. The error message doesn't make this obvious.
+
+And when verifying, use `git log --follow`, not plain `git log`. Without `--follow`, git won't trace file history across the subdirectory rewrite.
+
+Our migration preserved:
+- **316 total commits** from 2 repositories
+- All work item references
+- Complete file history (`git blame` works correctly)
+- Original authorship and timestamps
+- Merge commits and branch structure
+
+`git blame` and `git log --follow` work across the entire history as if the repos were never separate. So your coworker can't hide that bad code they wrote ;)
+
+Hope you find this useful, if not I'm sure I'll reference it myself at some point haha.

@@ -6,9 +6,12 @@ export type TOCEntry = {
 };
 
 export async function generateTableOfContentsFromMarkdown(markdown: string) {
+	// Strip fenced code blocks so code comments aren't parsed as headings
+	const withoutCodeBlocks = markdown.replace(/^```[\s\S]*?^```/gm, "");
+
 	const headings = [
 		// Match Markdown and HTML headings (e.g., ## Heading, <h2>Heading</h2>)
-		...markdown.matchAll(
+		...withoutCodeBlocks.matchAll(
 			/^(#+)\s+(.+)$|^<h([1-6])(?:\s+[^>]*\bid=["'](.*?)["'][^>]*)?>(.*?)<\/h\3>/gm,
 		),
 	].map((match) => {
