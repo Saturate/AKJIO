@@ -76,6 +76,9 @@
     "last 2 Safari versions",
     "last 2 Edge versions"
   ],
+  "pnpm": {
+    "minimumReleaseAge": "2d"
+  },
   "engines": {
     "node": ">=22.0.0"
   },
