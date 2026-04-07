@@ -45,27 +45,27 @@
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
     "remark-mdx-frontmatter": "^5.2.0",
-    "sass": "^1.98.0",
+    "sass": "^1.99.0",
     "shiki": "^4.0.2",
     "unist-util-remove": "^4.0.0",
     "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^16.2.2",
-    "@tanstack/react-query": "^5.96.1",
-    "@tanstack/react-query-devtools": "^5.96.1",
+    "@tanstack/react-query": "^5.96.2",
+    "@tanstack/react-query-devtools": "^5.96.2",
     "@types/d3-array": "^3.2.2",
     "@types/mdx": "^2.0.13",
-    "@types/node": "25.5.0",
+    "@types/node": "25.5.2",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "eslint": "10.1.0",
+    "eslint": "10.2.0",
     "eslint-config-prettier": "^10.1.8",
     "lint-staged": "^16.4.0",
     "prettier": "^3.8.1",
     "typescript": "6.0.2",
     "typescript-eslint": "^8.58.0",
-    "vercel": "^50.38.1"
+    "vercel": "^50.40.0"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
