@@ -20,7 +20,6 @@
     "@next/mdx": "^16.2.6",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/react-collapsible": "^1.1.12",
-    "@vercel/speed-insights": "^2.0.0",
     "@visx/axis": "^3.12.0",
     "@visx/curve": "^3.12.0",
     "@visx/event": "^3.12.0",
@@ -64,7 +63,7 @@
     "lint-staged": "^17.0.4",
     "prettier": "^3.8.3",
     "typescript": "6.0.3",
-    "typescript-eslint": "^8.59.3",
+    "typescript-eslint": "^8.58.0",
     "vercel": "^53.4.0"
   },
   "lint-staged": {
@@ -76,9 +75,6 @@
     "last 2 Safari versions",
     "last 2 Edge versions"
   ],
-  "pnpm": {
-    "minimumReleaseAge": "2d"
-  },
   "engines": {
     "node": ">=22.0.0"
   },
