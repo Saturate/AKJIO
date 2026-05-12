@@ -1,4 +1,3 @@
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Jersey_25, Inter } from "next/font/google";
 import styles from "../styles/Home.module.css";
 import "../styles/global-styles.css";
@@ -105,7 +104,6 @@ export default async function RootLayout({
 					<Footer />
 				</ThemeProvider>
 			</body>
-			<SpeedInsights />
 		</html>
 	);
 }

@@ -30,6 +30,9 @@ export default function Footer() {
 					<RssSimple weight="fill" />
 					<span>RSS</span>
 				</a>
+				<a href="/privacy">
+					<span>Privacy</span>
+				</a>
 			</div>
 		</footer>
 	);
