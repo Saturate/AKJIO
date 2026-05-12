@@ -25,6 +25,7 @@ type PostLayoutProps = {
 	};
 	toc: TOCEntry[];
 	readTime: number;
+	nonce?: string;
 };
 
 export default function PostLayout({
@@ -33,6 +34,7 @@ export default function PostLayout({
 	frontmatter,
 	toc,
 	readTime,
+	nonce,
 }: PostLayoutProps) {
 	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
 	const postUrl = `${siteUrl}/${slug}`;
@@ -98,7 +100,7 @@ export default function PostLayout({
 					</article>
 				</div>
 			</AnchorProvider>
-			<JsonLd data={jsonLd} />
+			<JsonLd data={jsonLd} nonce={nonce} />
 		</>
 	);
 }

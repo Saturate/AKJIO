@@ -8,6 +8,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import OceanWaterLazy from "@/components/OceanWater/OceanWaterLazy";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+import { getNonce } from "@/utils/nonce";
 
 const font = Jersey_25({
 	subsets: ["latin"],
@@ -74,11 +75,13 @@ export const metadata = {
 	},
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
+	const nonce = await getNonce();
+
 	return (
 		<html lang="en" className={`${font.variable} ${inter.variable}`} suppressHydrationWarning>
 			<body className={styles.page}>
@@ -87,6 +90,7 @@ export default function RootLayout({
 					defaultTheme="system"
 					enableSystem
 					disableTransitionOnChange
+					nonce={nonce}
 				>
 					<OceanWaterLazy />
 

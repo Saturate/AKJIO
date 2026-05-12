@@ -8,6 +8,7 @@ import {
 	generateOrganizationSchema,
 } from "@/utils/generateJsonLd";
 import JsonLd from "@/components/JsonLd/JsonLd";
+import { getNonce } from "@/utils/nonce";
 
 export async function generateMetadata() {
 	return {
@@ -25,6 +26,7 @@ export default async function FrontPage({ params }: PageProps) {
 	const slug = (await params).slug;
 
 	const page = await getPageFromSlug([slug]);
+	const nonce = await getNonce();
 
 	const personJsonLd = generatePersonSchema();
 	const orgJsonLd = generateOrganizationSchema();
@@ -38,8 +40,8 @@ export default async function FrontPage({ params }: PageProps) {
 					<PopularTags limit={10} />
 				</div>
 			</div>
-			<JsonLd data={personJsonLd} />
-			<JsonLd data={orgJsonLd} />
+			<JsonLd data={personJsonLd} nonce={nonce} />
+			<JsonLd data={orgJsonLd} nonce={nonce} />
 		</>
 	);
 }

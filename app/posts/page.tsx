@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { generateCollectionPageSchema } from "@/utils/generateJsonLd";
 import JsonLd from "@/components/JsonLd/JsonLd";
+import { getNonce } from "@/utils/nonce";
 
 type Props = {
 	searchParams: Promise<{ tag?: string }>;
@@ -33,6 +34,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
 export default async function PostsOverviewPage({ searchParams }: Props) {
 	const { tag } = await searchParams;
+	const nonce = await getNonce();
 	const { postIds } = await getPostsIds();
 
 	const posts = await Promise.all(
@@ -89,7 +91,7 @@ export default async function PostsOverviewPage({ searchParams }: Props) {
 				<p>No posts found {tag && `with tag "${tag}"`}.</p>
 			)}
 			{sortedPostElements}
-			<JsonLd data={jsonLd} />
+			<JsonLd data={jsonLd} nonce={nonce} />
 		</>
 	);
 }
