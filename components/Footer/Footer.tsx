@@ -1,4 +1,5 @@
 import { GithubLogo, LinkedinLogo, RssSimple } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
@@ -30,9 +31,9 @@ export default function Footer() {
 					<RssSimple weight="fill" />
 					<span>RSS</span>
 				</a>
-				<a href="/privacy">
+				<Link href="/privacy">
 					<span>Privacy</span>
-				</a>
+				</Link>
 			</div>
 		</footer>
 	);
