@@ -54,6 +54,10 @@ const nextConfig = {
 						value: "same-origin",
 					},
 					{
+						key: "Cross-Origin-Embedder-Policy",
+						value: "credentialless",
+					},
+					{
 						key: "Reporting-Endpoints",
 						value: 'default="https://reports.akj.io"',
 					},
