@@ -17,10 +17,9 @@
     "@giscus/react": "^3.1.0",
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/react": "^3.1.1",
-    "@next/mdx": "^16.2.2",
+    "@next/mdx": "^16.2.6",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/react-collapsible": "^1.1.12",
-    "@vercel/speed-insights": "^2.0.0",
     "@visx/axis": "^3.12.0",
     "@visx/curve": "^3.12.0",
     "@visx/event": "^3.12.0",
@@ -33,13 +32,13 @@
     "d3-array": "^3.2.4",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.38.0",
-    "lucide-react": "^1.7.0",
+    "lucide-react": "^1.14.0",
     "mdast-util-find-and-replace": "^3.0.2",
-    "next": "16.2.2",
+    "next": "16.2.6",
     "next-mdx-remote": "^6.0.0",
     "next-themes": "^0.4.6",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
     "recharts": "^3.8.1",
     "rehype-pretty-code": "^0.14.3",
     "remark-frontmatter": "^5.0.0",
@@ -51,21 +50,21 @@
     "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^16.2.2",
-    "@tanstack/react-query": "^5.96.2",
-    "@tanstack/react-query-devtools": "^5.96.2",
+    "@next/eslint-plugin-next": "^16.2.6",
+    "@tanstack/react-query": "^5.100.10",
+    "@tanstack/react-query-devtools": "^5.100.10",
     "@types/d3-array": "^3.2.2",
     "@types/mdx": "^2.0.13",
-    "@types/node": "25.5.2",
+    "@types/node": "25.7.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "eslint": "10.2.0",
+    "eslint": "10.3.0",
     "eslint-config-prettier": "^10.1.8",
-    "lint-staged": "^16.4.0",
-    "prettier": "^3.8.1",
-    "typescript": "6.0.2",
+    "lint-staged": "^17.0.4",
+    "prettier": "^3.8.3",
+    "typescript": "6.0.3",
     "typescript-eslint": "^8.58.0",
-    "vercel": "^50.40.0"
+    "vercel": "^53.4.0"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
@@ -76,11 +75,8 @@
     "last 2 Safari versions",
     "last 2 Edge versions"
   ],
-  "pnpm": {
-    "minimumReleaseAge": "2d"
-  },
   "engines": {
     "node": ">=22.0.0"
   },
-  "packageManager": "pnpm@10.30.3+sha512.c961d1e0a2d8e354ecaa5166b822516668b7f44cb5bd95122d590dd81922f606f5473b6d23ec4a5be05e7fcd18e8488d47d978bbe981872f1145d06e9a740017"
+  "packageManager": "pnpm@11.1.1+sha512.d1fdf5f73c617b64fa1a56a81c3c8dfe0e966e33a6010aa256b517ae77be21d93e05affc0de1a83b0e4f29d569f68b446ae8f068cd7247c0bb3df0fb4d7bdf9a"
 }
