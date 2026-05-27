@@ -115,7 +115,7 @@ export function toJsonResume(
       name: work.company,
       position: work.position,
       url: work.url,
-      startDate: work.dateRange.start,
+      startDate: work.dateRange.start ?? "",
       endDate:
         work.dateRange.end === "present" ? undefined : work.dateRange.end,
       summary: work.summary,
@@ -126,7 +126,7 @@ export function toJsonResume(
       url: edu.url,
       area: edu.area,
       studyType: edu.studyType,
-      startDate: edu.dateRange.start,
+      startDate: edu.dateRange.start ?? "",
       endDate:
         edu.dateRange.end === "present" ? undefined : edu.dateRange.end,
       score: edu.score,
@@ -144,7 +144,7 @@ export function toJsonResume(
       description: project.description,
       highlights: project.highlights,
       keywords: project.technologies,
-      startDate: project.dateRange.start,
+      startDate: project.dateRange.start ?? "",
       endDate:
         project.dateRange.end === "present" ? undefined : project.dateRange.end,
       url: project.url,
