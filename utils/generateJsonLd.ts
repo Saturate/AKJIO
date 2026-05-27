@@ -49,7 +49,7 @@ export function generatePersonSchema() {
 		name: AUTHOR_NAME,
 		url: SITE_URL,
 		sameAs: [
-			"https://github.com/alkj",
+			"https://github.com/Saturate",
 			"https://www.linkedin.com/in/allankimmerjensen/",
 		],
 	};
@@ -63,7 +63,7 @@ export function generateOrganizationSchema() {
 		url: SITE_URL,
 		logo: `${SITE_URL}/logo.png`,
 		sameAs: [
-			"https://github.com/alkj",
+			"https://github.com/Saturate",
 			"https://www.linkedin.com/in/allankimmerjensen/",
 		],
 	};
@@ -101,6 +101,37 @@ export function generateCollectionPageSchema(
 				position: index + 1,
 				url: post.url,
 			})),
+		},
+	};
+}
+
+export function generateProfilePageSchema(
+	work: Array<{ company: string; position: string; dateRange: { start?: string; end?: string }; url?: string }>,
+	skills: Array<{ category: string; items: Array<{ name: string }> }>,
+) {
+	const currentJobs = work.filter((w) => w.dateRange.end === "present");
+	const allSkills = skills.flatMap((s) => s.items.map((i) => i.name));
+
+	return {
+		"@context": "https://schema.org",
+		"@type": "ProfilePage",
+		mainEntity: {
+			"@type": "Person",
+			name: AUTHOR_NAME,
+			url: SITE_URL,
+			jobTitle: currentJobs[0]?.position,
+			...(currentJobs[0] && {
+				worksFor: currentJobs.map((job) => ({
+					"@type": "Organization",
+					name: job.company,
+					...(job.url && { url: job.url }),
+				})),
+			}),
+			knowsAbout: allSkills,
+			sameAs: [
+				"https://github.com/Saturate",
+				"https://www.linkedin.com/in/allankimmerjensen/",
+			],
 		},
 	};
 }
