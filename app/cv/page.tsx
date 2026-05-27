@@ -1,5 +1,8 @@
 import { cvData } from "@/data/cv";
 import { format as formatDate } from "date-fns";
+import { ExternalLink } from "lucide-react";
+import { generateProfilePageSchema } from "@/utils/generateJsonLd";
+import JsonLd from "@/components/JsonLd/JsonLd";
 import styles from "./page.module.css";
 
 export const metadata = {
@@ -8,17 +11,19 @@ export const metadata = {
     "Curriculum Vitae - 15+ years experience in software architecture, frontend development, and security.",
 };
 
-function formatDateRange(start: string, end?: string | "present") {
-  const startDate = new Date(start + "-01");
-  const formattedStart = formatDate(startDate, "MMM yyyy");
+function formatDateRange(start?: string, end?: string | "present") {
+  if (!start && !end) return null;
+
+  const formattedStart = start
+    ? formatDate(new Date(start + "-01"), "MMM yyyy")
+    : "";
 
   if (!end || end === "present") {
-    return `${formattedStart} - Present`;
+    return start ? `${formattedStart} - Present` : "Present";
   }
 
-  const endDate = new Date(end + "-01");
-  const formattedEnd = formatDate(endDate, "MMM yyyy");
-  return `${formattedStart} - ${formattedEnd}`;
+  const formattedEnd = formatDate(new Date(end + "-01"), "MMM yyyy");
+  return start ? `${formattedStart} - ${formattedEnd}` : formattedEnd;
 }
 
 export default function CVPage() {
@@ -95,13 +100,23 @@ export default function CVPage() {
                   <ul>
                     {relatedProjects.map((project) => (
                       <li key={project.id}>
-                        <strong>{project.name}</strong> (
-                        {formatDateRange(
-                          project.dateRange.start,
-                          project.dateRange.end
+                        <strong>{project.name}</strong>
+                        {project.url && (
+                          <a href={project.url} target="_blank" rel="noopener noreferrer" className={styles.projectLink}>
+                            <ExternalLink size={12} />
+                          </a>
                         )}
-                        )
+                        {formatDateRange(project.dateRange.start, project.dateRange.end) && (
+                          <> ({formatDateRange(project.dateRange.start, project.dateRange.end)})</>
+                        )}
                         <p>{project.description}</p>
+                        {project.technologies.length > 0 && (
+                          <div className={styles.technologies}>
+                            {project.technologies.map((tech) => (
+                              <span key={tech} className={styles.tagSmall}>{tech}</span>
+                            ))}
+                          </div>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -162,32 +177,6 @@ export default function CVPage() {
               )}
             </article>
           ))}
-      </section>
-
-      {/* Skills */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Skills</h2>
-        <div className={styles.skillsGrid}>
-          {cvData.skills.map((skillGroup) => (
-            <div key={skillGroup.category} className={styles.skillCategory}>
-              <h3 className={styles.skillCategoryTitle}>
-                {skillGroup.category}
-              </h3>
-              <ul className={styles.skillList}>
-                {skillGroup.items.map((skill) => (
-                  <li key={skill.name}>
-                    <span className={styles.skillName}>{skill.name}</span>
-                    {skill.proficiency && (
-                      <span className={styles.proficiency}>
-                        {skill.proficiency}
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
       </section>
 
       {/* Education */}
@@ -254,6 +243,27 @@ export default function CVPage() {
         </section>
       )}
 
+      {/* Skills */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Skills</h2>
+        <div className={styles.skillsGrid}>
+          {cvData.skills.map((skillGroup) => (
+            <div key={skillGroup.category} className={styles.skillCategory}>
+              <h3 className={styles.skillCategoryTitle}>
+                {skillGroup.category}
+              </h3>
+              <div className={styles.technologies}>
+                {skillGroup.items.map((skill) => (
+                  <span key={skill.name} className={styles.tag}>
+                    {skill.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Publications */}
       {/* {cvData.publications.length > 0 && (
         <section className={styles.section}>
@@ -279,6 +289,7 @@ export default function CVPage() {
           ))}
         </section>
       )} */}
+      <JsonLd data={generateProfilePageSchema(cvData.work, cvData.skills)} />
     </div>
   );
 }

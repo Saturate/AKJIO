@@ -1,5 +1,5 @@
 export type DateRange = {
-  start: string; // ISO8601: "2023-01" or "2023-01-15"
+  start?: string; // ISO8601: "2023-01" or "2023-01-15"
   end?: string | "present";
 };
 

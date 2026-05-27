@@ -1,34 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/providers/ThemeProvider";
 import { Sun, Moon, Monitor } from "lucide-react";
 import styles from "./ThemeToggle.module.css";
 
 export default function ThemeToggle() {
-	const [mounted, setMounted] = useState(false);
 	const { theme, setTheme } = useTheme();
-
-	// Prevent hydration mismatch
-	useEffect(() => {
-		setMounted(true);
-	}, []);
-
-	if (!mounted) {
-		return (
-			<div className={styles.toggleBar} aria-hidden="true">
-				<button className={styles.button} disabled>
-					<Sun size={18} />
-				</button>
-				<button className={styles.button} disabled>
-					<Moon size={18} />
-				</button>
-				<button className={styles.button} disabled>
-					<Monitor size={18} />
-				</button>
-			</div>
-		);
-	}
 
 	return (
 		<div className={styles.toggleBar} role="group" aria-label="Theme selector">

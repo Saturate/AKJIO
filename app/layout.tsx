@@ -83,14 +83,14 @@ export default async function RootLayout({
 
 	return (
 		<html lang="en" className={`${font.variable} ${inter.variable}`} suppressHydrationWarning>
-			<body className={styles.page}>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange
+			<head>
+				<script
 					nonce={nonce}
-				>
+					dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem("theme")||"system";var r=t;if(t==="system")r=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.classList.add(r);document.documentElement.style.colorScheme=r}catch(e){}})()` }}
+				/>
+			</head>
+			<body className={styles.page}>
+				<ThemeProvider>
 					<OceanWaterLazy />
 
 					<Header>
