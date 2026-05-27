@@ -94,8 +94,8 @@ Full system prompt dump including the flag. Classic case of embedding secrets in
 
 ## Closing Thoughts
 
-This challenge perfectly demonstrates why embedding secrets in system prompts is fundamentally broken. While it seems obvious that hardcoding API keys in prompts is a terrible idea, real-world implementations continue to surprise us with similar mistakes.
+This challenge demonstrates why embedding secrets in system prompts is broken. While it seems obvious that hardcoding API keys in prompts is a terrible idea, real-world implementations continue to surprise us with similar mistakes.
 
-Creating realistic prompt injection challenges is genuinely difficult—I've tried it myself. This one landed on the easier side: two prompts and we're done. The assistant leaked its entire system prompt without any defensive behavior, making the social engineering trivial.
+Creating realistic prompt injection challenges is genuinely difficult; I've tried it myself. This one landed on the easier side: two prompts and we're done. The assistant leaked its entire system prompt without any defensive behavior.
 
 The takeaway: treat system prompts as public information. Any secret you put there will eventually be extracted. Use proper authentication mechanisms, separate your secrets from your instructions, and assume attackers will see everything you tell the model.
