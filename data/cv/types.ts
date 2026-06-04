@@ -67,6 +67,18 @@ export type Publication = {
   featured?: boolean;
 };
 
+export type Award = {
+  id: string;
+  name: string;
+  issuer: string;
+  date: string;
+  category: string;
+  placement: "gold" | "silver" | "bronze" | "finalist" | "winner" | "1st" | "2nd" | "3rd";
+  url?: string;
+  tags: CVTag[];
+  relatedTo?: string;
+};
+
 export type Technology = {
   name: string;
   proficiency?: "beginner" | "intermediate" | "advanced" | "expert";
@@ -81,6 +93,7 @@ export type Skill = {
 export type CVData = {
   work: WorkExperience[];
   projects: Project[];
+  awards: Award[];
   education: Education[];
   certifications: Certification[];
   publications: Publication[];
