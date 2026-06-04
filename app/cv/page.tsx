@@ -1,6 +1,6 @@
 import { cvData } from "@/data/cv";
 import { format as formatDate } from "date-fns";
-import { ExternalLink, Trophy } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { generateProfilePageSchema } from "@/utils/generateJsonLd";
 import JsonLd from "@/components/JsonLd/JsonLd";
 import styles from "./page.module.css";
@@ -131,29 +131,29 @@ export default function CVPage() {
       {cvData.awards.length > 0 && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Awards</h2>
-          <div className={styles.awardsGrid}>
-            {cvData.awards.map((award) => (
-              <article key={award.id} className={styles.awardItem}>
-                <div className={styles.awardPlacement} data-placement={award.placement}>
-                  <Trophy size={16} />
-                  <span>{award.placement}</span>
-                </div>
-                <div className={styles.awardContent}>
+          {cvData.awards.map((award) => (
+            <article key={award.id} className={styles.awardItem}>
+              <div className={styles.awardHeader}>
+                <div>
                   <h3 className={styles.awardTitle}>
                     {award.url ? (
                       <a href={award.url} target="_blank" rel="noopener noreferrer">
-                        {award.name}
+                        {award.category}
                       </a>
                     ) : (
-                      award.name
+                      award.category
                     )}
                   </h3>
-                  <p className={styles.awardCategory}>{award.category}</p>
-                  <p className={styles.awardIssuer}>{award.issuer} • {award.date}</p>
+                  <p className={styles.awardMeta}>
+                    {award.name} • {award.issuer} • {award.date}
+                  </p>
                 </div>
-              </article>
-            ))}
-          </div>
+                <span className={styles.awardPlacement} data-placement={award.placement}>
+                  {award.placement}
+                </span>
+              </div>
+            </article>
+          ))}
         </section>
       )}
 

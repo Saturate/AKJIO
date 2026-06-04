@@ -178,61 +178,22 @@
 }
 
 /* Awards */
-.awardsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
-}
-
 .awardItem {
-  display: flex;
-  gap: 1rem;
-  padding: 1.25rem;
+  margin-bottom: 1rem;
+  padding: 1rem 1.5rem;
   background: var(--color-card-bg, rgba(255, 255, 255, 0.02));
   border-radius: 4px;
-  border: 1px solid var(--color-border, #333);
 }
 
-.awardPlacement {
+.awardHeader {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  min-width: 3.5rem;
-  padding: 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.awardPlacement[data-placement="gold"] {
-  color: #ffd700;
-  background: rgba(255, 215, 0, 0.1);
-  border: 1px solid rgba(255, 215, 0, 0.3);
-}
-
-.awardPlacement[data-placement="silver"] {
-  color: #c0c0c0;
-  background: rgba(192, 192, 192, 0.1);
-  border: 1px solid rgba(192, 192, 192, 0.3);
-}
-
-.awardPlacement[data-placement="bronze"],
-.awardPlacement[data-placement="3rd"] {
-  color: #cd7f32;
-  background: rgba(205, 127, 50, 0.1);
-  border: 1px solid rgba(205, 127, 50, 0.3);
-}
-
-.awardContent {
-  flex: 1;
-  min-width: 0;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .awardTitle {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   margin: 0 0 0.25rem;
 }
 
@@ -245,15 +206,23 @@
   color: var(--color-accent, #4a9eff);
 }
 
-.awardCategory {
-  margin: 0 0 0.25rem;
-  font-size: 0.95rem;
-}
-
-.awardIssuer {
+.awardMeta {
   margin: 0;
   font-size: 0.85rem;
   color: var(--color-text-tertiary, #888);
+}
+
+.awardPlacement {
+  flex-shrink: 0;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-secondary, #bababa);
+  background: var(--color-tag-bg, rgba(74, 158, 255, 0.1));
+  border: 1px solid var(--color-tag-border, rgba(74, 158, 255, 0.2));
 }
 
 /* Featured Projects */
