@@ -6,6 +6,7 @@ import Navigation from "@/components/Navigation/Navigation";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import OceanWaterLazy from "@/components/OceanWater/OceanWaterLazy";
+import DevColorPanel from "@/components/DevColorPanel/DevColorPanel";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { getNonce } from "@/utils/nonce";
 
@@ -102,6 +103,7 @@ export default async function RootLayout({
 					</main>
 
 					<Footer />
+					<DevColorPanel />
 				</ThemeProvider>
 			</body>
 		</html>
