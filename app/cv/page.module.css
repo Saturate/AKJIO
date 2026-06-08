@@ -38,7 +38,7 @@
   border-radius: 4px;
 }
 
-.workHeader {
+.sectionHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -185,12 +185,6 @@
   border-radius: 4px;
 }
 
-.awardHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-}
 
 .awardTitle {
   font-size: 1.1rem;
@@ -234,13 +228,6 @@
   border-radius: 4px;
 }
 
-.projectHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-  gap: 2rem;
-}
 
 .projectTitle {
   font-size: 1.5rem;
@@ -311,13 +298,6 @@
   border-radius: 4px;
 }
 
-.educationHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-  gap: 2rem;
-}
 
 .educationTitle {
   font-size: 1.5rem;
@@ -402,10 +382,7 @@
     font-size: 2rem;
   }
 
-  .workHeader,
-  .projectHeader,
-  .awardHeader,
-  .educationHeader {
+  .sectionHeader {
     flex-direction: column;
     gap: 0.5rem;
   }

@@ -58,7 +58,7 @@ export default function CVPage() {
 
           return (
             <article key={work.id} className={styles.workItem}>
-              <div className={styles.workHeader}>
+              <div className={styles.sectionHeader}>
                 <div>
                   <h3 className={styles.workTitle}>
                     {work.url ? (
@@ -145,7 +145,7 @@ export default function CVPage() {
           .filter((p) => p.featured)
           .map((project) => (
             <article key={project.id} className={styles.projectItem}>
-              <div className={styles.projectHeader}>
+              <div className={styles.sectionHeader}>
                 <h3 className={styles.projectTitle}>
                   {project.url ? (
                     <a
@@ -196,7 +196,7 @@ export default function CVPage() {
           <h2 className={styles.sectionTitle}>Education</h2>
           {cvData.education.map((edu) => (
             <article key={edu.id} className={styles.educationItem}>
-              <div className={styles.educationHeader}>
+              <div className={styles.sectionHeader}>
                 <div>
                   <h3 className={styles.educationTitle}>
                     {edu.url ? (
@@ -260,7 +260,7 @@ export default function CVPage() {
           <h2 className={styles.sectionTitle}>Awards</h2>
           {cvData.awards.map((award) => (
             <article key={award.id} className={styles.awardItem}>
-              <div className={styles.awardHeader}>
+              <div className={styles.sectionHeader}>
                 <div>
                   <h3 className={styles.awardTitle}>
                     {award.url ? (
