@@ -11,6 +11,17 @@ export const metadata = {
     "Curriculum Vitae - 15+ years experience in software architecture, frontend development, and security.",
 };
 
+const placementLabels: Record<string, string> = {
+  gold: "Gold",
+  silver: "Silver",
+  bronze: "Bronze",
+  "3rd": "3rd place",
+  "2nd": "2nd place",
+  "1st": "1st place",
+  winner: "Winner",
+  finalist: "Finalist",
+};
+
 function formatDateRange(start?: string, end?: string | "present") {
   if (!start && !end) return null;
 
@@ -265,7 +276,7 @@ export default function CVPage() {
                   </p>
                 </div>
                 <span className={styles.awardPlacement} data-placement={award.placement}>
-                  {award.placement}
+                  {placementLabels[award.placement] ?? award.placement}
                 </span>
               </div>
             </article>

@@ -404,6 +404,7 @@
 
   .workHeader,
   .projectHeader,
+  .awardHeader,
   .educationHeader {
     flex-direction: column;
     gap: 0.5rem;
