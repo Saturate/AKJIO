@@ -127,36 +127,6 @@ export default function CVPage() {
         })}
       </section>
 
-      {/* Awards */}
-      {cvData.awards.length > 0 && (
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Awards</h2>
-          {cvData.awards.map((award) => (
-            <article key={award.id} className={styles.awardItem}>
-              <div className={styles.awardHeader}>
-                <div>
-                  <h3 className={styles.awardTitle}>
-                    {award.url ? (
-                      <a href={award.url} target="_blank" rel="noopener noreferrer">
-                        {award.category}
-                      </a>
-                    ) : (
-                      award.category
-                    )}
-                  </h3>
-                  <p className={styles.awardMeta}>
-                    {award.name} • {award.issuer} • {award.date}
-                  </p>
-                </div>
-                <span className={styles.awardPlacement} data-placement={award.placement}>
-                  {award.placement}
-                </span>
-              </div>
-            </article>
-          ))}
-        </section>
-      )}
-
       {/* Featured Projects */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Featured Projects</h2>
@@ -268,6 +238,36 @@ export default function CVPage() {
               <p className={styles.certIssuer}>
                 {cert.issuer} • {formatDate(new Date(cert.date), "MMM yyyy")}
               </p>
+            </article>
+          ))}
+        </section>
+      )}
+
+      {/* Awards */}
+      {cvData.awards.length > 0 && (
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Awards</h2>
+          {cvData.awards.map((award) => (
+            <article key={award.id} className={styles.awardItem}>
+              <div className={styles.awardHeader}>
+                <div>
+                  <h3 className={styles.awardTitle}>
+                    {award.url ? (
+                      <a href={award.url} target="_blank" rel="noopener noreferrer">
+                        {award.category}
+                      </a>
+                    ) : (
+                      award.category
+                    )}
+                  </h3>
+                  <p className={styles.awardMeta}>
+                    {award.name} • {award.issuer} • {award.date}
+                  </p>
+                </div>
+                <span className={styles.awardPlacement} data-placement={award.placement}>
+                  {award.placement}
+                </span>
+              </div>
             </article>
           ))}
         </section>
