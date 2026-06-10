@@ -11,6 +11,17 @@ export const metadata = {
     "Curriculum Vitae - 15+ years experience in software architecture, frontend development, and security.",
 };
 
+const placementLabels: Record<string, string> = {
+  gold: "Gold",
+  silver: "Silver",
+  bronze: "Bronze",
+  "3rd": "3rd place",
+  "2nd": "2nd place",
+  "1st": "1st place",
+  winner: "Winner",
+  finalist: "Finalist",
+};
+
 function formatDateRange(start?: string, end?: string | "present") {
   if (!start && !end) return null;
 
@@ -47,7 +58,7 @@ export default function CVPage() {
 
           return (
             <article key={work.id} className={styles.workItem}>
-              <div className={styles.workHeader}>
+              <div className={styles.sectionHeader}>
                 <div>
                   <h3 className={styles.workTitle}>
                     {work.url ? (
@@ -134,7 +145,7 @@ export default function CVPage() {
           .filter((p) => p.featured)
           .map((project) => (
             <article key={project.id} className={styles.projectItem}>
-              <div className={styles.projectHeader}>
+              <div className={styles.sectionHeader}>
                 <h3 className={styles.projectTitle}>
                   {project.url ? (
                     <a
@@ -185,7 +196,7 @@ export default function CVPage() {
           <h2 className={styles.sectionTitle}>Education</h2>
           {cvData.education.map((edu) => (
             <article key={edu.id} className={styles.educationItem}>
-              <div className={styles.educationHeader}>
+              <div className={styles.sectionHeader}>
                 <div>
                   <h3 className={styles.educationTitle}>
                     {edu.url ? (
@@ -238,6 +249,36 @@ export default function CVPage() {
               <p className={styles.certIssuer}>
                 {cert.issuer} • {formatDate(new Date(cert.date), "MMM yyyy")}
               </p>
+            </article>
+          ))}
+        </section>
+      )}
+
+      {/* Awards */}
+      {cvData.awards.length > 0 && (
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Awards</h2>
+          {cvData.awards.map((award) => (
+            <article key={award.id} className={styles.awardItem}>
+              <div className={styles.sectionHeader}>
+                <div>
+                  <h3 className={styles.awardTitle}>
+                    {award.url ? (
+                      <a href={award.url} target="_blank" rel="noopener noreferrer">
+                        {award.category}
+                      </a>
+                    ) : (
+                      award.category
+                    )}
+                  </h3>
+                  <p className={styles.awardMeta}>
+                    {award.name} • {award.issuer} • {award.date}
+                  </p>
+                </div>
+                <span className={styles.awardPlacement} data-placement={award.placement}>
+                  {placementLabels[award.placement] ?? award.placement}
+                </span>
+              </div>
             </article>
           ))}
         </section>
