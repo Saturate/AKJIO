@@ -36,8 +36,10 @@ import {
 	Scene,
 	ShaderMaterial,
 	SphereGeometry,
+	SpotLight,
 	Sprite,
 	SpriteMaterial,
+	Vector2,
 	Vector3,
 	WebGLRenderer,
 } from "three";
@@ -362,6 +364,8 @@ const WATER_FRAG = /* glsl */ `
 	uniform float uSunX;
 	uniform float uTime;
 	uniform float uGlint;
+	uniform vec2 uBeamDir;
+	uniform float uBeamStrength;
 	varying vec3 vPos;
 	varying float vWave;
 	void main() {
@@ -419,6 +423,13 @@ const WATER_FRAG = /* glsl */ `
 		float streak = exp(-pow(vPos.x - cx, 2.0) / (3.0 + 900.0 * dist * dist));
 		float shimmer = 0.6 + 0.4 * sin(vPos.x * 2.4 + vPos.z * 3.1 + uTime * 2.2);
 		col += uSunColor * streak * shimmer * uGlint * dist;
+		// Lighthouse sweep: a warm light pool travels across the waves where
+		// the rotating beam points (bi-directional, so abs of the alignment).
+		vec2 toFrag = vPos.xz - vec2(12.0, -72.0);
+		float lampDist = length(toFrag);
+		float align = abs(dot(toFrag / max(lampDist, 0.001), uBeamDir));
+		float pool = smoothstep(0.978, 0.999, align) * smoothstep(85.0, 12.0, lampDist);
+		col += vec3(1.0, 0.93, 0.75) * pool * uBeamStrength;
 		float alpha = 0.94;
 		if (!gl_FrontFacing) {
 			// Underwater looking up: crossings near the camera stay translucent
@@ -499,6 +510,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	const glassShallowColor = new Color(DAY.glassShallow);
 	const glassDeepColor = new Color(DAY.glassDeep);
 	const glassFoamColor = new Color(DAY.foam);
+	const beamDirVec = new Vector2(1, 0);
 
 	// --- Sky ---------------------------------------------------------------
 	const skyMat = track(
@@ -750,10 +762,25 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	lighthouse.add(lampGlow);
 
 	// Rotating beam: two opposed light cones sweeping from the lamp room,
-	// visible at night only (opacity follows the palette mix).
+	// visible at night only (opacity follows the palette mix). An alpha
+	// gradient along the cone fades it out instead of ending abruptly.
+	const beamCanvas = document.createElement("canvas");
+	beamCanvas.width = 4;
+	beamCanvas.height = 128;
+	const beamCtx = beamCanvas.getContext("2d");
+	if (beamCtx) {
+		const g = beamCtx.createLinearGradient(0, 0, 0, 128);
+		g.addColorStop(0, "rgba(255,255,255,0.9)"); // apex (lamp)
+		g.addColorStop(0.55, "rgba(255,255,255,0.35)");
+		g.addColorStop(1, "rgba(255,255,255,0)"); // far end fades to nothing
+		beamCtx.fillStyle = g;
+		beamCtx.fillRect(0, 0, 4, 128);
+	}
+	const beamTexture = track(new CanvasTexture(beamCanvas));
 	const beamMat = track(
 		new MeshBasicMaterial({
 			color: 0xfff2cc,
+			map: beamTexture,
 			transparent: true,
 			opacity: 0,
 			blending: AdditiveBlending,
@@ -763,15 +790,20 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			clippingPlanes: [aboveWaterClip],
 		}),
 	);
-	const beamGeo = track(new ConeGeometry(2.4, 34, 12, 1, true));
+	const beamGeo = track(new ConeGeometry(3.4, 60, 12, 1, true));
 	beamGeo.rotateZ(-Math.PI / 2);
-	beamGeo.translate(-17, 0, 0); // apex at the pivot, cone sweeping outward
+	beamGeo.translate(-30, 0, 0); // apex at the pivot, cone sweeping outward
 	const beamPivot = new Group();
 	beamPivot.position.y = towerY + 0.45;
 	const beamA = new Mesh(beamGeo, beamMat);
 	const beamB = new Mesh(beamGeo, beamMat);
 	beamB.rotation.y = Math.PI;
 	beamPivot.add(beamA, beamB);
+	// A real light rides the pivot too, so the sweep brushes the islands
+	// and the ship as it passes.
+	const beamSpot = new SpotLight(0xffe8c0, 0, 110, 0.16, 0.7, 1);
+	beamSpot.target.position.set(-40, -3, 0);
+	beamPivot.add(beamSpot, beamSpot.target);
 	lighthouse.add(beamPivot);
 	lighthouse.position.set(12, 4.6, -72);
 	scene.add(lighthouse);
@@ -855,6 +887,8 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 				uFoam: { value: glassFoamColor },
 				uSunX: { value: SUN_X },
 				uGlint: { value: DAY.glint },
+				uBeamDir: { value: beamDirVec },
+				uBeamStrength: { value: 0 },
 			},
 			vertexShader: WATER_VERT,
 			fragmentShader: WATER_FRAG,
@@ -1143,7 +1177,9 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		starMat.opacity = DAY.starsOpacity + (NIGHT.starsOpacity - DAY.starsOpacity) * m;
 		beacon.intensity = DAY.beaconIntensity + (NIGHT.beaconIntensity - DAY.beaconIntensity) * m;
 		lampGlowMat.opacity = 0.25 + 0.6 * m;
-		beamMat.opacity = 0.14 * m;
+		beamMat.opacity = 0.2 * m;
+		beamSpot.intensity = 90 * m;
+		waterMat.uniforms.uBeamStrength.value = 0.5 * m;
 	}
 	applyPalette(mix);
 
@@ -1468,6 +1504,8 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			(DAY.beaconIntensity + (NIGHT.beaconIntensity - DAY.beaconIntensity) * mix) *
 			(0.7 + 0.3 * Math.sin(t * 2.4));
 		beamPivot.rotation.y = t * 0.55;
+		// World direction of the beam's local -x axis, for the water pool.
+		beamDirVec.set(-Math.cos(beamPivot.rotation.y), Math.sin(beamPivot.rotation.y));
 		glow.scale.setScalar(68 + Math.sin(t * 0.5) * 3);
 
 		// Kelp sways gently from the base, like current pushing through.
