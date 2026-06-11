@@ -67,7 +67,7 @@ export default function PostLayout({
 						/>
 					</aside>
 
-					<article className={styles.postContent}>
+					<article className={`${styles.postContent} glassPanel`}>
 						<h1>{frontmatter.title}</h1>
 						<h2>{frontmatter.subtitle ?? frontmatter.description}</h2>
 						{frontmatter.date && (

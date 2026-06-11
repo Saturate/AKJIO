@@ -135,6 +135,24 @@ h2 {
 	align-items: center;
 }
 
+/* Translucent panel that lifts content off the animated ocean scene. */
+.glassPanel {
+	background: rgba(10, 28, 46, 0.34);
+	-webkit-backdrop-filter: blur(8px) saturate(1.15);
+	backdrop-filter: blur(8px) saturate(1.15);
+	border: 1px solid rgba(255, 255, 255, 0.09);
+	border-radius: 16px;
+	padding: 2rem 2.25rem;
+	box-shadow: 0 10px 36px rgba(2, 12, 26, 0.25);
+}
+
+@media (max-width: 768px) {
+	.glassPanel {
+		padding: 1.5rem 1.25rem;
+		border-radius: 12px;
+	}
+}
+
 blockquote {
 	margin: 1.5rem 0;
 	padding: 1rem 1.5rem;

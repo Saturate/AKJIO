@@ -78,7 +78,7 @@ export default async function PostsOverviewPage({ searchParams }: Props) {
 	});
 
 	return (
-		<>
+		<div className="glassPanel">
 			{tag && (
 				<div style={{ marginBottom: "2rem" }}>
 					<p>
@@ -92,6 +92,6 @@ export default async function PostsOverviewPage({ searchParams }: Props) {
 			)}
 			{sortedPostElements}
 			<JsonLd data={jsonLd} nonce={nonce} />
-		</>
+		</div>
 	);
 }
