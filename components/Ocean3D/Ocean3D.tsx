@@ -2,7 +2,45 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import * as THREE from "three";
+import {
+	ACESFilmicToneMapping,
+	AdditiveBlending,
+	BackSide,
+	BoxGeometry,
+	BufferAttribute,
+	BufferGeometry,
+	CanvasTexture,
+	CircleGeometry,
+	Color,
+	ConeGeometry,
+	CylinderGeometry,
+	DirectionalLight,
+	DoubleSide,
+	Float32BufferAttribute,
+	Fog,
+	Group,
+	HemisphereLight,
+	IcosahedronGeometry,
+	Material,
+	Mesh,
+	MeshBasicMaterial,
+	MeshStandardMaterial,
+	Object3D,
+	PerspectiveCamera,
+	Plane,
+	PlaneGeometry,
+	PointLight,
+	Points,
+	PointsMaterial,
+	SRGBColorSpace,
+	Scene,
+	ShaderMaterial,
+	SphereGeometry,
+	Sprite,
+	SpriteMaterial,
+	Vector3,
+	WebGLRenderer,
+} from "three";
 import { useTheme } from "@/providers/ThemeProvider";
 import { getMoonPhase, getIlluminationFraction } from "@/lib/moonPhase";
 import styles from "./Ocean3D.module.css";
@@ -121,7 +159,7 @@ function mulberry32(seed: number) {
 
 // Position-hashed jitter: duplicated vertices (non-indexed polyhedra) get
 // identical offsets, so faces stay welded while the silhouette gets craggy.
-function jitterByPosition(geometry: THREE.BufferGeometry, amount: number) {
+function jitterByPosition(geometry: BufferGeometry, amount: number) {
 	const pos = geometry.getAttribute("position");
 	for (let i = 0; i < pos.count; i++) {
 		const x = pos.getX(i);
@@ -141,13 +179,13 @@ function jitterByPosition(geometry: THREE.BufferGeometry, amount: number) {
 	pos.needsUpdate = true;
 }
 
-function makeRock(material: THREE.Material, jitter = 0.35): THREE.Mesh {
-	const geometry = new THREE.IcosahedronGeometry(1, 1);
+function makeRock(material: Material, jitter = 0.35): Mesh {
+	const geometry = new IcosahedronGeometry(1, 1);
 	jitterByPosition(geometry, jitter);
-	return new THREE.Mesh(geometry, material);
+	return new Mesh(geometry, material);
 }
 
-function makeGlowTexture(): THREE.CanvasTexture {
+function makeGlowTexture(): CanvasTexture {
 	const size = 256;
 	const canvas = document.createElement("canvas");
 	canvas.width = size;
@@ -161,12 +199,12 @@ function makeGlowTexture(): THREE.CanvasTexture {
 		ctx.fillStyle = g;
 		ctx.fillRect(0, 0, size, size);
 	}
-	return new THREE.CanvasTexture(canvas);
+	return new CanvasTexture(canvas);
 }
 
 // Moon with the old site's craters, optionally shaded by the real lunar
 // phase (half-circle + ellipse terminator, clipped to the disc).
-function makeMoonTexture(phase: number | null): THREE.CanvasTexture {
+function makeMoonTexture(phase: number | null): CanvasTexture {
 	const size = 256;
 	const c = size / 2;
 	const r = size * 0.48;
@@ -257,8 +295,8 @@ function makeMoonTexture(phase: number | null): THREE.CanvasTexture {
 			ctx.restore();
 		}
 	}
-	const texture = new THREE.CanvasTexture(canvas);
-	texture.colorSpace = THREE.SRGBColorSpace;
+	const texture = new CanvasTexture(canvas);
+	texture.colorSpace = SRGBColorSpace;
 	return texture;
 }
 
@@ -374,9 +412,9 @@ interface SceneApi {
 }
 
 function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi | null {
-	let renderer: THREE.WebGLRenderer;
+	let renderer: WebGLRenderer;
 	try {
-		renderer = new THREE.WebGLRenderer({
+		renderer = new WebGLRenderer({
 			canvas,
 			// At DPR >= 2 the buffer is already supersampled relative to CSS
 			// pixels; MSAA on top costs heavy fill rate for no visible gain.
@@ -389,19 +427,19 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	}
 	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 	renderer.setSize(window.innerWidth, window.innerHeight);
-	renderer.toneMapping = THREE.ACESFilmicToneMapping;
+	renderer.toneMapping = ACESFilmicToneMapping;
 	renderer.toneMappingExposure = 1.05;
 	renderer.localClippingEnabled = true;
 
 	// Sun and glow exist only above the waterline; underwater you never see
 	// the celestial disc, just the light shafts baked into the water shader.
-	const aboveWaterClip = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+	const aboveWaterClip = new Plane(new Vector3(0, 1, 0), 0);
 
-	const scene = new THREE.Scene();
-	const fog = new THREE.Fog(0x5ea7d8, 12, 210);
+	const scene = new Scene();
+	const fog = new Fog(0x5ea7d8, 12, 210);
 	scene.fog = fog;
 
-	const camera = new THREE.PerspectiveCamera(
+	const camera = new PerspectiveCamera(
 		45,
 		window.innerWidth / window.innerHeight,
 		0.1,
@@ -426,31 +464,31 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 
 	// Uniform color instances are kept as direct references so the palette
 	// lerp can mutate them without casting back out of the uniforms object.
-	const skyTopColor = new THREE.Color(DAY.skyTop);
-	const skyHorizonColor = new THREE.Color(DAY.skyHorizon);
-	const waterNearColor = new THREE.Color(DAY.waterNear);
-	const waterFarColor = new THREE.Color(DAY.waterFar);
-	const waterHorizonColor = new THREE.Color(DAY.skyHorizon);
-	const waterSunColor = new THREE.Color(DAY.sun);
-	const glassShallowColor = new THREE.Color(DAY.glassShallow);
-	const glassDeepColor = new THREE.Color(DAY.glassDeep);
-	const glassFoamColor = new THREE.Color(DAY.foam);
+	const skyTopColor = new Color(DAY.skyTop);
+	const skyHorizonColor = new Color(DAY.skyHorizon);
+	const waterNearColor = new Color(DAY.waterNear);
+	const waterFarColor = new Color(DAY.waterFar);
+	const waterHorizonColor = new Color(DAY.skyHorizon);
+	const waterSunColor = new Color(DAY.sun);
+	const glassShallowColor = new Color(DAY.glassShallow);
+	const glassDeepColor = new Color(DAY.glassDeep);
+	const glassFoamColor = new Color(DAY.foam);
 
 	// --- Sky ---------------------------------------------------------------
 	const skyMat = track(
-		new THREE.ShaderMaterial({
+		new ShaderMaterial({
 			uniforms: {
 				uTop: { value: skyTopColor },
 				uHorizon: { value: skyHorizonColor },
 			},
 			vertexShader: SKY_VERT,
 			fragmentShader: SKY_FRAG,
-			side: THREE.BackSide,
+			side: BackSide,
 			fog: false,
 			depthWrite: false,
 		}),
 	);
-	const sky = new THREE.Mesh(track(new THREE.SphereGeometry(300, 24, 12)), skyMat);
+	const sky = new Mesh(track(new SphereGeometry(300, 24, 12)), skyMat);
 	scene.add(sky);
 
 	const starRand = mulberry32(7);
@@ -464,10 +502,10 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			280 * Math.sin(phi) * Math.sin(theta) - 40,
 		);
 	}
-	const starGeo = track(new THREE.BufferGeometry());
-	starGeo.setAttribute("position", new THREE.Float32BufferAttribute(starPositions, 3));
+	const starGeo = track(new BufferGeometry());
+	starGeo.setAttribute("position", new Float32BufferAttribute(starPositions, 3));
 	const starMat = track(
-		new THREE.PointsMaterial({
+		new PointsMaterial({
 			color: 0xffffff,
 			size: 1.6,
 			sizeAttenuation: false,
@@ -477,7 +515,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			depthWrite: false,
 		}),
 	);
-	const stars = new THREE.Points(starGeo, starMat);
+	const stars = new Points(starGeo, starMat);
 	scene.add(stars);
 
 	// --- Sun / moon ----------------------------------------------------------
@@ -490,20 +528,20 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	const SET_ANGLE = 0.7 * Math.PI;
 
 	const glowTexture = track(makeGlowTexture());
-	const makeCelestialGlow = (parent: THREE.Group, color: number, opacity: number, y: number, scale: number) => {
+	const makeCelestialGlow = (parent: Group, color: number, opacity: number, y: number, scale: number) => {
 		const material = track(
-			new THREE.SpriteMaterial({
+			new SpriteMaterial({
 				map: glowTexture,
 				color,
 				transparent: true,
 				opacity,
-				blending: THREE.AdditiveBlending,
+				blending: AdditiveBlending,
 				fog: false,
 				depthWrite: false,
 				clippingPlanes: [aboveWaterClip],
 			}),
 		);
-		const sprite = new THREE.Sprite(material);
+		const sprite = new Sprite(material);
 		sprite.scale.setScalar(scale);
 		sprite.position.set(0, y, 1);
 		sprite.renderOrder = 3;
@@ -511,13 +549,13 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		return { sprite, material };
 	};
 
-	const sunPivot = new THREE.Group();
+	const sunPivot = new Group();
 	sunPivot.position.set(SUN_X, 2.5 - SUN_ARC_RADIUS, -190);
 	scene.add(sunPivot);
 	const sunMat = track(
-		new THREE.MeshBasicMaterial({ color: DAY.sun, fog: false, clippingPlanes: [aboveWaterClip] }),
+		new MeshBasicMaterial({ color: DAY.sun, fog: false, clippingPlanes: [aboveWaterClip] }),
 	);
-	const sun = new THREE.Mesh(track(new THREE.CircleGeometry(17, 48)), sunMat);
+	const sun = new Mesh(track(new CircleGeometry(17, 48)), sunMat);
 	sun.position.set(0, SUN_ARC_RADIUS, 0);
 	sunPivot.add(sun);
 	const { sprite: glow, material: glowMat } = makeCelestialGlow(
@@ -532,7 +570,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	const moonIllumination = moonPhase === null ? 1 : getIlluminationFraction(moonPhase);
 	const moonTexture = track(makeMoonTexture(moonPhase));
 	const moonMat = track(
-		new THREE.MeshBasicMaterial({
+		new MeshBasicMaterial({
 			map: moonTexture,
 			// Dim multiplier so the moon glows softly instead of blowing out white.
 			color: 0xbcbab0,
@@ -541,10 +579,10 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			clippingPlanes: [aboveWaterClip],
 		}),
 	);
-	const moonPivot = new THREE.Group();
+	const moonPivot = new Group();
 	moonPivot.position.set(70, 33 - MOON_ARC_RADIUS, -185);
 	scene.add(moonPivot);
-	const moon = new THREE.Mesh(track(new THREE.CircleGeometry(7, 48)), moonMat);
+	const moon = new Mesh(track(new CircleGeometry(7, 48)), moonMat);
 	moon.position.set(0, MOON_ARC_RADIUS, 0);
 	moonPivot.add(moon);
 	const { material: moonGlowMat } = makeCelestialGlow(
@@ -556,9 +594,9 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	);
 
 	// --- Lights ------------------------------------------------------------
-	const hemi = new THREE.HemisphereLight(DAY.hemiSky, DAY.hemiGround, DAY.hemiIntensity);
+	const hemi = new HemisphereLight(DAY.hemiSky, DAY.hemiGround, DAY.hemiIntensity);
 	scene.add(hemi);
-	const dir = new THREE.DirectionalLight(DAY.dirColor, DAY.dirIntensity);
+	const dir = new DirectionalLight(DAY.dirColor, DAY.dirIntensity);
 	dir.position.set(-50, 25, -60);
 	scene.add(dir);
 
@@ -567,7 +605,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	// submerged part fades into the water color with depth so it reads as a
 	// pale floating-island silhouette instead of a dark unfogged blob.
 	const rockMat = track(
-		new THREE.MeshStandardMaterial({ color: DAY.rock, flatShading: true, fog: false }),
+		new MeshStandardMaterial({ color: DAY.rock, flatShading: true, fog: false }),
 	);
 	rockMat.onBeforeCompile = (shader) => {
 		shader.uniforms.uWaterTint = { value: glassShallowColor };
@@ -609,7 +647,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 
 	// --- Lighthouse ----------------------------------------------------------
 	const whiteMat = track(
-		new THREE.MeshStandardMaterial({
+		new MeshStandardMaterial({
 			color: 0xf2efe6,
 			flatShading: true,
 			fog: false,
@@ -617,7 +655,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		}),
 	);
 	const redMat = track(
-		new THREE.MeshStandardMaterial({
+		new MeshStandardMaterial({
 			color: 0xc8372a,
 			flatShading: true,
 			fog: false,
@@ -625,7 +663,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		}),
 	);
 	const darkMat = track(
-		new THREE.MeshStandardMaterial({
+		new MeshStandardMaterial({
 			color: 0x22262c,
 			flatShading: true,
 			fog: false,
@@ -633,47 +671,47 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		}),
 	);
 	const lampMat = track(
-		new THREE.MeshBasicMaterial({ color: 0xfff2dc, fog: false, clippingPlanes: [aboveWaterClip] }),
+		new MeshBasicMaterial({ color: 0xfff2dc, fog: false, clippingPlanes: [aboveWaterClip] }),
 	);
 
-	const lighthouse = new THREE.Group();
+	const lighthouse = new Group();
 	const bandHeights = [1.1, 1.0, 0.9, 0.85, 0.8];
 	let towerY = 0;
 	bandHeights.forEach((h, i) => {
 		const rBottom = 0.66 - i * 0.05;
 		const rTop = 0.66 - (i + 1) * 0.05;
-		const band = new THREE.Mesh(
-			track(new THREE.CylinderGeometry(rTop, rBottom, h, 12)),
+		const band = new Mesh(
+			track(new CylinderGeometry(rTop, rBottom, h, 12)),
 			i % 2 === 1 ? redMat : whiteMat,
 		);
 		band.position.y = towerY + h / 2;
 		towerY += h;
 		lighthouse.add(band);
 	});
-	const gallery = new THREE.Mesh(track(new THREE.CylinderGeometry(0.52, 0.52, 0.18, 12)), darkMat);
+	const gallery = new Mesh(track(new CylinderGeometry(0.52, 0.52, 0.18, 12)), darkMat);
 	gallery.position.y = towerY + 0.09;
 	lighthouse.add(gallery);
-	const lamp = new THREE.Mesh(track(new THREE.CylinderGeometry(0.3, 0.3, 0.5, 10)), lampMat);
+	const lamp = new Mesh(track(new CylinderGeometry(0.3, 0.3, 0.5, 10)), lampMat);
 	lamp.position.y = towerY + 0.45;
 	lighthouse.add(lamp);
-	const roof = new THREE.Mesh(track(new THREE.ConeGeometry(0.42, 0.55, 10)), redMat);
+	const roof = new Mesh(track(new ConeGeometry(0.42, 0.55, 10)), redMat);
 	roof.position.y = towerY + 0.95;
 	lighthouse.add(roof);
-	const beacon = new THREE.PointLight(0xff6a4a, DAY.beaconIntensity, 60, 1.6);
+	const beacon = new PointLight(0xff6a4a, DAY.beaconIntensity, 60, 1.6);
 	beacon.position.y = towerY + 0.45;
 	lighthouse.add(beacon);
 	const lampGlowMat = track(
-		new THREE.SpriteMaterial({
+		new SpriteMaterial({
 			map: glowTexture,
 			color: 0xffd9a0,
 			transparent: true,
 			opacity: 0.25,
-			blending: THREE.AdditiveBlending,
+			blending: AdditiveBlending,
 			fog: false,
 			depthWrite: false,
 		}),
 	);
-	const lampGlow = new THREE.Sprite(lampGlowMat);
+	const lampGlow = new Sprite(lampGlowMat);
 	lampGlow.scale.setScalar(3.5);
 	lampGlow.position.y = towerY + 0.45;
 	lampGlow.renderOrder = 3;
@@ -683,27 +721,27 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 
 	// --- Ship + rowboat -------------------------------------------------------
 	const orangeMat = track(
-		new THREE.MeshStandardMaterial({
+		new MeshStandardMaterial({
 			color: 0xe8622d,
 			flatShading: true,
 			fog: false,
 			clippingPlanes: [aboveWaterClip],
 		}),
 	);
-	const ship = new THREE.Group();
-	const hull = new THREE.Mesh(track(new THREE.BoxGeometry(8, 1.6, 2.2)), darkMat);
+	const ship = new Group();
+	const hull = new Mesh(track(new BoxGeometry(8, 1.6, 2.2)), darkMat);
 	hull.position.y = 0.5;
 	ship.add(hull);
-	const cabin1 = new THREE.Mesh(track(new THREE.BoxGeometry(1.6, 1.3, 1.5)), whiteMat);
+	const cabin1 = new Mesh(track(new BoxGeometry(1.6, 1.3, 1.5)), whiteMat);
 	cabin1.position.set(-1.6, 1.9, 0);
 	ship.add(cabin1);
-	const cabin2 = new THREE.Mesh(track(new THREE.BoxGeometry(1.1, 0.9, 1.2)), whiteMat);
+	const cabin2 = new Mesh(track(new BoxGeometry(1.1, 0.9, 1.2)), whiteMat);
 	cabin2.position.set(0.2, 1.7, 0);
 	ship.add(cabin2);
-	const funnel = new THREE.Mesh(track(new THREE.ConeGeometry(0.45, 1.6, 8)), orangeMat);
+	const funnel = new Mesh(track(new ConeGeometry(0.45, 1.6, 8)), orangeMat);
 	funnel.position.set(1.8, 2.3, 0);
 	ship.add(funnel);
-	const mast = new THREE.Mesh(track(new THREE.CylinderGeometry(0.05, 0.05, 2.4, 6)), darkMat);
+	const mast = new Mesh(track(new CylinderGeometry(0.05, 0.05, 2.4, 6)), darkMat);
 	mast.position.set(3.1, 2.4, 0);
 	ship.add(mast);
 	ship.position.set(27, -0.1, -78);
@@ -741,11 +779,11 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		const d = wallRowStart + c;
 		waterIndices.push(a, d, a + 1, a + 1, d, d + 1);
 	}
-	const waterGeo = track(new THREE.BufferGeometry());
+	const waterGeo = track(new BufferGeometry());
 	waterGeo.setIndex(waterIndices);
-	waterGeo.setAttribute("position", new THREE.Float32BufferAttribute(waterPositions, 3));
+	waterGeo.setAttribute("position", new Float32BufferAttribute(waterPositions, 3));
 	const waterMat = track(
-		new THREE.ShaderMaterial({
+		new ShaderMaterial({
 			uniforms: {
 				uTime: { value: 0 },
 				uNear: { value: waterNearColor },
@@ -762,24 +800,24 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			fragmentShader: WATER_FRAG,
 			transparent: true,
 			depthWrite: false,
-			side: THREE.DoubleSide,
+			side: DoubleSide,
 			fog: false,
 		}),
 	);
-	const water = new THREE.Mesh(waterGeo, waterMat);
+	const water = new Mesh(waterGeo, waterMat);
 	// Renders after the underwater world so the cross-section wall tints it.
 	water.renderOrder = 10;
 	scene.add(water);
 
 	// --- Underwater world --------------------------------------------------------
 	const underMat = track(
-		new THREE.MeshStandardMaterial({ color: DAY.underGeo, flatShading: true }),
+		new MeshStandardMaterial({ color: DAY.underGeo, flatShading: true }),
 	);
 
-	const seabedGeo = track(new THREE.PlaneGeometry(520, 230, 110, 56));
+	const seabedGeo = track(new PlaneGeometry(520, 230, 110, 56));
 	seabedGeo.rotateX(-Math.PI / 2);
 	// Ridges are generated in scatter(), seeded per URL.
-	const seabed = new THREE.Mesh(seabedGeo, underMat);
+	const seabed = new Mesh(seabedGeo, underMat);
 	seabed.position.set(0, SEABED_Y, -75); // span z from -190 to +40
 	scene.add(seabed);
 
@@ -792,7 +830,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		[16, -77, 11, 20, 9],
 		[-52, -118, 18, 16, 13],
 	];
-	const roots: THREE.Mesh[] = [];
+	const roots: Mesh[] = [];
 	for (const [x, z, sx, sy, sz] of rootSpecs) {
 		const root = makeRock(underMat, 0.45);
 		root.scale.set(sx, sy, sz);
@@ -808,7 +846,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	// within ~20 units of the camera plane: distant rocks on a deep seabed
 	// project near eye level with the ground fogged out beneath them, which
 	// reads as stones floating in open water.
-	const seabedRocks: THREE.Mesh[] = [];
+	const seabedRocks: Mesh[] = [];
 	for (let i = 0; i < 12; i++) {
 		const rock = makeRock(underMat, 0.5);
 		const s = 1 + rootRand() * 3.5;
@@ -826,30 +864,30 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	// Foreground seabed cross-section: a bumpy low-poly rock wall that fills
 	// the bottom of the frame at full depth, so the dive ends "in the rocks"
 	// behind the footer instead of clipping into open void.
-	const wallGeo = track(new THREE.PlaneGeometry(80, 44, 64, 18));
+	const wallGeo = track(new PlaneGeometry(80, 44, 64, 18));
 	jitterByPosition(wallGeo, 1.8);
-	const wall = new THREE.Mesh(wallGeo, underMat);
+	const wall = new Mesh(wallGeo, underMat);
 	wall.position.set(0, -39.2, 28);
 	scene.add(wall);
 
 	// Distant rock pinnacles rising from the floor: faded background
 	// silhouettes that give the underwater horizon depth. Placement and
 	// height re-roll per URL in scatter(); vertical sizing in applyDepth().
-	const pinnacles: { mesh: THREE.Mesh; heightFrac: number }[] = [];
+	const pinnacles: { mesh: Mesh; heightFrac: number }[] = [];
 	for (let i = 0; i < 9; i++) {
 		const mesh = makeRock(underMat, 0.5);
 		pinnacles.push({ mesh, heightFrac: 0.5 });
 		scene.add(mesh);
 	}
 
-	const wreck = new THREE.Group();
-	const wreckHull = new THREE.Mesh(track(new THREE.BoxGeometry(4.2, 1.2, 1.5)), underMat);
+	const wreck = new Group();
+	const wreckHull = new Mesh(track(new BoxGeometry(4.2, 1.2, 1.5)), underMat);
 	wreck.add(wreckHull);
-	const wreckBow = new THREE.Mesh(track(new THREE.ConeGeometry(0.8, 1.6, 4)), underMat);
+	const wreckBow = new Mesh(track(new ConeGeometry(0.8, 1.6, 4)), underMat);
 	wreckBow.rotation.z = -Math.PI / 2;
 	wreckBow.position.x = 2.8;
 	wreck.add(wreckBow);
-	const wreckMast = new THREE.Mesh(track(new THREE.CylinderGeometry(0.08, 0.1, 2.6, 6)), underMat);
+	const wreckMast = new Mesh(track(new CylinderGeometry(0.08, 0.1, 2.6, 6)), underMat);
 	wreckMast.rotation.z = 0.5;
 	wreckMast.position.set(-0.6, 1.4, 0);
 	wreck.add(wreckMast);
@@ -860,39 +898,39 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	// --- Fish + bubbles --------------------------------------------------------
 	// Low-poly fish facing +x: diamond body from two squashed cones, a
 	// dorsal fin, and a tail pivoted at its tip so it can wag.
-	const fishHeadGeo = track(new THREE.ConeGeometry(0.26, 0.5, 6));
+	const fishHeadGeo = track(new ConeGeometry(0.26, 0.5, 6));
 	fishHeadGeo.rotateZ(-Math.PI / 2);
 	fishHeadGeo.scale(1, 1, 0.55);
 	fishHeadGeo.translate(0.25, 0, 0);
-	const fishBodyGeo = track(new THREE.ConeGeometry(0.26, 0.7, 6));
+	const fishBodyGeo = track(new ConeGeometry(0.26, 0.7, 6));
 	fishBodyGeo.rotateZ(Math.PI / 2);
 	fishBodyGeo.scale(1, 1, 0.55);
 	fishBodyGeo.translate(-0.35, 0, 0);
-	const fishTailGeo = track(new THREE.ConeGeometry(0.3, 0.45, 4));
+	const fishTailGeo = track(new ConeGeometry(0.3, 0.45, 4));
 	fishTailGeo.rotateZ(-Math.PI / 2);
 	fishTailGeo.scale(1, 1, 0.18);
 	fishTailGeo.translate(-0.225, 0, 0);
-	const fishFinGeo = track(new THREE.ConeGeometry(0.16, 0.28, 4));
+	const fishFinGeo = track(new ConeGeometry(0.16, 0.28, 4));
 	fishFinGeo.scale(1, 1, 0.2);
 	fishFinGeo.translate(-0.05, 0.3, 0);
 
 	const fishRand = mulberry32(99);
 	const fish: {
-		mesh: THREE.Group;
-		tail: THREE.Mesh;
+		mesh: Group;
+		tail: Mesh;
 		speed: number;
 		phase: number;
 		baseY: number;
 		depthFrac: number;
 	}[] = [];
 	for (let i = 0; i < 7; i++) {
-		const f = new THREE.Group();
-		const tail = new THREE.Mesh(fishTailGeo, underMat);
+		const f = new Group();
+		const tail = new Mesh(fishTailGeo, underMat);
 		tail.position.x = -0.62;
 		f.add(
-			new THREE.Mesh(fishHeadGeo, underMat),
-			new THREE.Mesh(fishBodyGeo, underMat),
-			new THREE.Mesh(fishFinGeo, underMat),
+			new Mesh(fishHeadGeo, underMat),
+			new Mesh(fishBodyGeo, underMat),
+			new Mesh(fishFinGeo, underMat),
 			tail,
 		);
 		const speed = (0.8 + fishRand() * 1.6) * (fishRand() > 0.5 ? 1 : -1);
@@ -914,10 +952,10 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		bubblePositions[i * 3 + 1] = -bubbleDepthFracs[i] * 17;
 		bubblePositions[i * 3 + 2] = 22 - bubbleRand() * 45;
 	}
-	const bubbleGeo = track(new THREE.BufferGeometry());
-	bubbleGeo.setAttribute("position", new THREE.BufferAttribute(bubblePositions, 3));
+	const bubbleGeo = track(new BufferGeometry());
+	bubbleGeo.setAttribute("position", new BufferAttribute(bubblePositions, 3));
 	const bubbleMat = track(
-		new THREE.PointsMaterial({
+		new PointsMaterial({
 			color: 0xdff2ff,
 			size: 0.16,
 			transparent: true,
@@ -925,7 +963,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			depthWrite: false,
 		}),
 	);
-	scene.add(new THREE.Points(bubbleGeo, bubbleMat));
+	scene.add(new Points(bubbleGeo, bubbleMat));
 
 	// --- Cursor splash -----------------------------------------------------
 	// A pooled foam burst that spawns where the cursor crosses the waterline.
@@ -933,10 +971,10 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	const splashPositions = new Float32Array(SPLASH_MAX * 3).fill(9999);
 	const splashVel = new Float32Array(SPLASH_MAX * 3);
 	const splashLife = new Float32Array(SPLASH_MAX);
-	const splashGeo = track(new THREE.BufferGeometry());
-	splashGeo.setAttribute("position", new THREE.BufferAttribute(splashPositions, 3));
+	const splashGeo = track(new BufferGeometry());
+	splashGeo.setAttribute("position", new BufferAttribute(splashPositions, 3));
 	const splashMat = track(
-		new THREE.PointsMaterial({
+		new PointsMaterial({
 			size: 0.09,
 			transparent: true,
 			opacity: 0.9,
@@ -949,7 +987,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	);
 	// Shared instance: the palette lerp keeps splash foam in sync with theme.
 	splashMat.color = glassFoamColor;
-	const splash = new THREE.Points(splashGeo, splashMat);
+	const splash = new Points(splashGeo, splashMat);
 	splash.renderOrder = 11;
 	// Pooled particles park far away when dead; the stale bounding sphere
 	// would otherwise frustum-cull the whole pool.
@@ -979,9 +1017,9 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	// --- Palette / theme -----------------------------------------------------
 	let mix = initialDark ? 1 : 0;
 	let mixTarget = mix;
-	const colorA = new THREE.Color();
-	const colorB = new THREE.Color();
-	const lerpColor = (target: THREE.Color, day: number, night: number, m: number) => {
+	const colorA = new Color();
+	const colorB = new Color();
+	const lerpColor = (target: Color, day: number, night: number, m: number) => {
 		colorA.setHex(day);
 		colorB.setHex(night);
 		target.copy(colorA).lerp(colorB, m);
@@ -1020,7 +1058,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	// --- Static matrix freeze ------------------------------------------------
 	// Only a handful of objects move per frame; the rest of the scene keeps
 	// frozen local matrices. applyDepth() re-freezes after repositioning.
-	const animatedObjects = new Set<THREE.Object3D>([ship, sunPivot, moonPivot, glow]);
+	const animatedObjects = new Set<Object3D>([ship, sunPivot, moonPivot, glow]);
 	for (const f of fish) {
 		animatedObjects.add(f.mesh);
 		animatedObjects.add(f.tail);
@@ -1166,7 +1204,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	}
 
 	const onScroll = () => readScroll();
-	const mouseRay = new THREE.Vector3();
+	const mouseRay = new Vector3();
 	let lastWaterDelta: number | null = null;
 	const onMouseMove = (e: MouseEvent) => {
 		mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -1337,7 +1375,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			window.removeEventListener("resize", onResize);
 			window.removeEventListener("mousemove", onMouseMove);
 			scene.traverse((obj) => {
-				if (obj instanceof THREE.Mesh || obj instanceof THREE.Points) {
+				if (obj instanceof Mesh || obj instanceof Points) {
 					obj.geometry.dispose();
 				}
 			});
