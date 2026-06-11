@@ -6,35 +6,49 @@
 	z-index: 10;
 }
 
-.headerTitle {
+/* The name is the identity, anchored top-left like a signature; the domain
+   rides along as a small tag underneath. */
+.brand {
+	position: absolute;
+	top: 1.25rem;
+	left: 1.75rem;
+	margin: 0;
 	font-family: var(--font-jersey-25);
-	font-size: 4em;
-	margin: 0.2em 0.4em 0.3em;
+	font-size: 1.9em;
+	font-weight: 400;
+	line-height: 1;
 	color: var(--text-primary);
-	text-shadow: 3px 3px 2px #0000002e;
-	span {
-		margin-top: -26px;
-		display: block;
-		font-size: 0.3em;
-		font-weight: 400;
-	}
+	text-shadow: 2px 2px 1px #0000002e;
+	z-index: 10;
 }
 
-/* The header is the sky of the 3D diorama: the waterline sits at ~34vh at
+.brand span {
+	display: block;
+	margin-top: 0.25em;
+	font-size: 0.5em;
+	opacity: 0.7;
+	letter-spacing: 0.04em;
+}
+
+/* The header is the sky of the 3D diorama: the waterline sits at ~37vh at
    scroll 0, so the menu floats in the sky band above it. */
 .websitetop {
 	position: relative;
 	background: transparent;
 	min-height: 32vh;
 	display: flex;
-	align-items: flex-start;
-	padding-top: 2vh;
+	align-items: center;
 	z-index: 1;
 }
 
 @media (max-width: 768px) {
 	.websitetop {
 		min-height: 27vh;
-		padding-top: 1vh;
+	}
+
+	.brand {
+		font-size: 1.45em;
+		top: 1rem;
+		left: 1.1rem;
 	}
 }
