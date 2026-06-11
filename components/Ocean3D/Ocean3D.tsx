@@ -1115,26 +1115,43 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		});
 	}
 
+	// The seabed is a bowl: ridges from the per-URL seed, plus far edge and
+	// sides curling up toward the surface so the underwater horizon is
+	// rising ground instead of a void between distant water and floor.
+	// Rise height tracks the procedural depth, so it regenerates both on
+	// scatter (new seed) and on applyDepth (new page depth).
+	let seabedOffsetX = 0;
+	let seabedOffsetZ = 0;
+	function updateSeabedGeometry() {
+		const ease = (v: number) => {
+			const c = Math.min(1, Math.max(0, v));
+			return c * c * (3 - 2 * c);
+		};
+		const rise = Math.min(-seabedY * 0.85, 24);
+		const pos = seabedGeo.getAttribute("position");
+		for (let i = 0; i < pos.count; i++) {
+			const x = pos.getX(i);
+			const z = pos.getZ(i);
+			const ridges =
+				Math.sin(x * 0.12 + seabedOffsetX) * Math.cos(z * 0.1 + seabedOffsetZ) * 1.4 +
+				Math.sin(x * 0.31 + z * 0.21 + seabedOffsetX) * 0.6 +
+				Math.sin(z * 0.45 - x * 0.07 + seabedOffsetZ) * 0.35;
+			const bowl =
+				ease((-60 - z) / 120) * rise + ease((Math.abs(x) - 130) / 120) * rise * 0.8;
+			pos.setY(i, ridges + bowl);
+		}
+		pos.needsUpdate = true;
+		seabedGeo.computeVertexNormals();
+	}
+
 	// --- Per-URL scatter ---------------------------------------------------
 	// Everything loose underwater re-rolls from the page's pathname hash:
 	// the same article always shows the same ocean, but every page differs.
 	function scatter(seed: number) {
 		const rand = mulberry32(seed);
 
-		const seabedPos = seabedGeo.getAttribute("position");
-		const ox = rand() * 100;
-		const oz = rand() * 100;
-		for (let i = 0; i < seabedPos.count; i++) {
-			const x = seabedPos.getX(i);
-			const z = seabedPos.getZ(i);
-			const ridges =
-				Math.sin(x * 0.12 + ox) * Math.cos(z * 0.1 + oz) * 1.4 +
-				Math.sin(x * 0.31 + z * 0.21 + ox) * 0.6 +
-				Math.sin(z * 0.45 - x * 0.07 + oz) * 0.35;
-			seabedPos.setY(i, ridges);
-		}
-		seabedPos.needsUpdate = true;
-		seabedGeo.computeVertexNormals();
+		seabedOffsetX = rand() * 100;
+		seabedOffsetZ = rand() * 100;
 
 		for (const rock of seabedRocks) {
 			const s = 1 + rand() * 3.5;
@@ -1228,6 +1245,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		cameraFloorY = seabedY + CAMERA_FLOOR_CLEARANCE;
 
 		seabed.position.y = seabedY;
+		updateSeabedGeometry();
 		wall.position.y = seabedY - 21.2; // ridge crest ends up just above the floor
 		wreck.position.y = seabedY + 1.1;
 		for (const rock of seabedRocks) rock.position.y = seabedY + 0.4;
