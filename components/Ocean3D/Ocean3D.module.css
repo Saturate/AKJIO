@@ -6,18 +6,18 @@
 	height: 100%;
 	z-index: 0;
 	pointer-events: none;
+	/* The scene fades in over the placeholder once the first frame is up. */
+	opacity: 0;
+	transition: opacity 0.9s ease;
 }
 
-/* Static CSS fallback shown while three.js loads.
-   Approximates the day scene: grey-mauve sky down to a pale horizon,
-   the bright waterline at ~64vh, then water deepening below.
-   Once the WebGL canvas is live the layer is dropped entirely so the
-   compositor stops painting a hidden full-screen gradient. The canvas
-   gets `hidden` if WebGL init fails, which brings this back. */
-.oceanPlaceholder:has(+ .oceanCanvas:not([hidden])) {
-	display: none;
+.oceanCanvas[data-ready="true"] {
+	opacity: 1;
 }
 
+/* Static CSS fallback shown while three.js loads. Approximates the day
+   scene: grey-mauve sky to a pale horizon, the sun low on the left, the
+   bright waterline at ~42vh, then water deepening below. */
 .oceanPlaceholder {
 	position: fixed;
 	top: 0;
@@ -26,23 +26,68 @@
 	height: 100%;
 	z-index: 0;
 	pointer-events: none;
-	background: linear-gradient(
-		180deg,
-		#6d7997 0%,
-		#dfe3df 40vh,
-		#eaf6ff 42vh,
-		#55a7dd 44vh,
-		#123f6b 100%
-	);
+	background:
+		radial-gradient(circle 16vh at 30% 36%, rgba(255, 247, 220, 0.6), transparent 70%),
+		linear-gradient(
+			180deg,
+			#6d7997 0%,
+			#dfe3df 40vh,
+			#eaf6ff 42vh,
+			#55a7dd 44vh,
+			#123f6b 100%
+		);
+}
+
+/* Loading shimmer travelling along the waterline. */
+.oceanPlaceholder::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 41vh;
+	height: 2vh;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+	background-size: 50% 100%;
+	background-repeat: no-repeat;
+	animation: oceanShimmer 2.4s ease-in-out infinite;
+	opacity: 0.8;
+}
+
+@keyframes oceanShimmer {
+	from {
+		background-position: -60% 0;
+	}
+	to {
+		background-position: 160% 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.oceanPlaceholder::after {
+		animation: none;
+	}
+}
+
+/* Once the canvas has faded in, stop painting the placeholder entirely.
+   If WebGL init fails the canvas never becomes ready, so this stays. */
+.oceanPlaceholder:has(+ .oceanCanvas[data-ready="true"]) {
+	visibility: hidden;
+	transition: visibility 0s 1s;
 }
 
 :global(.dark) .oceanPlaceholder {
-	background: linear-gradient(
-		180deg,
-		#030a14 0%,
-		#10293e 40vh,
-		#8fb4c8 42vh,
-		#0e3050 44vh,
-		#040e18 100%
-	);
+	background:
+		radial-gradient(circle 7vh at 70% 18%, rgba(244, 241, 222, 0.5), transparent 70%),
+		linear-gradient(
+			180deg,
+			#081426 0%,
+			#1c3a54 40vh,
+			#9fc4d8 42vh,
+			#16406a 44vh,
+			#081826 100%
+		);
+}
+
+:global(.dark) .oceanPlaceholder::after {
+	opacity: 0.45;
 }

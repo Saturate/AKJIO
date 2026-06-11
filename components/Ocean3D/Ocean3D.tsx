@@ -1358,10 +1358,20 @@ export default function Ocean3D() {
 		// so this is theme-correct before React state settles.
 		const initialDark = document.documentElement.classList.contains("dark");
 		const api = buildScene(canvas, initialDark);
-		// Re-expose the CSS placeholder when WebGL isn't available.
-		canvas.hidden = api === null;
 		apiRef.current = api;
+		// Double rAF lands after the first rendered frame: fade the scene in
+		// over the placeholder. On WebGL failure this never runs and the
+		// placeholder stays.
+		let raf = 0;
+		if (api) {
+			raf = requestAnimationFrame(() => {
+				raf = requestAnimationFrame(() => {
+					canvas.dataset.ready = "true";
+				});
+			});
+		}
 		return () => {
+			cancelAnimationFrame(raf);
 			api?.dispose();
 			apiRef.current = null;
 		};
