@@ -85,6 +85,8 @@ interface Palette {
 	starsOpacity: number;
 	beaconIntensity: number;
 	glint: number;
+	seaweed: number;
+	starfish: number;
 }
 
 const DAY: Palette = {
@@ -109,6 +111,8 @@ const DAY: Palette = {
 	starsOpacity: 0,
 	beaconIntensity: 2,
 	glint: 0.55,
+	seaweed: 0x3a7a5e,
+	starfish: 0xcf7d52,
 };
 
 const NIGHT: Palette = {
@@ -133,6 +137,8 @@ const NIGHT: Palette = {
 	starsOpacity: 0.9,
 	beaconIntensity: 30,
 	glint: 0.3,
+	seaweed: 0x1f4a42,
+	starfish: 0x70453a,
 };
 
 // FNV-1a: turns the page pathname into a stable scatter seed, so every URL
@@ -599,6 +605,12 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	const dir = new DirectionalLight(DAY.dirColor, DAY.dirIntensity);
 	dir.position.set(-50, 25, -60);
 	scene.add(dir);
+	// Palette-resolved bases; renderFrame cools and dims them with camera
+	// depth, since water swallows warm light long before it reaches the floor.
+	const hemiSkyBase = new Color(DAY.hemiSky);
+	const dirColorBase = new Color(DAY.dirColor);
+	let hemiIntensityBase = DAY.hemiIntensity;
+	let dirIntensityBase = DAY.dirIntensity;
 
 	// --- Islands -----------------------------------------------------------
 	// Icebergs, not cutouts: the rock continues below the waterline, and its
@@ -895,6 +907,32 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	wreck.rotation.set(0.12, 0.6, 0.28);
 	scene.add(wreck);
 
+	// --- Seaweed + starfish ---------------------------------------------------
+	// Kelp blades sway from their base; bases sink slightly into the floor so
+	// the ridged seabed never leaves them hovering. Scatter() places them.
+	const seaweedMat = track(
+		new MeshStandardMaterial({ color: DAY.seaweed, flatShading: true }),
+	);
+	const bladeGeo = track(new CylinderGeometry(0.015, 0.07, 1, 5));
+	bladeGeo.translate(0, 0.5, 0); // pivot at the base so rotation = sway
+	const seaweed: { mesh: Mesh; phase: number; speed: number }[] = [];
+	for (let i = 0; i < 28; i++) {
+		const blade = new Mesh(bladeGeo, seaweedMat);
+		seaweed.push({ mesh: blade, phase: 0, speed: 1 });
+		scene.add(blade);
+	}
+
+	const starfishMat = track(
+		new MeshStandardMaterial({ color: DAY.starfish, flatShading: true }),
+	);
+	const starfishGeo = track(new ConeGeometry(1, 0.18, 5));
+	const starfish: Mesh[] = [];
+	for (let i = 0; i < 5; i++) {
+		const star = new Mesh(starfishGeo, starfishMat);
+		starfish.push(star);
+		scene.add(star);
+	}
+
 	// --- Fish + bubbles --------------------------------------------------------
 	// Low-poly fish facing +x: diamond body from two squashed cones, a
 	// dorsal fin, and a tail pivoted at its tip so it can wag.
@@ -1044,11 +1082,16 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		moonGlowMat.opacity = 0.55 * m * (0.4 + 0.6 * moonIllumination);
 		lerpColor(rockMat.color, DAY.rock, NIGHT.rock, m);
 		lerpColor(underMat.color, DAY.underGeo, NIGHT.underGeo, m);
-		lerpColor(hemi.color, DAY.hemiSky, NIGHT.hemiSky, m);
+		lerpColor(seaweedMat.color, DAY.seaweed, NIGHT.seaweed, m);
+		lerpColor(starfishMat.color, DAY.starfish, NIGHT.starfish, m);
+		lerpColor(hemiSkyBase, DAY.hemiSky, NIGHT.hemiSky, m);
 		lerpColor(hemi.groundColor, DAY.hemiGround, NIGHT.hemiGround, m);
-		hemi.intensity = DAY.hemiIntensity + (NIGHT.hemiIntensity - DAY.hemiIntensity) * m;
-		lerpColor(dir.color, DAY.dirColor, NIGHT.dirColor, m);
-		dir.intensity = DAY.dirIntensity + (NIGHT.dirIntensity - DAY.dirIntensity) * m;
+		hemiIntensityBase = DAY.hemiIntensity + (NIGHT.hemiIntensity - DAY.hemiIntensity) * m;
+		lerpColor(dirColorBase, DAY.dirColor, NIGHT.dirColor, m);
+		dirIntensityBase = DAY.dirIntensity + (NIGHT.dirIntensity - DAY.dirIntensity) * m;
+		// Below the surface the sky dome is hidden, so the clear color is
+		// what shows behind the fogged water.
+		renderer.setClearColor(fog.color);
 		starMat.opacity = DAY.starsOpacity + (NIGHT.starsOpacity - DAY.starsOpacity) * m;
 		beacon.intensity = DAY.beaconIntensity + (NIGHT.beaconIntensity - DAY.beaconIntensity) * m;
 		lampGlowMat.opacity = 0.25 + 0.6 * m;
@@ -1063,6 +1106,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		animatedObjects.add(f.mesh);
 		animatedObjects.add(f.tail);
 	}
+	for (const blade of seaweed) animatedObjects.add(blade.mesh);
 	function freezeStaticMatrices() {
 		scene.traverse((obj) => {
 			if (animatedObjects.has(obj)) return;
@@ -1111,6 +1155,30 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			p.mesh.position.x = (rand() - 0.5) * 360;
 			p.mesh.position.z = -90 - rand() * 100;
 			p.mesh.rotation.y = rand() * Math.PI * 2;
+		}
+
+		// Kelp grows in clusters of ~4 blades around shared roots.
+		for (let i = 0; i < seaweed.length; i++) {
+			const blade = seaweed[i];
+			if (i % 4 === 0) {
+				blade.mesh.position.x = (rand() - 0.5) * 52;
+				blade.mesh.position.z = 25 - rand() * 20;
+			} else {
+				const root = seaweed[i - (i % 4)].mesh.position;
+				blade.mesh.position.x = root.x + (rand() - 0.5) * 1.4;
+				blade.mesh.position.z = root.z + (rand() - 0.5) * 1.4;
+			}
+			blade.mesh.scale.y = 1.6 + rand() * 2.6;
+			blade.mesh.scale.x = blade.mesh.scale.z = 0.8 + rand() * 0.8;
+			blade.phase = rand() * Math.PI * 2;
+			blade.speed = 0.6 + rand() * 0.6;
+		}
+
+		for (const star of starfish) {
+			star.position.x = (rand() - 0.5) * 48;
+			star.position.z = 25 - rand() * 16;
+			star.scale.setScalar(0.3 + rand() * 0.35);
+			star.rotation.y = rand() * Math.PI * 2;
 		}
 
 		for (const f of fish) {
@@ -1179,6 +1247,8 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			p.mesh.scale.y = Math.max(2, (top - bottom) / 2.45);
 			p.mesh.position.y = (top + bottom) / 2;
 		}
+		for (const blade of seaweed) blade.mesh.position.y = seabedY - 0.3;
+		for (const star of starfish) star.position.y = seabedY + 0.4;
 		for (const f of fish) {
 			f.baseY = -2.5 + (seabedY + 4 - -2.5) * f.depthFrac;
 		}
@@ -1282,6 +1352,17 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		sunPivot.visible = skyVisible;
 		moonPivot.visible = skyVisible;
 		stars.visible = skyVisible;
+		// The dome too: at depth its warm horizon would smear through the
+		// water; the fog-colored clear color takes over instead.
+		sky.visible = skyVisible;
+
+		// Depth swallows warm light: cool and dim the lights as the camera
+		// descends so the deep seabed stays blue instead of washing out.
+		const lightDepth = Math.min(1, Math.max(0, -camera.position.y / 18));
+		hemi.color.copy(hemiSkyBase).lerp(fog.color, lightDepth * 0.55);
+		hemi.intensity = hemiIntensityBase * (1 - lightDepth * 0.35);
+		dir.color.copy(dirColorBase).lerp(fog.color, lightDepth * 0.65);
+		dir.intensity = dirIntensityBase * (1 - lightDepth * 0.6);
 
 		// Camera and content move 1:1 — one viewport of scroll equals one
 		// frame-height of descent, so the scene feels attached to the page.
@@ -1299,6 +1380,12 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			(DAY.beaconIntensity + (NIGHT.beaconIntensity - DAY.beaconIntensity) * mix) *
 			(0.7 + 0.3 * Math.sin(t * 2.4));
 		glow.scale.setScalar(68 + Math.sin(t * 0.5) * 3);
+
+		// Kelp sways gently from the base, like current pushing through.
+		for (const blade of seaweed) {
+			blade.mesh.rotation.z = Math.sin(t * blade.speed + blade.phase) * 0.14;
+			blade.mesh.rotation.x = Math.sin(t * blade.speed * 0.7 + blade.phase * 1.3) * 0.06;
+		}
 
 		for (const f of fish) {
 			f.mesh.position.x += f.speed * dt;
