@@ -442,7 +442,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	const aboveWaterClip = new Plane(new Vector3(0, 1, 0), 0);
 
 	const scene = new Scene();
-	const fog = new Fog(0x5ea7d8, 12, 210);
+	const fog = new Fog(0x5ea7d8, 12, 300);
 	scene.fog = fog;
 
 	const camera = new PerspectiveCamera(
@@ -1127,7 +1127,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			const c = Math.min(1, Math.max(0, v));
 			return c * c * (3 - 2 * c);
 		};
-		const rise = Math.min(-seabedY * 0.85, 24);
+		const rise = Math.min(-seabedY * 0.9, 26);
 		const pos = seabedGeo.getAttribute("position");
 		for (let i = 0; i < pos.count; i++) {
 			const x = pos.getX(i);
@@ -1136,8 +1136,10 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 				Math.sin(x * 0.12 + seabedOffsetX) * Math.cos(z * 0.1 + seabedOffsetZ) * 1.4 +
 				Math.sin(x * 0.31 + z * 0.21 + seabedOffsetX) * 0.6 +
 				Math.sin(z * 0.45 - x * 0.07 + seabedOffsetZ) * 0.35;
+			// Rise must finish well inside fog range (~150 units) or the bowl
+			// is invisible: back wall completes by z=-120, sides by |x|=150.
 			const bowl =
-				ease((-60 - z) / 120) * rise + ease((Math.abs(x) - 130) / 120) * rise * 0.8;
+				ease((-30 - z) / 90) * rise + ease((Math.abs(x) - 70) / 80) * rise * 0.75;
 			pos.setY(i, ridges + bowl);
 		}
 		pos.needsUpdate = true;
