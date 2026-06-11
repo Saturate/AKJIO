@@ -346,7 +346,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	const aboveWaterClip = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
 	const scene = new THREE.Scene();
-	const fog = new THREE.Fog(0x5ea7d8, 12, 150);
+	const fog = new THREE.Fog(0x5ea7d8, 12, 210);
 	scene.fog = fog;
 
 	const camera = new THREE.PerspectiveCamera(
@@ -724,11 +724,11 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		new THREE.MeshStandardMaterial({ color: DAY.underGeo, flatShading: true }),
 	);
 
-	const seabedGeo = track(new THREE.PlaneGeometry(320, 180, 90, 50));
+	const seabedGeo = track(new THREE.PlaneGeometry(520, 230, 110, 56));
 	seabedGeo.rotateX(-Math.PI / 2);
 	// Ridges are generated in scatter(), seeded per URL.
 	const seabed = new THREE.Mesh(seabedGeo, underMat);
-	seabed.position.set(0, SEABED_Y, -64); // span z from -154 to +26
+	seabed.position.set(0, SEABED_Y, -75); // span z from -190 to +40
 	scene.add(seabed);
 
 	// Island roots: the above-water rocks continue down as huge pale cliffs.
@@ -779,6 +779,16 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	const wall = new THREE.Mesh(wallGeo, underMat);
 	wall.position.set(0, -39.2, 28);
 	scene.add(wall);
+
+	// Distant rock pinnacles rising from the floor: faded background
+	// silhouettes that give the underwater horizon depth. Placement and
+	// height re-roll per URL in scatter(); vertical sizing in applyDepth().
+	const pinnacles: { mesh: THREE.Mesh; heightFrac: number }[] = [];
+	for (let i = 0; i < 9; i++) {
+		const mesh = makeRock(underMat, 0.5);
+		pinnacles.push({ mesh, heightFrac: 0.5 });
+		scene.add(mesh);
+	}
 
 	const wreck = new THREE.Group();
 	const wreckHull = new THREE.Mesh(track(new THREE.BoxGeometry(4.2, 1.2, 1.5)), underMat);
@@ -938,6 +948,16 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		wreck.position.x = -16 + rand() * 28;
 		wreck.rotation.y = rand() * Math.PI * 2;
 
+		for (const p of pinnacles) {
+			p.heightFrac = 0.35 + rand() * 0.5;
+			const sx = 8 + rand() * 12;
+			p.mesh.scale.x = sx;
+			p.mesh.scale.z = sx * (0.7 + rand() * 0.6);
+			p.mesh.position.x = (rand() - 0.5) * 360;
+			p.mesh.position.z = -90 - rand() * 100;
+			p.mesh.rotation.y = rand() * Math.PI * 2;
+		}
+
 		for (const f of fish) {
 			f.speed = (0.8 + rand() * 1.6) * (rand() > 0.5 ? 1 : -1);
 			f.phase = rand() * Math.PI * 2;
@@ -988,11 +1008,21 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		wall.position.y = seabedY - 21.2; // ridge crest ends up just above the floor
 		wreck.position.y = seabedY + 1.1;
 		for (const rock of seabedRocks) rock.position.y = seabedY + 0.4;
-		// Stretch the island roots so the cliffs always run surface-to-floor.
+		// Stretch the island roots surface-to-floor, with the tapered bottom
+		// buried well below the seabed: the visible part is then always a
+		// column widening downward, never a dome hanging mid-water.
 		for (const root of roots) {
-			const sy = Math.max(3, (-seabedY - 0.8) / 2.2);
-			root.scale.y = sy;
-			root.position.y = -0.8 - 1.25 * sy;
+			const top = -0.8;
+			const bottom = seabedY - 6;
+			root.scale.y = Math.max(3, (top - bottom) / 2.45);
+			root.position.y = (top + bottom) / 2;
+		}
+		// Pinnacles rise from below the floor up to their per-URL height.
+		for (const p of pinnacles) {
+			const top = seabedY + (-seabedY - 4) * p.heightFrac;
+			const bottom = seabedY - 8;
+			p.mesh.scale.y = Math.max(2, (top - bottom) / 2.45);
+			p.mesh.position.y = (top + bottom) / 2;
 		}
 		for (const f of fish) {
 			f.baseY = -2.5 + (seabedY + 4 - -2.5) * f.depthFrac;
