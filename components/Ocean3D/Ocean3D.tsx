@@ -32,7 +32,6 @@ import {
 	PointLight,
 	Points,
 	PointsMaterial,
-	RingGeometry,
 	SRGBColorSpace,
 	Scene,
 	ShaderMaterial,
@@ -1142,11 +1141,9 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	splashGeo.setAttribute("position", new BufferAttribute(splashPositions, 3));
 	const splashMat = track(
 		new PointsMaterial({
-			size: 0.13,
-			// Soft round droplets instead of square points.
-			map: glowTexture,
+			size: 0.09,
 			transparent: true,
-			opacity: 0.95,
+			opacity: 0.9,
 			depthWrite: false,
 			// Drawn last over the water; depth testing would let stale depth
 			// values swallow the burst at the cut plane.
@@ -1164,48 +1161,18 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	scene.add(splash);
 	let splashCursor = 0;
 
-	// Expanding foam rings at the impact point, in the cut plane.
-	const rippleGeo = track(new RingGeometry(0.85, 1, 24));
-	const rippleRings: { mesh: Mesh; mat: MeshBasicMaterial; life: number }[] = [];
-	for (let i = 0; i < 3; i++) {
-		const mat = track(
-			new MeshBasicMaterial({
-				transparent: true,
-				opacity: 0,
-				depthTest: false,
-				depthWrite: false,
-				fog: false,
-			}),
-		);
-		mat.color = glassFoamColor;
-		const mesh = new Mesh(rippleGeo, mat);
-		mesh.renderOrder = 11;
-		mesh.visible = false;
-		mesh.frustumCulled = false;
-		rippleRings.push({ mesh, mat, life: 0 });
-		scene.add(mesh);
-	}
-	let rippleCursor = 0;
-
 	function spawnSplash(x: number, y: number) {
-		for (let i = 0; i < 18; i++) {
+		for (let i = 0; i < 14; i++) {
 			const idx = splashCursor;
 			splashCursor = (splashCursor + 1) % SPLASH_MAX;
-			splashPositions[idx * 3] = x + (Math.random() - 0.5) * 0.2;
+			splashPositions[idx * 3] = x + (Math.random() - 0.5) * 0.15;
 			splashPositions[idx * 3 + 1] = y;
 			splashPositions[idx * 3 + 2] = GLASS_Z - 0.3;
-			// Fountain shape: tight horizontal spread, strong vertical kick.
-			splashVel[idx * 3] = (Math.random() - 0.5) * 1.6;
-			splashVel[idx * 3 + 1] = 1.6 + Math.random() * 2.8;
-			splashVel[idx * 3 + 2] = (Math.random() - 0.5) * 0.5;
-			splashLife[idx] = 0.6 + Math.random() * 0.4;
+			splashVel[idx * 3] = (Math.random() - 0.5) * 2.2;
+			splashVel[idx * 3 + 1] = 1.2 + Math.random() * 2.4;
+			splashVel[idx * 3 + 2] = (Math.random() - 0.5) * 0.6;
+			splashLife[idx] = 0.6 + Math.random() * 0.35;
 		}
-		const ring = rippleRings[rippleCursor];
-		rippleCursor = (rippleCursor + 1) % rippleRings.length;
-		ring.mesh.position.set(x, y, GLASS_Z - 0.25);
-		ring.mesh.scale.setScalar(0.12);
-		ring.life = 0.55;
-		ring.mesh.visible = true;
 	}
 
 	// JS mirror of the glass-edge ripple in the shaders (at the cut plane).
@@ -1273,7 +1240,6 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		animatedObjects.add(f.tail);
 	}
 	for (const blade of seaweed) animatedObjects.add(blade.mesh);
-	for (const ring of rippleRings) animatedObjects.add(ring.mesh);
 	function freezeStaticMatrices() {
 		scene.traverse((obj) => {
 			if (animatedObjects.has(obj)) return;
@@ -1656,18 +1622,6 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			splashAlive = true;
 		}
 		if (splashAlive) splashGeo.getAttribute("position").needsUpdate = true;
-
-		for (const ring of rippleRings) {
-			if (ring.life <= 0) continue;
-			ring.life -= dt;
-			if (ring.life <= 0) {
-				ring.mesh.visible = false;
-				ring.mat.opacity = 0;
-				continue;
-			}
-			ring.mesh.scale.addScalar(dt * 1.1);
-			ring.mat.opacity = (ring.life / 0.55) * 0.7;
-		}
 
 		renderer.render(scene, camera);
 	}
