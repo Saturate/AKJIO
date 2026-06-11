@@ -10,7 +10,14 @@
 
 /* Static CSS fallback shown while three.js loads.
    Approximates the day scene: grey-mauve sky down to a pale horizon,
-   the bright waterline at ~64vh, then water deepening below. */
+   the bright waterline at ~64vh, then water deepening below.
+   Once the WebGL canvas is live the layer is dropped entirely so the
+   compositor stops painting a hidden full-screen gradient. The canvas
+   gets `hidden` if WebGL init fails, which brings this back. */
+.oceanPlaceholder:has(+ .oceanCanvas:not([hidden])) {
+	display: none;
+}
+
 .oceanPlaceholder {
 	position: fixed;
 	top: 0;

@@ -376,7 +376,14 @@ interface SceneApi {
 function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi | null {
 	let renderer: THREE.WebGLRenderer;
 	try {
-		renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+		renderer = new THREE.WebGLRenderer({
+			canvas,
+			// At DPR >= 2 the buffer is already supersampled relative to CSS
+			// pixels; MSAA on top costs heavy fill rate for no visible gain.
+			antialias: window.devicePixelRatio < 2,
+			alpha: false,
+			stencil: false,
+		});
 	} catch {
 		return null;
 	}
@@ -1010,6 +1017,22 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	}
 	applyPalette(mix);
 
+	// --- Static matrix freeze ------------------------------------------------
+	// Only a handful of objects move per frame; the rest of the scene keeps
+	// frozen local matrices. applyDepth() re-freezes after repositioning.
+	const animatedObjects = new Set<THREE.Object3D>([ship, sunPivot, moonPivot, glow]);
+	for (const f of fish) {
+		animatedObjects.add(f.mesh);
+		animatedObjects.add(f.tail);
+	}
+	function freezeStaticMatrices() {
+		scene.traverse((obj) => {
+			if (animatedObjects.has(obj)) return;
+			obj.matrixAutoUpdate = false;
+			obj.updateMatrix();
+		});
+	}
+
 	// --- Per-URL scatter ---------------------------------------------------
 	// Everything loose underwater re-rolls from the page's pathname hash:
 	// the same article always shows the same ocean, but every page differs.
@@ -1126,6 +1149,8 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			bp.setY(i, (seabedY + 1) * bubbleDepthFracs[i]);
 		}
 		bp.needsUpdate = true;
+
+		freezeStaticMatrices();
 	}
 
 	// --- Scroll / mouse / loop -------------------------------------------------
@@ -1333,6 +1358,8 @@ export default function Ocean3D() {
 		// so this is theme-correct before React state settles.
 		const initialDark = document.documentElement.classList.contains("dark");
 		const api = buildScene(canvas, initialDark);
+		// Re-expose the CSS placeholder when WebGL isn't available.
+		canvas.hidden = api === null;
 		apiRef.current = api;
 		return () => {
 			api?.dispose();
