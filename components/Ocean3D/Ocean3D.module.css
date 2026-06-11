@@ -27,11 +27,11 @@
 	z-index: 0;
 	pointer-events: none;
 	background:
-		radial-gradient(circle 16vh at 30% 36%, rgba(255, 247, 220, 0.6), transparent 70%),
+		radial-gradient(circle 16vh at 30% 36%, rgba(255, 240, 205, 0.65), transparent 70%),
 		linear-gradient(
 			180deg,
-			#6d7997 0%,
-			#dfe3df 40vh,
+			#837093 0%,
+			#f2dcc4 40vh,
 			#eaf6ff 42vh,
 			#55a7dd 44vh,
 			#123f6b 100%
