@@ -180,17 +180,62 @@ function makeMoonTexture(phase: number | null): THREE.CanvasTexture {
 		ctx.arc(c, c, r, 0, Math.PI * 2);
 		ctx.fill();
 
-		ctx.fillStyle = "rgba(168, 165, 146, 0.55)";
+		// Soft-edged maria laid out like the real near side: Procellarum on
+		// the left limb, Imbrium upper left, Serenitatis/Tranquillitatis in
+		// the upper middle, Fecunditatis/Nectaris lower right.
+		ctx.save();
+		ctx.beginPath();
+		ctx.arc(c, c, r, 0, Math.PI * 2);
+		ctx.clip();
+		const mare = (mx: number, my: number, mr: number, alpha: number) => {
+			const px = c + mx * r;
+			const py = c + my * r;
+			const g = ctx.createRadialGradient(px, py, 0, px, py, mr * r);
+			g.addColorStop(0, `rgba(166, 163, 145, ${alpha})`);
+			g.addColorStop(0.7, `rgba(166, 163, 145, ${alpha * 0.8})`);
+			g.addColorStop(1, "rgba(166, 163, 145, 0)");
+			ctx.fillStyle = g;
+			ctx.beginPath();
+			ctx.arc(px, py, mr * r, 0, Math.PI * 2);
+			ctx.fill();
+		};
+		mare(-0.52, -0.12, 0.3, 0.5); // Oceanus Procellarum (upper)
+		mare(-0.48, 0.22, 0.24, 0.45); // Oceanus Procellarum (lower)
+		mare(-0.22, -0.38, 0.28, 0.55); // Mare Imbrium
+		mare(0.16, -0.36, 0.2, 0.5); // Mare Serenitatis
+		mare(0.34, -0.1, 0.21, 0.5); // Mare Tranquillitatis
+		mare(0.52, 0.14, 0.15, 0.45); // Mare Fecunditatis
+		mare(0.28, 0.28, 0.11, 0.4); // Mare Nectaris
+		mare(-0.18, 0.32, 0.13, 0.35); // Mare Nubium
+		// A few small craters in the bright highlands.
+		ctx.fillStyle = "rgba(160, 157, 140, 0.4)";
 		const craters: [number, number, number][] = [
-			[-0.25, -0.12, 0.2],
-			[0.37, 0.25, 0.15],
-			[0.12, -0.37, 0.12],
+			[-0.3, 0.05, 0.045], // Copernicus
+			[0.05, 0.5, 0.035], // Albategnius-ish
+			[-0.55, 0.5, 0.03],
+			[0.55, -0.42, 0.03],
 		];
 		for (const [cx, cy, cr] of craters) {
 			ctx.beginPath();
 			ctx.arc(c + cx * r, c + cy * r, cr * r, 0, Math.PI * 2);
 			ctx.fill();
 		}
+		// Tycho: bright spot near the southern limb.
+		const tycho = ctx.createRadialGradient(
+			c - 0.08 * r,
+			c + 0.62 * r,
+			0,
+			c - 0.08 * r,
+			c + 0.62 * r,
+			0.12 * r,
+		);
+		tycho.addColorStop(0, "rgba(255, 253, 240, 0.9)");
+		tycho.addColorStop(1, "rgba(255, 253, 240, 0)");
+		ctx.fillStyle = tycho;
+		ctx.beginPath();
+		ctx.arc(c - 0.08 * r, c + 0.62 * r, 0.12 * r, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.restore();
 
 		if (phase !== null && getIlluminationFraction(phase) < 0.99) {
 			ctx.save();
@@ -875,6 +920,55 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	);
 	scene.add(new THREE.Points(bubbleGeo, bubbleMat));
 
+	// --- Cursor splash -----------------------------------------------------
+	// A pooled foam burst that spawns where the cursor crosses the waterline.
+	const SPLASH_MAX = 64;
+	const splashPositions = new Float32Array(SPLASH_MAX * 3).fill(9999);
+	const splashVel = new Float32Array(SPLASH_MAX * 3);
+	const splashLife = new Float32Array(SPLASH_MAX);
+	const splashGeo = track(new THREE.BufferGeometry());
+	splashGeo.setAttribute("position", new THREE.BufferAttribute(splashPositions, 3));
+	const splashMat = track(
+		new THREE.PointsMaterial({
+			size: 0.09,
+			transparent: true,
+			opacity: 0.9,
+			depthWrite: false,
+			// Drawn last over the water; depth testing would let stale depth
+			// values swallow the burst at the cut plane.
+			depthTest: false,
+			fog: false,
+		}),
+	);
+	// Shared instance: the palette lerp keeps splash foam in sync with theme.
+	splashMat.color = glassFoamColor;
+	const splash = new THREE.Points(splashGeo, splashMat);
+	splash.renderOrder = 11;
+	// Pooled particles park far away when dead; the stale bounding sphere
+	// would otherwise frustum-cull the whole pool.
+	splash.frustumCulled = false;
+	scene.add(splash);
+	let splashCursor = 0;
+
+	function spawnSplash(x: number, y: number) {
+		for (let i = 0; i < 14; i++) {
+			const idx = splashCursor;
+			splashCursor = (splashCursor + 1) % SPLASH_MAX;
+			splashPositions[idx * 3] = x + (Math.random() - 0.5) * 0.15;
+			splashPositions[idx * 3 + 1] = y;
+			splashPositions[idx * 3 + 2] = GLASS_Z - 0.3;
+			splashVel[idx * 3] = (Math.random() - 0.5) * 2.2;
+			splashVel[idx * 3 + 1] = 1.2 + Math.random() * 2.4;
+			splashVel[idx * 3 + 2] = (Math.random() - 0.5) * 0.6;
+			splashLife[idx] = 0.6 + Math.random() * 0.35;
+		}
+	}
+
+	// JS mirror of the glass-edge ripple in the shaders (at the cut plane).
+	const waterlineAt = (x: number) =>
+		Math.sin(x * 0.8 + elapsed * 0.9) * 0.12 +
+		Math.sin(x * 0.45 - elapsed * 0.55 + 24.0) * 0.1;
+
 	// --- Palette / theme -----------------------------------------------------
 	let mix = initialDark ? 1 : 0;
 	let mixTarget = mix;
@@ -1047,8 +1141,33 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	}
 
 	const onScroll = () => readScroll();
+	const mouseRay = new THREE.Vector3();
+	let lastWaterDelta: number | null = null;
 	const onMouseMove = (e: MouseEvent) => {
 		mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+		// Project the cursor onto the cut plane and splash when it crosses
+		// the waterline ripple.
+		mouseRay
+			.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1, 0.5)
+			.unproject(camera)
+			.sub(camera.position)
+			.normalize();
+		if (Math.abs(mouseRay.z) > 1e-4) {
+			const t = (GLASS_Z - camera.position.z) / mouseRay.z;
+			if (t > 0) {
+				const hx = camera.position.x + mouseRay.x * t;
+				const hy = camera.position.y + mouseRay.y * t;
+				const delta = hy - waterlineAt(hx);
+				if (
+					lastWaterDelta !== null &&
+					Math.sign(delta) !== Math.sign(lastWaterDelta) &&
+					Math.abs(delta) < 3
+				) {
+					spawnSplash(hx, hy - delta);
+				}
+				lastWaterDelta = delta;
+			}
+		}
 	};
 	const onResize = () => {
 		camera.aspect = window.innerWidth / window.innerHeight;
@@ -1135,6 +1254,22 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			bp.setX(i, bp.getX(i) + Math.sin(t + i) * dt * 0.08);
 		}
 		bp.needsUpdate = true;
+
+		let splashAlive = false;
+		for (let i = 0; i < SPLASH_MAX; i++) {
+			if (splashLife[i] <= 0) continue;
+			splashLife[i] -= dt;
+			if (splashLife[i] <= 0) {
+				splashPositions[i * 3 + 1] = 9999;
+			} else {
+				splashVel[i * 3 + 1] -= 7.5 * dt;
+				splashPositions[i * 3] += splashVel[i * 3] * dt;
+				splashPositions[i * 3 + 1] += splashVel[i * 3 + 1] * dt;
+				splashPositions[i * 3 + 2] += splashVel[i * 3 + 2] * dt;
+			}
+			splashAlive = true;
+		}
+		if (splashAlive) splashGeo.getAttribute("position").needsUpdate = true;
 
 		renderer.render(scene, camera);
 	}
