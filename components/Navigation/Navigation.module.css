@@ -2,35 +2,53 @@
 	font-family: var(--font-jersey-25);
 	color: var(--text-primary);
 	display: flex;
-	font-size: 1.3em;
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.09);
-	padding-bottom: 70px;
+	justify-content: center;
+	gap: 0.75rem;
+	font-size: 1.25em;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
+	/* Rest the menu on the horizon line, clear of the lighthouse. */
+	margin-top: 2.6em;
 }
 
 .nav a {
 	text-decoration: none;
 	display: inline-block;
-	padding: 10px 20px;
+	padding: 8px 18px 10px;
 	text-align: center;
-	font-size: 1.1em;
-	flex-direction: column;
-	flex: 1;
 	line-height: 1;
-	&:after {
-		padding: 4px;
-		border-bottom: 1px solid #e0e0e0;
-		content: " ";
-		display: block;
-		width: 10%;
-		margin: auto;
+	border-radius: 10px;
+	transition: background-color 0.15s ease;
+}
+
+.nav a:after {
+	content: " ";
+	display: block;
+	width: 16px;
+	margin: 6px auto 0;
+	border-bottom: 1px solid rgba(224, 224, 224, 0.65);
+}
+
+.nav a:hover,
+.nav a:focus {
+	text-decoration: none;
+	background-color: rgba(255, 255, 255, 0.12);
+}
+
+.nav a span {
+	font-size: 0.55em;
+	display: block;
+	margin-top: 4px;
+	opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+	.nav {
+		gap: 0.25rem;
+		font-size: 1.05em;
+		margin-top: 1.4em;
 	}
-	&:hover,
-	&:focus {
-		text-decoration: none;
-		background-color: rgba(0, 0, 0, 0.08);
-	}
-	span {
-		font-size: 0.6em;
-		display: block;
+
+	.nav a {
+		padding: 6px 10px 8px;
 	}
 }
