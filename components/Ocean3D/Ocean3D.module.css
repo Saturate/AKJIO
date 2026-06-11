@@ -17,7 +17,7 @@
 
 /* Static CSS fallback shown while three.js loads. Approximates the day
    scene: grey-mauve sky to a pale horizon, the sun low on the left, the
-   bright waterline at ~34vh, then water deepening below. */
+   bright waterline at ~37vh, then water deepening below. */
 .oceanPlaceholder {
 	position: fixed;
 	top: 0;
@@ -31,9 +31,9 @@
 		linear-gradient(
 			180deg,
 			#837093 0%,
-			#f2dcc4 32vh,
-			#eaf6ff 34vh,
-			#55a7dd 36vh,
+			#f2dcc4 35vh,
+			#eaf6ff 37vh,
+			#55a7dd 39vh,
 			#123f6b 100%
 		);
 }
@@ -44,7 +44,7 @@
 	position: absolute;
 	left: 0;
 	right: 0;
-	top: 33vh;
+	top: 36vh;
 	height: 2vh;
 	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
 	background-size: 50% 100%;
@@ -81,9 +81,9 @@
 		linear-gradient(
 			180deg,
 			#081426 0%,
-			#1c3a54 32vh,
-			#9fc4d8 34vh,
-			#16406a 36vh,
+			#1c3a54 35vh,
+			#9fc4d8 37vh,
+			#16406a 39vh,
 			#081826 100%
 		);
 }
@@ -103,9 +103,9 @@
 		linear-gradient(
 			180deg,
 			#837093 0%,
-			#f2dcc4 32vh,
-			#eaf6ff 34vh,
-			#55a7dd 36vh,
+			#f2dcc4 35vh,
+			#eaf6ff 37vh,
+			#55a7dd 39vh,
 			#2a679f 160vh,
 			#123f6b 320vh,
 			#0a2a4c 100%
@@ -119,7 +119,7 @@
 	top: 0;
 	left: 0;
 	right: 0;
-	height: 32vh;
+	height: 35vh;
 	background:
 		radial-gradient(ellipse 10vw 7vh at 28% 100%, #5f6e57 0%, #5f6e57 99%, transparent 100%),
 		radial-gradient(ellipse 4vw 4vh at 35% 100%, #525f4c 0%, #525f4c 99%, transparent 100%),
@@ -137,9 +137,9 @@
 		linear-gradient(
 			180deg,
 			#081426 0%,
-			#1c3a54 32vh,
-			#9fc4d8 34vh,
-			#16406a 36vh,
+			#1c3a54 35vh,
+			#9fc4d8 37vh,
+			#16406a 39vh,
 			#0c2742 160vh,
 			#081826 320vh,
 			#050f1a 100%

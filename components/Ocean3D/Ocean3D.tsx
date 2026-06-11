@@ -56,7 +56,7 @@ const REAL_MOON_PHASES = process.env.NEXT_PUBLIC_REAL_MOON_PHASES === "true";
 // so the header lives in the sky and the footer rests in the rocks.
 const CAMERA_Z = 36;
 const GLASS_Z = 30;
-const CAMERA_TOP_Y = 0.3;
+const CAMERA_TOP_Y = 0.6;
 // Initial seabed depth; the real depth is procedural — derived from the
 // page's scroll height in applyDepth() so short pages get shallow water
 // and long ones a deep ocean, with the footer always ending in the rocks.
@@ -420,8 +420,11 @@ const WATER_FRAG = /* glsl */ `
 		foamRing *= 0.55 + 0.45 * sin(vPos.x * 1.7 + vPos.z * 1.3 - uTime * 1.6);
 		col = mix(col, uFoam, foamRing * 0.75);
 		float cx = uSunX * dist;
-		float streak = exp(-pow(vPos.x - cx, 2.0) / (3.0 + 900.0 * dist * dist));
+		float streak = exp(-pow(vPos.x - cx, 2.0) / (3.0 + 360.0 * dist * dist));
 		float shimmer = 0.6 + 0.4 * sin(vPos.x * 2.4 + vPos.z * 3.1 + uTime * 2.2);
+		// The shimmer's world-space stripes alias into banding at range:
+		// fade to a smooth glow toward the horizon.
+		shimmer = mix(shimmer, 0.65, smoothstep(0.25, 0.7, dist));
 		col += uSunColor * streak * shimmer * uGlint * dist;
 		// Lighthouse sweep: a warm light pool travels across the waves where
 		// the rotating beam points (bi-directional, so abs of the alignment).
@@ -489,7 +492,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	const applyViewOffset = () => {
 		const w = window.innerWidth;
 		const h = window.innerHeight;
-		camera.setViewOffset(w, h, 0, Math.round(h * 0.22), w, h);
+		camera.setViewOffset(w, h, 0, Math.round(h * 0.25), w, h);
 	};
 	applyViewOffset();
 
@@ -817,22 +820,55 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			clippingPlanes: [aboveWaterClip],
 		}),
 	);
+	// A little fishing boat: red hull with a pointed bow and white gunwale,
+	// white wheelhouse with a window band, short mast with a pennant, and
+	// orange buoys hanging over the side.
 	const ship = new Group();
-	const hull = new Mesh(track(new BoxGeometry(8, 1.6, 2.2)), darkMat);
+	const hullMat = track(
+		new MeshStandardMaterial({
+			color: 0xb5483c,
+			flatShading: true,
+			fog: false,
+			clippingPlanes: [aboveWaterClip],
+		}),
+	);
+	const hull = new Mesh(track(new BoxGeometry(3.4, 1.0, 1.6)), hullMat);
 	hull.position.y = 0.5;
 	ship.add(hull);
-	const cabin1 = new Mesh(track(new BoxGeometry(1.6, 1.3, 1.5)), whiteMat);
-	cabin1.position.set(-1.6, 1.9, 0);
-	ship.add(cabin1);
-	const cabin2 = new Mesh(track(new BoxGeometry(1.1, 0.9, 1.2)), whiteMat);
-	cabin2.position.set(0.2, 1.7, 0);
-	ship.add(cabin2);
-	const funnel = new Mesh(track(new ConeGeometry(0.45, 1.6, 8)), orangeMat);
-	funnel.position.set(1.8, 2.3, 0);
-	ship.add(funnel);
-	const mast = new Mesh(track(new CylinderGeometry(0.05, 0.05, 2.4, 6)), darkMat);
-	mast.position.set(3.1, 2.4, 0);
+	const bow = new Mesh(track(new ConeGeometry(0.8, 1.4, 4)), hullMat);
+	bow.rotation.z = -Math.PI / 2;
+	bow.rotation.x = Math.PI / 4;
+	bow.position.set(2.2, 0.5, 0);
+	ship.add(bow);
+	const gunwale = new Mesh(track(new BoxGeometry(3.5, 0.16, 1.7)), whiteMat);
+	gunwale.position.y = 1.04;
+	ship.add(gunwale);
+	const wheelhouse = new Mesh(track(new BoxGeometry(1.25, 1.0, 1.3)), whiteMat);
+	wheelhouse.position.set(-0.7, 1.6, 0);
+	ship.add(wheelhouse);
+	const windowBand = new Mesh(track(new BoxGeometry(1.32, 0.32, 1.36)), darkMat);
+	windowBand.position.set(-0.7, 1.82, 0);
+	ship.add(windowBand);
+	const wheelhouseRoof = new Mesh(track(new BoxGeometry(1.45, 0.14, 1.5)), hullMat);
+	wheelhouseRoof.position.set(-0.7, 2.16, 0);
+	ship.add(wheelhouseRoof);
+	const mast = new Mesh(track(new CylinderGeometry(0.045, 0.06, 1.8, 6)), darkMat);
+	mast.position.set(0.7, 1.9, 0);
 	ship.add(mast);
+	const boom = new Mesh(track(new CylinderGeometry(0.035, 0.035, 1.5, 6)), darkMat);
+	boom.rotation.z = 1.15;
+	boom.position.set(0.05, 2.25, 0);
+	ship.add(boom);
+	const pennant = new Mesh(track(new ConeGeometry(0.14, 0.4, 4)), orangeMat);
+	pennant.rotation.z = -Math.PI / 2;
+	pennant.position.set(0.92, 2.75, 0);
+	ship.add(pennant);
+	const buoyGeo = track(new SphereGeometry(0.17, 8, 6));
+	const buoyA = new Mesh(buoyGeo, orangeMat);
+	buoyA.position.set(0.4, 0.62, 0.85);
+	const buoyB = new Mesh(buoyGeo, orangeMat);
+	buoyB.position.set(-0.6, 0.62, 0.85);
+	ship.add(buoyA, buoyB);
 	// Start position and heading come from scatter(): the ship sails in from
 	// off-screen and eases to a stop at a seeded anchorage in open water.
 	let shipTargetX = 27;
@@ -1225,7 +1261,9 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			// is invisible: back wall completes by z=-120, sides by |x|=150.
 			const bowl =
 				ease((-30 - z) / 90) * rise + ease((Math.abs(x) - 70) / 80) * rise * 0.75;
-			pos.setY(i, ridges + bowl);
+			// Rim stays submerged: on shallow pages it would otherwise breach
+			// the surface as pale underwater-material hills.
+			pos.setY(i, Math.min(ridges + bowl, -0.8 - seabedY));
 		}
 		pos.needsUpdate = true;
 		seabedGeo.computeVertexNormals();
@@ -1497,8 +1535,10 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		const bob = Math.sin(t * 0.8) * 0.12;
 		ship.position.y = -0.1 + bob;
 		ship.rotation.z = Math.sin(t * 0.6) * 0.02;
-		// Exponential approach: a long glide that eases to a stop at anchor.
-		ship.position.x += (shipTargetX - ship.position.x) * Math.min(1, dt * 0.18);
+		// Putters along at fishing-boat pace, easing out over the last stretch.
+		const shipDx = shipTargetX - ship.position.x;
+		const shipSpeed = Math.min(1.6, Math.abs(shipDx) * 0.2);
+		ship.position.x += Math.sign(shipDx) * Math.min(Math.abs(shipDx), shipSpeed * dt);
 
 		beacon.intensity =
 			(DAY.beaconIntensity + (NIGHT.beaconIntensity - DAY.beaconIntensity) * mix) *
