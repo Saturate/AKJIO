@@ -801,7 +801,10 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	const mast = new Mesh(track(new CylinderGeometry(0.05, 0.05, 2.4, 6)), darkMat);
 	mast.position.set(3.1, 2.4, 0);
 	ship.add(mast);
-	ship.position.set(27, -0.1, -78);
+	// Start position and heading come from scatter(): the ship sails in from
+	// off-screen and eases to a stop at a seeded anchorage in open water.
+	let shipTargetX = 27;
+	ship.position.set(27, -0.1, -55);
 	scene.add(ship);
 
 	// --- Water block ------------------------------------------------------------
@@ -1212,6 +1215,13 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		wreck.position.x = -16 + rand() * 28;
 		wreck.rotation.y = rand() * Math.PI * 2;
 
+		// Ship sails in from a random side and anchors at a seeded spot;
+		// reduced motion skips the voyage and starts it at anchor.
+		const shipSide = rand() > 0.5 ? 1 : -1;
+		shipTargetX = (rand() - 0.5) * 80;
+		ship.position.x = reducedMotion ? shipTargetX : shipSide * 88;
+		ship.rotation.y = shipSide > 0 ? Math.PI : 0;
+
 		for (const p of pinnacles) {
 			p.heightFrac = 0.35 + rand() * 0.5;
 			const sx = 8 + rand() * 12;
@@ -1451,6 +1461,8 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		const bob = Math.sin(t * 0.8) * 0.12;
 		ship.position.y = -0.1 + bob;
 		ship.rotation.z = Math.sin(t * 0.6) * 0.02;
+		// Exponential approach: a long glide that eases to a stop at anchor.
+		ship.position.x += (shipTargetX - ship.position.x) * Math.min(1, dt * 0.18);
 
 		beacon.intensity =
 			(DAY.beaconIntensity + (NIGHT.beaconIntensity - DAY.beaconIntensity) * mix) *
