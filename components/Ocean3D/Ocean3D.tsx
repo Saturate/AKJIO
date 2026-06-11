@@ -395,6 +395,26 @@ const WATER_FRAG = /* glsl */ `
 		vec3 viewDir = normalize(cameraPosition - vPos);
 		float grazing = pow(1.0 - clamp(abs(viewDir.y), 0.0, 1.0), 4.0);
 		col = mix(col, uHorizon, grazing * (0.2 + 0.6 * smoothstep(0.1, 0.9, dist)));
+		// Foam rings lapping the island shores; footprints match the rock
+		// placements (x, z, radiusX, radiusZ). Living in the shader means
+		// the foam rides the waves instead of floating as a separate mesh.
+		vec4 islands[4];
+		islands[0] = vec4(-55.0, -120.0, 17.5, 12.5);
+		islands[1] = vec4(-42.0, -112.0, 8.5, 7.5);
+		islands[2] = vec4(15.0, -75.0, 10.5, 8.5);
+		islands[3] = vec4(24.0, -71.0, 5.5, 5.5);
+		float foamRing = 0.0;
+		for (int i = 0; i < 4; i++) {
+			vec2 rel = vec2(
+				(vPos.x - islands[i].x) / islands[i].z,
+				(vPos.z - islands[i].y) / islands[i].w
+			);
+			float d = length(rel);
+			float ring = smoothstep(0.8, 1.0, d) * smoothstep(1.3, 1.05, d);
+			foamRing = max(foamRing, ring);
+		}
+		foamRing *= 0.55 + 0.45 * sin(vPos.x * 1.7 + vPos.z * 1.3 - uTime * 1.6);
+		col = mix(col, uFoam, foamRing * 0.75);
 		float cx = uSunX * dist;
 		float streak = exp(-pow(vPos.x - cx, 2.0) / (3.0 + 900.0 * dist * dist));
 		float shimmer = 0.6 + 0.4 * sin(vPos.x * 2.4 + vPos.z * 3.1 + uTime * 2.2);
@@ -728,6 +748,31 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	lampGlow.position.y = towerY + 0.45;
 	lampGlow.renderOrder = 3;
 	lighthouse.add(lampGlow);
+
+	// Rotating beam: two opposed light cones sweeping from the lamp room,
+	// visible at night only (opacity follows the palette mix).
+	const beamMat = track(
+		new MeshBasicMaterial({
+			color: 0xfff2cc,
+			transparent: true,
+			opacity: 0,
+			blending: AdditiveBlending,
+			depthWrite: false,
+			side: DoubleSide,
+			fog: false,
+			clippingPlanes: [aboveWaterClip],
+		}),
+	);
+	const beamGeo = track(new ConeGeometry(2.4, 34, 12, 1, true));
+	beamGeo.rotateZ(-Math.PI / 2);
+	beamGeo.translate(-17, 0, 0); // apex at the pivot, cone sweeping outward
+	const beamPivot = new Group();
+	beamPivot.position.y = towerY + 0.45;
+	const beamA = new Mesh(beamGeo, beamMat);
+	const beamB = new Mesh(beamGeo, beamMat);
+	beamB.rotation.y = Math.PI;
+	beamPivot.add(beamA, beamB);
+	lighthouse.add(beamPivot);
 	lighthouse.position.set(12, 4.6, -72);
 	scene.add(lighthouse);
 
@@ -1095,13 +1140,14 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		starMat.opacity = DAY.starsOpacity + (NIGHT.starsOpacity - DAY.starsOpacity) * m;
 		beacon.intensity = DAY.beaconIntensity + (NIGHT.beaconIntensity - DAY.beaconIntensity) * m;
 		lampGlowMat.opacity = 0.25 + 0.6 * m;
+		beamMat.opacity = 0.14 * m;
 	}
 	applyPalette(mix);
 
 	// --- Static matrix freeze ------------------------------------------------
 	// Only a handful of objects move per frame; the rest of the scene keeps
 	// frozen local matrices. applyDepth() re-freezes after repositioning.
-	const animatedObjects = new Set<Object3D>([ship, sunPivot, moonPivot, glow]);
+	const animatedObjects = new Set<Object3D>([ship, sunPivot, moonPivot, glow, beamPivot]);
 	for (const f of fish) {
 		animatedObjects.add(f.mesh);
 		animatedObjects.add(f.tail);
@@ -1296,12 +1342,11 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	const onScroll = () => readScroll();
 	const mouseRay = new Vector3();
 	let lastWaterDelta: number | null = null;
-	const onMouseMove = (e: MouseEvent) => {
-		mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-		// Project the cursor onto the cut plane and splash when it crosses
-		// the waterline ripple.
+	// Project the pointer onto the cut plane and splash when it crosses
+	// the waterline ripple.
+	const splashFromPointer = (clientX: number, clientY: number) => {
 		mouseRay
-			.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1, 0.5)
+			.set((clientX / window.innerWidth) * 2 - 1, -(clientY / window.innerHeight) * 2 + 1, 0.5)
 			.unproject(camera)
 			.sub(camera.position)
 			.normalize();
@@ -1322,6 +1367,14 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			}
 		}
 	};
+	const onMouseMove = (e: MouseEvent) => {
+		mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+		splashFromPointer(e.clientX, e.clientY);
+	};
+	const onTouchMove = (e: TouchEvent) => {
+		const touch = e.touches[0];
+		if (touch) splashFromPointer(touch.clientX, touch.clientY);
+	};
 	const onResize = () => {
 		camera.aspect = window.innerWidth / window.innerHeight;
 		applyViewOffset();
@@ -1333,7 +1386,10 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	};
 	window.addEventListener("scroll", onScroll, { passive: true });
 	window.addEventListener("resize", onResize);
-	if (!reducedMotion) window.addEventListener("mousemove", onMouseMove, { passive: true });
+	if (!reducedMotion) {
+		window.addEventListener("mousemove", onMouseMove, { passive: true });
+		window.addEventListener("touchmove", onTouchMove, { passive: true });
+	}
 	readScroll();
 	scatter(hashString(window.location.pathname));
 
@@ -1399,6 +1455,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		beacon.intensity =
 			(DAY.beaconIntensity + (NIGHT.beaconIntensity - DAY.beaconIntensity) * mix) *
 			(0.7 + 0.3 * Math.sin(t * 2.4));
+		beamPivot.rotation.y = t * 0.55;
 		glow.scale.setScalar(68 + Math.sin(t * 0.5) * 3);
 
 		// Kelp sways gently from the base, like current pushing through.
@@ -1461,6 +1518,25 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		rafId = requestAnimationFrame(loop);
 	}
 
+	// GPU resets would otherwise leave a frozen canvas: fall back to the CSS
+	// placeholder on loss, and resume seamlessly if the context comes back.
+	const onContextLost = (e: Event) => {
+		e.preventDefault();
+		cancelAnimationFrame(rafId);
+		delete canvas.dataset.ready;
+	};
+	const onContextRestored = () => {
+		canvas.dataset.ready = "true";
+		if (!reducedMotion) {
+			lastTime = performance.now();
+			rafId = requestAnimationFrame(loop);
+		} else {
+			renderFrame(0.016);
+		}
+	};
+	canvas.addEventListener("webglcontextlost", onContextLost);
+	canvas.addEventListener("webglcontextrestored", onContextRestored);
+
 	return {
 		setDark: (dark: boolean) => {
 			mixTarget = dark ? 1 : 0;
@@ -1477,10 +1553,13 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		dispose: () => {
 			cancelAnimationFrame(rafId);
 			contentObserver.disconnect();
+			canvas.removeEventListener("webglcontextlost", onContextLost);
+			canvas.removeEventListener("webglcontextrestored", onContextRestored);
 			window.removeEventListener("scroll", onScroll);
 			window.removeEventListener("scroll", onReducedScroll);
 			window.removeEventListener("resize", onResize);
 			window.removeEventListener("mousemove", onMouseMove);
+			window.removeEventListener("touchmove", onTouchMove);
 			scene.traverse((obj) => {
 				if (obj instanceof Mesh || obj instanceof Points) {
 					obj.geometry.dispose();
