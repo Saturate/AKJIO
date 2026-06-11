@@ -1414,6 +1414,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	// --- Scroll / mouse / loop -------------------------------------------------
 	let scrollTarget = 0;
 	let scrollCurrent = 0;
+	let cameraGliding = false;
 	let mouseX = 0;
 	let mouseCurrent = 0;
 
@@ -1500,9 +1501,20 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			applyPalette(mix);
 		}
 
-		// No easing on scroll: the camera tracks the page exactly, so the
-		// scene and content move at the same speed with the same smoothness.
-		scrollCurrent = scrollTarget;
+		// No easing on normal scroll: the camera tracks the page exactly so
+		// the scene and content move together. But a navigation-sized jump
+		// (route change, anchor link) glides instead - the camera swims to
+		// the new depth rather than teleporting.
+		const scrollJump = scrollTarget - scrollCurrent;
+		if (!reducedMotion && Math.abs(scrollJump) > window.innerHeight * 1.5) {
+			cameraGliding = true;
+		}
+		if (cameraGliding) {
+			scrollCurrent += scrollJump * Math.min(1, dt * 3.4);
+			if (Math.abs(scrollTarget - scrollCurrent) < 2) cameraGliding = false;
+		} else {
+			scrollCurrent = scrollTarget;
+		}
 		mouseCurrent += (mouseX - mouseCurrent) * Math.min(1, dt * 3);
 
 		// Sky bodies don't write depth against the transparent water surface,
