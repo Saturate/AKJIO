@@ -733,13 +733,12 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 
 	// Island roots: the above-water rocks continue down as huge pale cliffs.
 	const rootRand = mulberry32(21);
+	// Only directly beneath the two islands: free-standing columns read as
+	// boulders floating mid-water once the procedural depth stretches them.
 	const rootSpecs: [number, number, number, number, number][] = [
 		// x, z, sx, sy, sz
 		[16, -77, 11, 20, 9],
 		[-52, -118, 18, 16, 13],
-		[46, -70, 12, 24, 10],
-		[-34, -55, 9, 12, 8],
-		[60, -40, 10, 16, 9],
 	];
 	const roots: THREE.Mesh[] = [];
 	for (const [x, z, sx, sy, sz] of rootSpecs) {
