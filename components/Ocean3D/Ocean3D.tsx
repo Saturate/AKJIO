@@ -32,6 +32,7 @@ import {
 	PointLight,
 	Points,
 	PointsMaterial,
+	RingGeometry,
 	SRGBColorSpace,
 	Scene,
 	ShaderMaterial,
@@ -1070,31 +1071,41 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	fishFinGeo.scale(1, 1, 0.2);
 	fishFinGeo.translate(-0.05, 0.3, 0);
 
+	// A second, darker tint so schools aren't uniform.
+	const fishAltMat = track(
+		new MeshStandardMaterial({ color: DAY.underGeo, flatShading: true }),
+	);
 	const fishRand = mulberry32(99);
 	const fish: {
 		mesh: Group;
 		tail: Mesh;
+		kind: number;
 		speed: number;
 		phase: number;
 		baseY: number;
 		depthFrac: number;
 	}[] = [];
-	for (let i = 0; i < 7; i++) {
+	for (let i = 0; i < 10; i++) {
+		// Three species from the same parts: regular, slim darter, tall disc.
+		const kind = i % 3;
+		const mat = kind === 2 ? fishAltMat : underMat;
 		const f = new Group();
-		const tail = new Mesh(fishTailGeo, underMat);
+		const tail = new Mesh(fishTailGeo, mat);
 		tail.position.x = -0.62;
-		f.add(
-			new Mesh(fishHeadGeo, underMat),
-			new Mesh(fishBodyGeo, underMat),
-			new Mesh(fishFinGeo, underMat),
-			tail,
-		);
+		f.add(new Mesh(fishHeadGeo, mat), new Mesh(fishBodyGeo, mat), new Mesh(fishFinGeo, mat), tail);
 		const speed = (0.8 + fishRand() * 1.6) * (fishRand() > 0.5 ? 1 : -1);
 		const depthFrac = fishRand();
 		f.position.set((fishRand() - 0.5) * 50, -3, 10 - fishRand() * 40);
-		f.scale.setScalar(0.8 + fishRand() * 1.4);
 		if (speed < 0) f.rotation.y = Math.PI;
-		fish.push({ mesh: f, tail, speed, phase: fishRand() * Math.PI * 2, baseY: -3, depthFrac });
+		fish.push({
+			mesh: f,
+			tail,
+			kind,
+			speed,
+			phase: fishRand() * Math.PI * 2,
+			baseY: -3,
+			depthFrac,
+		});
 		scene.add(f);
 	}
 
@@ -1131,9 +1142,11 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	splashGeo.setAttribute("position", new BufferAttribute(splashPositions, 3));
 	const splashMat = track(
 		new PointsMaterial({
-			size: 0.09,
+			size: 0.13,
+			// Soft round droplets instead of square points.
+			map: glowTexture,
 			transparent: true,
-			opacity: 0.9,
+			opacity: 0.95,
 			depthWrite: false,
 			// Drawn last over the water; depth testing would let stale depth
 			// values swallow the burst at the cut plane.
@@ -1151,18 +1164,48 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	scene.add(splash);
 	let splashCursor = 0;
 
+	// Expanding foam rings at the impact point, in the cut plane.
+	const rippleGeo = track(new RingGeometry(0.85, 1, 24));
+	const rippleRings: { mesh: Mesh; mat: MeshBasicMaterial; life: number }[] = [];
+	for (let i = 0; i < 3; i++) {
+		const mat = track(
+			new MeshBasicMaterial({
+				transparent: true,
+				opacity: 0,
+				depthTest: false,
+				depthWrite: false,
+				fog: false,
+			}),
+		);
+		mat.color = glassFoamColor;
+		const mesh = new Mesh(rippleGeo, mat);
+		mesh.renderOrder = 11;
+		mesh.visible = false;
+		mesh.frustumCulled = false;
+		rippleRings.push({ mesh, mat, life: 0 });
+		scene.add(mesh);
+	}
+	let rippleCursor = 0;
+
 	function spawnSplash(x: number, y: number) {
-		for (let i = 0; i < 14; i++) {
+		for (let i = 0; i < 18; i++) {
 			const idx = splashCursor;
 			splashCursor = (splashCursor + 1) % SPLASH_MAX;
-			splashPositions[idx * 3] = x + (Math.random() - 0.5) * 0.15;
+			splashPositions[idx * 3] = x + (Math.random() - 0.5) * 0.2;
 			splashPositions[idx * 3 + 1] = y;
 			splashPositions[idx * 3 + 2] = GLASS_Z - 0.3;
-			splashVel[idx * 3] = (Math.random() - 0.5) * 2.2;
-			splashVel[idx * 3 + 1] = 1.2 + Math.random() * 2.4;
-			splashVel[idx * 3 + 2] = (Math.random() - 0.5) * 0.6;
-			splashLife[idx] = 0.6 + Math.random() * 0.35;
+			// Fountain shape: tight horizontal spread, strong vertical kick.
+			splashVel[idx * 3] = (Math.random() - 0.5) * 1.6;
+			splashVel[idx * 3 + 1] = 1.6 + Math.random() * 2.8;
+			splashVel[idx * 3 + 2] = (Math.random() - 0.5) * 0.5;
+			splashLife[idx] = 0.6 + Math.random() * 0.4;
 		}
+		const ring = rippleRings[rippleCursor];
+		rippleCursor = (rippleCursor + 1) % rippleRings.length;
+		ring.mesh.position.set(x, y, GLASS_Z - 0.25);
+		ring.mesh.scale.setScalar(0.12);
+		ring.life = 0.55;
+		ring.mesh.visible = true;
 	}
 
 	// JS mirror of the glass-edge ripple in the shaders (at the cut plane).
@@ -1202,6 +1245,8 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		lerpColor(underMat.color, DAY.underGeo, NIGHT.underGeo, m);
 		lerpColor(seaweedMat.color, DAY.seaweed, NIGHT.seaweed, m);
 		lerpColor(starfishMat.color, DAY.starfish, NIGHT.starfish, m);
+		lerpColor(fishAltMat.color, DAY.underGeo, NIGHT.underGeo, m);
+		fishAltMat.color.multiplyScalar(0.72);
 		lerpColor(hemiSkyBase, DAY.hemiSky, NIGHT.hemiSky, m);
 		lerpColor(hemi.groundColor, DAY.hemiGround, NIGHT.hemiGround, m);
 		hemiIntensityBase = DAY.hemiIntensity + (NIGHT.hemiIntensity - DAY.hemiIntensity) * m;
@@ -1228,6 +1273,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		animatedObjects.add(f.tail);
 	}
 	for (const blade of seaweed) animatedObjects.add(blade.mesh);
+	for (const ring of rippleRings) animatedObjects.add(ring.mesh);
 	function freezeStaticMatrices() {
 		scene.traverse((obj) => {
 			if (animatedObjects.has(obj)) return;
@@ -1336,7 +1382,18 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			f.depthFrac = rand();
 			f.mesh.position.x = (rand() - 0.5) * 50;
 			f.mesh.position.z = 10 - rand() * 40;
-			f.mesh.scale.setScalar(0.8 + rand() * 1.4);
+			const s = 0.8 + rand() * 1.2;
+			if (f.kind === 1) {
+				// Slim darter: long, low, quick.
+				f.mesh.scale.set(s * 1.7, s * 0.5, s * 0.7);
+				f.speed *= 1.5;
+			} else if (f.kind === 2) {
+				// Tall disc fish: short, deep-bodied, slow.
+				f.mesh.scale.set(s * 0.75, s * 1.5, s);
+				f.speed *= 0.65;
+			} else {
+				f.mesh.scale.set(s, s, s);
+			}
 			f.mesh.rotation.y = f.speed < 0 ? Math.PI : 0;
 		}
 
@@ -1599,6 +1656,18 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			splashAlive = true;
 		}
 		if (splashAlive) splashGeo.getAttribute("position").needsUpdate = true;
+
+		for (const ring of rippleRings) {
+			if (ring.life <= 0) continue;
+			ring.life -= dt;
+			if (ring.life <= 0) {
+				ring.mesh.visible = false;
+				ring.mat.opacity = 0;
+				continue;
+			}
+			ring.mesh.scale.addScalar(dt * 1.1);
+			ring.mat.opacity = (ring.life / 0.55) * 0.7;
+		}
 
 		renderer.render(scene, camera);
 	}

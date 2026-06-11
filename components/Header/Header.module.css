@@ -37,8 +37,29 @@
 	background: transparent;
 	min-height: 32vh;
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
+	/* Same level as the corner signature. */
+	padding-top: 1.35rem;
 	z-index: 1;
+}
+
+/* Below this the centered nav would collide with the signature: stack
+   the menu underneath the name instead. */
+@media (max-width: 1279px) {
+	.websitetop {
+		display: block;
+		padding-top: 0;
+	}
+
+	.brand {
+		position: static;
+		display: inline-block;
+		margin: 1rem 0 0 1.5rem;
+	}
+
+	.header {
+		margin-top: 1rem;
+	}
 }
 
 @media (max-width: 768px) {
@@ -48,7 +69,10 @@
 
 	.brand {
 		font-size: 1.45em;
-		top: 1rem;
-		left: 1.1rem;
+		margin: 0.9rem 0 0 1.1rem;
+	}
+
+	.header {
+		margin-top: 0.5rem;
 	}
 }
