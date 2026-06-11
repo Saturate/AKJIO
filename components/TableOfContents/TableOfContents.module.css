@@ -3,7 +3,11 @@
 	top: 2rem;
 	max-height: calc(100vh - 4rem);
 	overflow-y: auto;
+	overflow-x: hidden;
 	padding: 1rem;
+	/* Still wheel-scrollable when taller than the viewport, but no native
+	   scrollbars floating over the ocean scene. */
+	scrollbar-width: none;
 }
 
 .tocHeader {
@@ -113,23 +117,8 @@
 	bottom: 0.375rem;
 }
 
-/* Custom scrollbar for the TOC */
 .toc::-webkit-scrollbar {
-	width: 4px;
-}
-
-.toc::-webkit-scrollbar-track {
-	background: rgba(255, 255, 255, 0.05);
-	border-radius: 4px;
-}
-
-.toc::-webkit-scrollbar-thumb {
-	background: rgba(255, 255, 255, 0.2);
-	border-radius: 4px;
-}
-
-.toc::-webkit-scrollbar-thumb:hover {
-	background: rgba(255, 255, 255, 0.3);
+	display: none;
 }
 
 
