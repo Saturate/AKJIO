@@ -5,7 +5,7 @@ import "../styles/syntaxhighlighting.css";
 import Navigation from "@/components/Navigation/Navigation";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
-import OceanWaterLazy from "@/components/OceanWater/OceanWaterLazy";
+import Ocean3DLazy from "@/components/Ocean3D/Ocean3DLazy";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { getNonce } from "@/utils/nonce";
 
@@ -91,7 +91,7 @@ export default async function RootLayout({
 			</head>
 			<body className={styles.page}>
 				<ThemeProvider>
-					<OceanWaterLazy />
+					<Ocean3DLazy />
 
 					<Header>
 						<Navigation />

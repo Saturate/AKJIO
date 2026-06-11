@@ -20,10 +20,21 @@
 	}
 }
 
+/* The header is the sky of the 3D diorama: the waterline sits at ~42vh at
+   scroll 0, so the menu floats in the sky band above it. */
 .websitetop {
 	position: relative;
 	background: transparent;
-	min-height: 100px;
-	overflow: hidden;
+	min-height: 40vh;
+	display: flex;
+	align-items: flex-start;
+	padding-top: 4vh;
 	z-index: 1;
+}
+
+@media (max-width: 768px) {
+	.websitetop {
+		min-height: 34vh;
+		padding-top: 2vh;
+	}
 }
