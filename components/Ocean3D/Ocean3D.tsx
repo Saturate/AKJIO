@@ -446,13 +446,13 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		600,
 	);
 	camera.position.set(0, CAMERA_TOP_Y, CAMERA_Z);
-	// Lens-shift the framing downward so the horizon sits at ~36% of the
+	// Lens-shift the framing downward so the horizon sits at ~28% of the
 	// viewport instead of centered: less sky, more ocean, and no camera
 	// tilt that would skew the diorama.
 	const applyViewOffset = () => {
 		const w = window.innerWidth;
 		const h = window.innerHeight;
-		camera.setViewOffset(w, h, 0, Math.round(h * 0.14), w, h);
+		camera.setViewOffset(w, h, 0, Math.round(h * 0.22), w, h);
 	};
 	applyViewOffset();
 

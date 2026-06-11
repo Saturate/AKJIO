@@ -17,7 +17,7 @@
 
 /* Static CSS fallback shown while three.js loads. Approximates the day
    scene: grey-mauve sky to a pale horizon, the sun low on the left, the
-   bright waterline at ~42vh, then water deepening below. */
+   bright waterline at ~34vh, then water deepening below. */
 .oceanPlaceholder {
 	position: fixed;
 	top: 0;
@@ -27,13 +27,13 @@
 	z-index: 0;
 	pointer-events: none;
 	background:
-		radial-gradient(circle 16vh at 30% 36%, rgba(255, 240, 205, 0.65), transparent 70%),
+		radial-gradient(circle 16vh at 30% 28%, rgba(255, 240, 205, 0.65), transparent 70%),
 		linear-gradient(
 			180deg,
 			#837093 0%,
-			#f2dcc4 40vh,
-			#eaf6ff 42vh,
-			#55a7dd 44vh,
+			#f2dcc4 32vh,
+			#eaf6ff 34vh,
+			#55a7dd 36vh,
 			#123f6b 100%
 		);
 }
@@ -44,7 +44,7 @@
 	position: absolute;
 	left: 0;
 	right: 0;
-	top: 41vh;
+	top: 33vh;
 	height: 2vh;
 	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
 	background-size: 50% 100%;
@@ -81,9 +81,9 @@
 		linear-gradient(
 			180deg,
 			#081426 0%,
-			#1c3a54 40vh,
-			#9fc4d8 42vh,
-			#16406a 44vh,
+			#1c3a54 32vh,
+			#9fc4d8 34vh,
+			#16406a 36vh,
 			#081826 100%
 		);
 }
@@ -99,13 +99,13 @@
 	position: absolute;
 	height: 100%;
 	background:
-		radial-gradient(circle 16vh at 30% 36vh, rgba(255, 240, 205, 0.65), transparent 70%),
+		radial-gradient(circle 16vh at 30% 28vh, rgba(255, 240, 205, 0.65), transparent 70%),
 		linear-gradient(
 			180deg,
 			#837093 0%,
-			#f2dcc4 40vh,
-			#eaf6ff 42vh,
-			#55a7dd 44vh,
+			#f2dcc4 32vh,
+			#eaf6ff 34vh,
+			#55a7dd 36vh,
 			#2a679f 160vh,
 			#123f6b 320vh,
 			#0a2a4c 100%
@@ -119,7 +119,7 @@
 	top: 0;
 	left: 0;
 	right: 0;
-	height: 40vh;
+	height: 32vh;
 	background:
 		radial-gradient(ellipse 10vw 7vh at 28% 100%, #5f6e57 0%, #5f6e57 99%, transparent 100%),
 		radial-gradient(ellipse 4vw 4vh at 35% 100%, #525f4c 0%, #525f4c 99%, transparent 100%),
@@ -137,9 +137,9 @@
 		linear-gradient(
 			180deg,
 			#081426 0%,
-			#1c3a54 40vh,
-			#9fc4d8 42vh,
-			#16406a 44vh,
+			#1c3a54 32vh,
+			#9fc4d8 34vh,
+			#16406a 36vh,
 			#0c2742 160vh,
 			#081826 320vh,
 			#050f1a 100%
