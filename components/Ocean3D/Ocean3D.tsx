@@ -125,17 +125,17 @@ const NIGHT: Palette = {
 	waterFar: 0x1f4060,
 	glassShallow: 0x16406a,
 	glassDeep: 0x081826,
-	foam: 0x9fc4d8,
+	foam: 0x7396ac,
 	sun: 0xf2f4e0,
 	sunGlow: 0xbcd4e8,
 	glowOpacity: 0.3,
-	rock: 0x4e5c52,
+	rock: 0x5a6a60,
 	underGeo: 0x3a5e7a,
-	hemiSky: 0x3a5e80,
-	hemiGround: 0x12243a,
-	hemiIntensity: 1.15,
+	hemiSky: 0x4f739c,
+	hemiGround: 0x1c3452,
+	hemiIntensity: 1.65,
 	dirColor: 0xc4d8ec,
-	dirIntensity: 0.7,
+	dirIntensity: 1.25,
 	starsOpacity: 0.9,
 	beaconIntensity: 30,
 	glint: 0.3,
@@ -638,7 +638,13 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	const hemi = new HemisphereLight(DAY.hemiSky, DAY.hemiGround, DAY.hemiIntensity);
 	scene.add(hemi);
 	const dir = new DirectionalLight(DAY.dirColor, DAY.dirIntensity);
-	dir.position.set(-50, 25, -60);
+	// Day: keyed from the sun's side (left). At night applyPalette swings it
+	// to the moon's side so the rocks read as moonlit, not backlit.
+	const DIR_POS_DAY = new Vector3(-50, 25, -60);
+	// Cheated toward the camera: physically the moon backlights the islands,
+	// but a pure backlight makes them unreadable black cutouts.
+	const DIR_POS_NIGHT = new Vector3(60, 35, -15);
+	dir.position.copy(DIR_POS_DAY);
 	scene.add(dir);
 	// Palette-resolved bases; renderFrame cools and dims them with camera
 	// depth, since water swallows warm light long before it reaches the floor.
@@ -802,11 +808,13 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	const beamB = new Mesh(beamGeo, beamMat);
 	beamB.rotation.y = Math.PI;
 	beamPivot.add(beamA, beamB);
-	// A real light rides the pivot too, so the sweep brushes the islands
-	// and the ship as it passes.
+	// Real lights ride the pivot too, so the sweep brushes the islands
+	// and the ship as it passes — one per visual cone.
 	const beamSpot = new SpotLight(0xffe8c0, 0, 110, 0.16, 0.7, 1);
 	beamSpot.target.position.set(-40, -3, 0);
-	beamPivot.add(beamSpot, beamSpot.target);
+	const beamSpotB = new SpotLight(0xffe8c0, 0, 110, 0.16, 0.7, 1);
+	beamSpotB.target.position.set(40, -3, 0);
+	beamPivot.add(beamSpot, beamSpot.target, beamSpotB, beamSpotB.target);
 	lighthouse.add(beamPivot);
 	lighthouse.position.set(12, 4.6, -72);
 	scene.add(lighthouse);
@@ -863,6 +871,44 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	pennant.rotation.z = -Math.PI / 2;
 	pennant.position.set(0.92, 2.75, 0);
 	ship.add(pennant);
+	// Navigation lights: red to port, green to starboard (bow points +X, so
+	// port is -Z). Additive dots that only glow at night; opacity is driven
+	// by the palette mix and a blink pulse in the render loop.
+	const navLightGeo = track(new SphereGeometry(0.11, 8, 6));
+	const navPortMat = track(
+		new MeshBasicMaterial({
+			color: 0xff3b30,
+			transparent: true,
+			opacity: 0,
+			blending: AdditiveBlending,
+			depthWrite: false,
+			fog: false,
+		}),
+	);
+	const navStarboardMat = track(
+		new MeshBasicMaterial({
+			color: 0x30e85a,
+			transparent: true,
+			opacity: 0,
+			blending: AdditiveBlending,
+			depthWrite: false,
+			fog: false,
+		}),
+	);
+	// Halo spheres make the dots read as lights from across the scene
+	// instead of tiny colored pixels.
+	const navHaloGeo = track(new SphereGeometry(0.28, 8, 6));
+	const navPortHaloMat = track(navPortMat.clone());
+	const navStarboardHaloMat = track(navStarboardMat.clone());
+	const navPort = new Mesh(navLightGeo, navPortMat);
+	// Proud of the wheelhouse wall (half-width 0.65), so the sphere and at
+	// least half the halo clear the depth test instead of being buried.
+	navPort.position.set(-0.7, 1.5, -0.82);
+	navPort.add(new Mesh(navHaloGeo, navPortHaloMat));
+	const navStarboard = new Mesh(navLightGeo, navStarboardMat);
+	navStarboard.position.set(-0.7, 1.5, 0.82);
+	navStarboard.add(new Mesh(navHaloGeo, navStarboardHaloMat));
+	ship.add(navPort, navStarboard);
 	const buoyGeo = track(new SphereGeometry(0.17, 8, 6));
 	const buoyA = new Mesh(buoyGeo, orangeMat);
 	buoyA.position.set(0.4, 0.62, 0.85);
@@ -1219,6 +1265,10 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		hemiIntensityBase = DAY.hemiIntensity + (NIGHT.hemiIntensity - DAY.hemiIntensity) * m;
 		lerpColor(dirColorBase, DAY.dirColor, NIGHT.dirColor, m);
 		dirIntensityBase = DAY.dirIntensity + (NIGHT.dirIntensity - DAY.dirIntensity) * m;
+		// The light's matrix is frozen by freezeStaticMatrices, so a manual
+		// update is needed for the day/night reposition to take effect.
+		dir.position.lerpVectors(DIR_POS_DAY, DIR_POS_NIGHT, m);
+		dir.updateMatrix();
 		// Below the surface the sky dome is hidden, so the clear color is
 		// what shows behind the fogged water.
 		renderer.setClearColor(fog.color);
@@ -1227,6 +1277,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		lampGlowMat.opacity = 0.25 + 0.6 * m;
 		beamMat.opacity = 0.2 * m;
 		beamSpot.intensity = 90 * m;
+		beamSpotB.intensity = 90 * m;
 		waterMat.uniforms.uBeamStrength.value = 0.5 * m;
 	}
 	applyPalette(mix);
@@ -1574,6 +1625,14 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		const shipDx = shipTargetX - ship.position.x;
 		const shipSpeed = Math.min(1.6, Math.abs(shipDx) * 0.2);
 		ship.position.x += Math.sign(shipDx) * Math.min(Math.abs(shipDx), shipSpeed * dt);
+		// Soft-edged blink so the lights don't strobe; the two sides pulse in
+		// counter-phase. Never fully off, like a lamp dimming between flashes.
+		const navPulse = (phase: number) =>
+			0.18 + 0.82 * Math.min(1, Math.max(0, Math.sin(t * 2.2 + phase) * 3.0));
+		navPortMat.opacity = mix * navPulse(0);
+		navStarboardMat.opacity = mix * navPulse(Math.PI);
+		navPortHaloMat.opacity = navPortMat.opacity * 0.3;
+		navStarboardHaloMat.opacity = navStarboardMat.opacity * 0.3;
 
 		beacon.intensity =
 			(DAY.beaconIntensity + (NIGHT.beaconIntensity - DAY.beaconIntensity) * mix) *
