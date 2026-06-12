@@ -4,13 +4,9 @@ import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import {
 	ACESFilmicToneMapping,
-	AdditiveBlending,
-	BackSide,
 	BoxGeometry,
 	BufferAttribute,
 	BufferGeometry,
-	CanvasTexture,
-	CircleGeometry,
 	Color,
 	ConeGeometry,
 	CylinderGeometry,
@@ -27,31 +23,26 @@ import {
 	PerspectiveCamera,
 	Plane,
 	PlaneGeometry,
-	PointLight,
 	Points,
 	PointsMaterial,
 	Scene,
 	ShaderMaterial,
-	SphereGeometry,
-	SpotLight,
-	Sprite,
-	SpriteMaterial,
 	Vector2,
 	Vector3,
 	WebGLRenderer,
 } from "three";
 import { useTheme } from "@/providers/ThemeProvider";
-import { getMoonPhase, getIlluminationFraction } from "@/lib/moonPhase";
 import { DAY, NIGHT } from "./palette";
 import { hashString, mulberry32 } from "./random";
 import { jitterByPosition, makeRock } from "./geometry";
-import { makeGlowTexture, makeMoonTexture } from "./textures";
-import { SKY_VERT, SKY_FRAG, WATER_VERT, WATER_FRAG } from "./shaders";
+import { makeGlowTexture } from "./textures";
+import { WATER_VERT, WATER_FRAG } from "./shaders";
+import { buildSky, buildCelestial, SET_ANGLE } from "./celestial";
+import { buildIslands } from "./islands";
+import { buildLighthouse } from "./lighthouse";
+import { buildShip } from "./ship";
+import type { SceneCtx } from "./types";
 import styles from "./Ocean3D.module.css";
-
-// Feature flag: render the actual lunar phase instead of a permanent full
-// moon. Ported from the feat/real-moon-phases branch of the 2D canvas site.
-const REAL_MOON_PHASES = process.env.NEXT_PUBLIC_REAL_MOON_PHASES === "true";
 
 // World layout: the waterline is y=0. The camera sits at a fixed x/z and
 // dives from just above the surface down to the seabed as the page scrolls,
@@ -137,123 +128,14 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	const glassFoamColor = new Color(DAY.foam);
 	const beamDirVec = new Vector2(1, 0);
 
-	// --- Sky ---------------------------------------------------------------
-	const skyMat = track(
-		new ShaderMaterial({
-			uniforms: {
-				uTop: { value: skyTopColor },
-				uHorizon: { value: skyHorizonColor },
-			},
-			vertexShader: SKY_VERT,
-			fragmentShader: SKY_FRAG,
-			side: BackSide,
-			fog: false,
-			depthWrite: false,
-		}),
-	);
-	const sky = new Mesh(track(new SphereGeometry(300, 24, 12)), skyMat);
-	scene.add(sky);
-
-	const starRand = mulberry32(7);
-	const starPositions: number[] = [];
-	for (let i = 0; i < 220; i++) {
-		const theta = starRand() * Math.PI * 2;
-		const phi = Math.acos(starRand() * 0.85 + 0.08);
-		starPositions.push(
-			280 * Math.sin(phi) * Math.cos(theta),
-			280 * Math.cos(phi),
-			280 * Math.sin(phi) * Math.sin(theta) - 40,
-		);
-	}
-	const starGeo = track(new BufferGeometry());
-	starGeo.setAttribute("position", new Float32BufferAttribute(starPositions, 3));
-	const starMat = track(
-		new PointsMaterial({
-			color: 0xffffff,
-			size: 1.6,
-			sizeAttenuation: false,
-			transparent: true,
-			opacity: 0,
-			fog: false,
-			depthWrite: false,
-		}),
-	);
-	const stars = new Points(starGeo, starMat);
-	scene.add(stars);
-
-	// --- Sun / moon ----------------------------------------------------------
-	// Sun and moon are distinct bodies on separate arcs. On theme change the
-	// sun swings down-left out of the scene while the smaller moon rises
-	// from the right into a higher spot; the waterline clip sells the
-	// set/rise as they cross y=0.
-	const SUN_ARC_RADIUS = 30;
-	const MOON_ARC_RADIUS = 26;
-	const SET_ANGLE = 0.7 * Math.PI;
-
+	// --- Sky / sun / moon ----------------------------------------------------
+	const ctx: SceneCtx = { scene, track, aboveWaterClip };
+	const { sky, stars, starMat } = buildSky(ctx, skyTopColor, skyHorizonColor);
 	const glowTexture = track(makeGlowTexture());
-	const makeCelestialGlow = (parent: Group, color: number, opacity: number, y: number, scale: number) => {
-		const material = track(
-			new SpriteMaterial({
-				map: glowTexture,
-				color,
-				transparent: true,
-				opacity,
-				blending: AdditiveBlending,
-				fog: false,
-				depthWrite: false,
-				clippingPlanes: [aboveWaterClip],
-			}),
-		);
-		const sprite = new Sprite(material);
-		sprite.scale.setScalar(scale);
-		sprite.position.set(0, y, 1);
-		sprite.renderOrder = 3;
-		parent.add(sprite);
-		return { sprite, material };
-	};
-
-	const sunPivot = new Group();
-	sunPivot.position.set(SUN_X, 2.5 - SUN_ARC_RADIUS, -190);
-	scene.add(sunPivot);
-	const sunMat = track(
-		new MeshBasicMaterial({ color: DAY.sun, fog: false, clippingPlanes: [aboveWaterClip] }),
-	);
-	const sun = new Mesh(track(new CircleGeometry(17, 48)), sunMat);
-	sun.position.set(0, SUN_ARC_RADIUS, 0);
-	sunPivot.add(sun);
-	const { sprite: glow, material: glowMat } = makeCelestialGlow(
-		sunPivot,
-		DAY.sunGlow,
-		DAY.glowOpacity,
-		SUN_ARC_RADIUS,
-		68,
-	);
-
-	const moonPhase = REAL_MOON_PHASES ? getMoonPhase() : null;
-	const moonIllumination = moonPhase === null ? 1 : getIlluminationFraction(moonPhase);
-	const moonTexture = track(makeMoonTexture(moonPhase));
-	const moonMat = track(
-		new MeshBasicMaterial({
-			map: moonTexture,
-			// Dim multiplier so the moon glows softly instead of blowing out white.
-			color: 0xbcbab0,
-			transparent: true,
-			fog: false,
-			clippingPlanes: [aboveWaterClip],
-		}),
-	);
-	const moonPivot = new Group();
-	moonPivot.position.set(70, 33 - MOON_ARC_RADIUS, -185);
-	scene.add(moonPivot);
-	const moon = new Mesh(track(new CircleGeometry(7, 48)), moonMat);
-	moon.position.set(0, MOON_ARC_RADIUS, 0);
-	moonPivot.add(moon);
-	const { material: moonGlowMat } = makeCelestialGlow(
-		moonPivot,
-		NIGHT.sunGlow,
-		0,
-		MOON_ARC_RADIUS,
-		34,
+	const { sunPivot, moonPivot, glow, glowMat, moonGlowMat, moonIllumination } = buildCelestial(
+		ctx,
+		glowTexture,
+		SUN_X,
 	);
 
 	// --- Lights ------------------------------------------------------------
@@ -275,273 +157,15 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	let hemiIntensityBase = DAY.hemiIntensity;
 	let dirIntensityBase = DAY.dirIntensity;
 
-	// --- Islands -----------------------------------------------------------
-	// Icebergs, not cutouts: the rock continues below the waterline, and its
-	// submerged part fades into the water color with depth so it reads as a
-	// pale floating-island silhouette instead of a dark unfogged blob.
-	const rockMat = track(
-		new MeshStandardMaterial({ color: DAY.rock, flatShading: true, fog: false }),
+	// --- Islands, lighthouse, ship -------------------------------------------
+	const { rockMat } = buildIslands(ctx, glassShallowColor);
+	const { beacon, beamPivot, beamMat, beamSpot, beamSpotB, lampGlowMat, whiteMat, darkMat } =
+		buildLighthouse(ctx, glowTexture);
+	const { ship, navPortMat, navStarboardMat, navPortHaloMat, navStarboardHaloMat } = buildShip(
+		ctx,
+		{ whiteMat, darkMat },
 	);
-	rockMat.onBeforeCompile = (shader) => {
-		shader.uniforms.uWaterTint = { value: glassShallowColor };
-		shader.vertexShader = shader.vertexShader.replace(
-			"#include <fog_vertex>",
-			"#include <fog_vertex>\n\tvOceanWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;",
-		);
-		shader.vertexShader = `varying vec3 vOceanWorldPos;\n${shader.vertexShader}`;
-		shader.fragmentShader = `varying vec3 vOceanWorldPos;\nuniform vec3 uWaterTint;\n${shader.fragmentShader}`;
-		shader.fragmentShader = shader.fragmentShader.replace(
-			"#include <dithering_fragment>",
-			"#include <dithering_fragment>\n\tfloat oceanUnder = smoothstep(0.0, -7.0, vOceanWorldPos.y);\n\tgl_FragColor.rgb = mix(gl_FragColor.rgb, uWaterTint, oceanUnder * 0.85);",
-		);
-	};
-
-	const leftIsland = makeRock(rockMat);
-	leftIsland.scale.set(17, 10, 12);
-	leftIsland.position.set(-55, -2, -120);
-	leftIsland.rotation.y = 0.7;
-	scene.add(leftIsland);
-
-	const leftIslandSmall = makeRock(rockMat, 0.5);
-	leftIslandSmall.scale.set(8, 5, 7);
-	leftIslandSmall.position.set(-42, -1.5, -112);
-	leftIslandSmall.rotation.y = 2.1;
-	scene.add(leftIslandSmall);
-
-	const lighthouseIsland = makeRock(rockMat);
-	lighthouseIsland.scale.set(10, 7.5, 8);
-	lighthouseIsland.position.set(15, -1.5, -75);
-	lighthouseIsland.rotation.y = 1.3;
-	scene.add(lighthouseIsland);
-
-	const lighthouseIslandSmall = makeRock(rockMat, 0.5);
-	lighthouseIslandSmall.scale.set(5, 3.5, 5);
-	lighthouseIslandSmall.position.set(24, -0.8, -71);
-	lighthouseIslandSmall.rotation.y = 4.2;
-	scene.add(lighthouseIslandSmall);
-
-	// --- Lighthouse ----------------------------------------------------------
-	const whiteMat = track(
-		new MeshStandardMaterial({
-			color: 0xf2efe6,
-			flatShading: true,
-			fog: false,
-			clippingPlanes: [aboveWaterClip],
-		}),
-	);
-	const redMat = track(
-		new MeshStandardMaterial({
-			color: 0xc8372a,
-			flatShading: true,
-			fog: false,
-			clippingPlanes: [aboveWaterClip],
-		}),
-	);
-	const darkMat = track(
-		new MeshStandardMaterial({
-			color: 0x22262c,
-			flatShading: true,
-			fog: false,
-			clippingPlanes: [aboveWaterClip],
-		}),
-	);
-	const lampMat = track(
-		new MeshBasicMaterial({ color: 0xfff2dc, fog: false, clippingPlanes: [aboveWaterClip] }),
-	);
-
-	const lighthouse = new Group();
-	const bandHeights = [1.1, 1.0, 0.9, 0.85, 0.8];
-	let towerY = 0;
-	bandHeights.forEach((h, i) => {
-		const rBottom = 0.66 - i * 0.05;
-		const rTop = 0.66 - (i + 1) * 0.05;
-		const band = new Mesh(
-			track(new CylinderGeometry(rTop, rBottom, h, 12)),
-			i % 2 === 1 ? redMat : whiteMat,
-		);
-		band.position.y = towerY + h / 2;
-		towerY += h;
-		lighthouse.add(band);
-	});
-	const gallery = new Mesh(track(new CylinderGeometry(0.52, 0.52, 0.18, 12)), darkMat);
-	gallery.position.y = towerY + 0.09;
-	lighthouse.add(gallery);
-	const lamp = new Mesh(track(new CylinderGeometry(0.3, 0.3, 0.5, 10)), lampMat);
-	lamp.position.y = towerY + 0.45;
-	lighthouse.add(lamp);
-	const roof = new Mesh(track(new ConeGeometry(0.42, 0.55, 10)), redMat);
-	roof.position.y = towerY + 0.95;
-	lighthouse.add(roof);
-	const beacon = new PointLight(0xff6a4a, DAY.beaconIntensity, 60, 1.6);
-	beacon.position.y = towerY + 0.45;
-	lighthouse.add(beacon);
-	const lampGlowMat = track(
-		new SpriteMaterial({
-			map: glowTexture,
-			color: 0xffd9a0,
-			transparent: true,
-			opacity: 0.25,
-			blending: AdditiveBlending,
-			fog: false,
-			depthWrite: false,
-		}),
-	);
-	const lampGlow = new Sprite(lampGlowMat);
-	lampGlow.scale.setScalar(3.5);
-	lampGlow.position.y = towerY + 0.45;
-	lampGlow.renderOrder = 3;
-	lighthouse.add(lampGlow);
-
-	// Rotating beam: two opposed light cones sweeping from the lamp room,
-	// visible at night only (opacity follows the palette mix). An alpha
-	// gradient along the cone fades it out instead of ending abruptly.
-	const beamCanvas = document.createElement("canvas");
-	beamCanvas.width = 4;
-	beamCanvas.height = 128;
-	const beamCtx = beamCanvas.getContext("2d");
-	if (beamCtx) {
-		const g = beamCtx.createLinearGradient(0, 0, 0, 128);
-		g.addColorStop(0, "rgba(255,255,255,0.9)"); // apex (lamp)
-		g.addColorStop(0.55, "rgba(255,255,255,0.35)");
-		g.addColorStop(1, "rgba(255,255,255,0)"); // far end fades to nothing
-		beamCtx.fillStyle = g;
-		beamCtx.fillRect(0, 0, 4, 128);
-	}
-	const beamTexture = track(new CanvasTexture(beamCanvas));
-	const beamMat = track(
-		new MeshBasicMaterial({
-			color: 0xfff2cc,
-			map: beamTexture,
-			transparent: true,
-			opacity: 0,
-			blending: AdditiveBlending,
-			depthWrite: false,
-			side: DoubleSide,
-			fog: false,
-			clippingPlanes: [aboveWaterClip],
-		}),
-	);
-	const beamGeo = track(new ConeGeometry(3.4, 60, 12, 1, true));
-	beamGeo.rotateZ(-Math.PI / 2);
-	beamGeo.translate(-30, 0, 0); // apex at the pivot, cone sweeping outward
-	const beamPivot = new Group();
-	beamPivot.position.y = towerY + 0.45;
-	const beamA = new Mesh(beamGeo, beamMat);
-	const beamB = new Mesh(beamGeo, beamMat);
-	beamB.rotation.y = Math.PI;
-	beamPivot.add(beamA, beamB);
-	// Real lights ride the pivot too, so the sweep brushes the islands
-	// and the ship as it passes — one per visual cone.
-	const beamSpot = new SpotLight(0xffe8c0, 0, 110, 0.16, 0.7, 1);
-	beamSpot.target.position.set(-40, -3, 0);
-	const beamSpotB = new SpotLight(0xffe8c0, 0, 110, 0.16, 0.7, 1);
-	beamSpotB.target.position.set(40, -3, 0);
-	beamPivot.add(beamSpot, beamSpot.target, beamSpotB, beamSpotB.target);
-	lighthouse.add(beamPivot);
-	lighthouse.position.set(12, 4.6, -72);
-	scene.add(lighthouse);
-
-	// --- Ship + rowboat -------------------------------------------------------
-	const orangeMat = track(
-		new MeshStandardMaterial({
-			color: 0xe8622d,
-			flatShading: true,
-			fog: false,
-			clippingPlanes: [aboveWaterClip],
-		}),
-	);
-	// A little fishing boat: red hull with a pointed bow and white gunwale,
-	// white wheelhouse with a window band, short mast with a pennant, and
-	// orange buoys hanging over the side.
-	const ship = new Group();
-	const hullMat = track(
-		new MeshStandardMaterial({
-			color: 0xb5483c,
-			flatShading: true,
-			fog: false,
-			clippingPlanes: [aboveWaterClip],
-		}),
-	);
-	const hull = new Mesh(track(new BoxGeometry(3.4, 1.0, 1.6)), hullMat);
-	hull.position.y = 0.5;
-	ship.add(hull);
-	const bow = new Mesh(track(new ConeGeometry(0.8, 1.4, 4)), hullMat);
-	bow.rotation.z = -Math.PI / 2;
-	bow.rotation.x = Math.PI / 4;
-	bow.position.set(2.2, 0.5, 0);
-	ship.add(bow);
-	const gunwale = new Mesh(track(new BoxGeometry(3.5, 0.16, 1.7)), whiteMat);
-	gunwale.position.y = 1.04;
-	ship.add(gunwale);
-	const wheelhouse = new Mesh(track(new BoxGeometry(1.25, 1.0, 1.3)), whiteMat);
-	wheelhouse.position.set(-0.7, 1.6, 0);
-	ship.add(wheelhouse);
-	const windowBand = new Mesh(track(new BoxGeometry(1.32, 0.32, 1.36)), darkMat);
-	windowBand.position.set(-0.7, 1.82, 0);
-	ship.add(windowBand);
-	const wheelhouseRoof = new Mesh(track(new BoxGeometry(1.45, 0.14, 1.5)), hullMat);
-	wheelhouseRoof.position.set(-0.7, 2.16, 0);
-	ship.add(wheelhouseRoof);
-	const mast = new Mesh(track(new CylinderGeometry(0.045, 0.06, 1.8, 6)), darkMat);
-	mast.position.set(0.7, 1.9, 0);
-	ship.add(mast);
-	const boom = new Mesh(track(new CylinderGeometry(0.035, 0.035, 1.5, 6)), darkMat);
-	boom.rotation.z = 1.15;
-	boom.position.set(0.05, 2.25, 0);
-	ship.add(boom);
-	const pennant = new Mesh(track(new ConeGeometry(0.14, 0.4, 4)), orangeMat);
-	pennant.rotation.z = -Math.PI / 2;
-	pennant.position.set(0.92, 2.75, 0);
-	ship.add(pennant);
-	// Navigation lights: red to port, green to starboard (bow points +X, so
-	// port is -Z). Additive dots that only glow at night; opacity is driven
-	// by the palette mix and a blink pulse in the render loop.
-	const navLightGeo = track(new SphereGeometry(0.11, 8, 6));
-	const navPortMat = track(
-		new MeshBasicMaterial({
-			color: 0xff3b30,
-			transparent: true,
-			opacity: 0,
-			blending: AdditiveBlending,
-			depthWrite: false,
-			fog: false,
-		}),
-	);
-	const navStarboardMat = track(
-		new MeshBasicMaterial({
-			color: 0x30e85a,
-			transparent: true,
-			opacity: 0,
-			blending: AdditiveBlending,
-			depthWrite: false,
-			fog: false,
-		}),
-	);
-	// Halo spheres make the dots read as lights from across the scene
-	// instead of tiny colored pixels.
-	const navHaloGeo = track(new SphereGeometry(0.28, 8, 6));
-	const navPortHaloMat = track(navPortMat.clone());
-	const navStarboardHaloMat = track(navStarboardMat.clone());
-	const navPort = new Mesh(navLightGeo, navPortMat);
-	// Proud of the wheelhouse wall (half-width 0.65), so the sphere and at
-	// least half the halo clear the depth test instead of being buried.
-	navPort.position.set(-0.7, 1.5, -0.82);
-	navPort.add(new Mesh(navHaloGeo, navPortHaloMat));
-	const navStarboard = new Mesh(navLightGeo, navStarboardMat);
-	navStarboard.position.set(-0.7, 1.5, 0.82);
-	navStarboard.add(new Mesh(navHaloGeo, navStarboardHaloMat));
-	ship.add(navPort, navStarboard);
-	const buoyGeo = track(new SphereGeometry(0.17, 8, 6));
-	const buoyA = new Mesh(buoyGeo, orangeMat);
-	buoyA.position.set(0.4, 0.62, 0.85);
-	const buoyB = new Mesh(buoyGeo, orangeMat);
-	buoyB.position.set(-0.6, 0.62, 0.85);
-	ship.add(buoyA, buoyB);
-	// Start position and heading come from scatter(): the ship sails in from
-	// off-screen and eases to a stop at a seeded anchorage in open water.
 	let shipTargetX = 27;
-	ship.position.set(27, -0.1, -55);
-	scene.add(ship);
 
 	// --- Water block ------------------------------------------------------------
 	// One welded mesh, like a low-poly water cube: the wavy top sheet spans
