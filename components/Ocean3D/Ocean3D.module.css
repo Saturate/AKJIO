@@ -15,9 +15,10 @@
 	opacity: 1;
 }
 
-/* Static CSS fallback shown while three.js loads. Approximates the day
-   scene: grey-mauve sky to a pale horizon, the sun low on the left, the
-   bright waterline at ~37vh, then water deepening below. */
+/* Static CSS fallback shown while three.js loads. Mirrors the rendered
+   scene's bands so the canvas fade-in reads as the picture sharpening,
+   not being replaced: sky down to the horizon at ~25vh, a strip of open
+   water, the bright glass-wave crest at ~38vh, then deep water below. */
 .oceanPlaceholder {
 	position: fixed;
 	top: 0;
@@ -27,30 +28,47 @@
 	z-index: 0;
 	pointer-events: none;
 	background:
-		radial-gradient(circle 16vh at 30% 28%, rgba(255, 240, 205, 0.65), transparent 70%),
+		radial-gradient(circle 18vh at 17% 24vh, rgba(255, 228, 182, 0.7), transparent 70%),
 		linear-gradient(
 			180deg,
 			#837093 0%,
-			#f2dcc4 35vh,
-			#eaf6ff 37vh,
-			#55a7dd 39vh,
+			#d9b29a 21vh,
+			#f2dcc4 24.6vh,
+			#a4c8dc 25vh,
+			#4f9dd6 36vh,
+			#3f7fb0 37.6vh,
+			#d7ecf7 38.2vh,
+			#5fb0e4 39vh,
 			#123f6b 100%
 		);
 }
 
-/* Loading shimmer travelling along the waterline. */
+/* Island silhouettes resting on the horizon, matching the 3D layout: a
+   low rock on the left, the lighthouse island right of center. */
+.oceanPlaceholder::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background:
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 44' preserveAspectRatio='none'%3E%3Cpolygon points='0,44 14,20 34,8 60,16 82,32 100,44' fill='%2397a98f'/%3E%3Cpolygon points='34,8 60,16 52,44 18,44 14,20' fill='%23839579'/%3E%3Cpolygon points='60,16 82,32 100,44 52,44' fill='%236f8168'/%3E%3C/svg%3E")
+			left 21% top calc(25vh - 7.5vh) / 17vh 7.5vh no-repeat,
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 70' preserveAspectRatio='none'%3E%3Crect x='63' y='8' width='11' height='30' fill='%23ece7dd'/%3E%3Crect x='63' y='12' width='11' height='5' fill='%23b5483c'/%3E%3Crect x='63' y='23' width='11' height='5' fill='%23b5483c'/%3E%3Crect x='61' y='3' width='15' height='5' fill='%23423c38'/%3E%3Ccircle cx='68.5' cy='5.5' r='2' fill='%23ffd27a'/%3E%3Cpolygon points='0,70 22,46 52,34 92,40 118,56 140,70' fill='%2397a98f'/%3E%3Cpolygon points='52,34 92,40 80,70 30,70' fill='%23798b71'/%3E%3C/svg%3E")
+			left 60% top calc(25vh - 11vh) / 22vh 11vh no-repeat;
+}
+
+/* Loading shimmer travelling along the wave crest. */
 .oceanPlaceholder::after {
 	content: "";
 	position: absolute;
 	left: 0;
 	right: 0;
-	top: 36vh;
-	height: 2vh;
+	top: 37.7vh;
+	height: 1.4vh;
 	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
 	background-size: 50% 100%;
 	background-repeat: no-repeat;
 	animation: oceanShimmer 2.4s ease-in-out infinite;
-	opacity: 0.8;
+	opacity: 0.7;
 }
 
 @keyframes oceanShimmer {
@@ -77,19 +95,31 @@
 
 :global(.dark) .oceanPlaceholder {
 	background:
-		radial-gradient(circle 7vh at 70% 18%, rgba(244, 241, 222, 0.5), transparent 70%),
+		radial-gradient(circle 9vh at 72% 7vh, rgba(244, 241, 222, 0.55), transparent 70%),
 		linear-gradient(
 			180deg,
 			#081426 0%,
-			#1c3a54 35vh,
-			#9fc4d8 37vh,
+			#122b42 21vh,
+			#1c3a54 24.6vh,
+			#1f4060 25vh,
+			#1c4470 36vh,
+			#173a5e 37.6vh,
+			#7396ac 38.2vh,
 			#16406a 39vh,
 			#081826 100%
 		);
 }
 
+:global(.dark) .oceanPlaceholder::before {
+	background:
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 44' preserveAspectRatio='none'%3E%3Cpolygon points='0,44 14,20 34,8 60,16 82,32 100,44' fill='%23394a42'/%3E%3Cpolygon points='34,8 60,16 52,44 18,44 14,20' fill='%232e3d36'/%3E%3Cpolygon points='60,16 82,32 100,44 52,44' fill='%23242f2a'/%3E%3C/svg%3E")
+			left 21% top calc(25vh - 7.5vh) / 17vh 7.5vh no-repeat,
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 70' preserveAspectRatio='none'%3E%3Ccircle cx='68.5' cy='5.5' r='6' fill='%23ffe9a8' opacity='0.3'/%3E%3Crect x='63' y='8' width='11' height='30' fill='%239aa6ae'/%3E%3Crect x='63' y='12' width='11' height='5' fill='%236e3630'/%3E%3Crect x='63' y='23' width='11' height='5' fill='%236e3630'/%3E%3Crect x='61' y='3' width='15' height='5' fill='%23262220'/%3E%3Ccircle cx='68.5' cy='5.5' r='2.2' fill='%23ffe9a8'/%3E%3Cpolygon points='0,70 22,46 52,34 92,40 118,56 140,70' fill='%23394a42'/%3E%3Cpolygon points='52,34 92,40 80,70 30,70' fill='%232e3d36'/%3E%3C/svg%3E")
+			left 60% top calc(25vh - 11vh) / 22vh 11vh no-repeat;
+}
+
 :global(.dark) .oceanPlaceholder::after {
-	opacity: 0.45;
+	opacity: 0.3;
 }
 
 /* Standalone CSS-only ocean (Save-Data, 2G, or ?css): pinned to the
@@ -99,33 +129,25 @@
 	position: absolute;
 	height: 100%;
 	background:
-		radial-gradient(circle 16vh at 30% 28vh, rgba(255, 240, 205, 0.65), transparent 70%),
+		radial-gradient(circle 18vh at 17% 24vh, rgba(255, 228, 182, 0.7), transparent 70%),
 		linear-gradient(
 			180deg,
 			#837093 0%,
-			#f2dcc4 35vh,
-			#eaf6ff 37vh,
-			#55a7dd 39vh,
+			#d9b29a 21vh,
+			#f2dcc4 24.6vh,
+			#a4c8dc 25vh,
+			#4f9dd6 36vh,
+			#3f7fb0 37.6vh,
+			#d7ecf7 38.2vh,
+			#5fb0e4 39vh,
 			#2a679f 160vh,
 			#123f6b 320vh,
 			#0a2a4c 100%
 		);
 }
 
-/* Island silhouettes resting on the horizon, clipped at the waterline. */
-.oceanPlaceholderPermanent::before {
-	content: "";
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	height: 35vh;
-	background:
-		radial-gradient(ellipse 10vw 7vh at 28% 100%, #5f6e57 0%, #5f6e57 99%, transparent 100%),
-		radial-gradient(ellipse 4vw 4vh at 35% 100%, #525f4c 0%, #525f4c 99%, transparent 100%),
-		radial-gradient(ellipse 8vw 6vh at 63% 100%, #57654f 0%, #57654f 99%, transparent 100%);
-}
-
+/* Islands come from the shared ::before; only the slower ambient
+   shimmer is specific to the standalone mode. */
 .oceanPlaceholderPermanent::after {
 	animation-duration: 5s;
 	opacity: 0.5;
@@ -133,22 +155,19 @@
 
 :global(.dark) .oceanPlaceholderPermanent {
 	background:
-		radial-gradient(circle 7vh at 70% 18vh, rgba(244, 241, 222, 0.5), transparent 70%),
+		radial-gradient(circle 9vh at 72% 7vh, rgba(244, 241, 222, 0.55), transparent 70%),
 		linear-gradient(
 			180deg,
 			#081426 0%,
-			#1c3a54 35vh,
-			#9fc4d8 37vh,
+			#122b42 21vh,
+			#1c3a54 24.6vh,
+			#1f4060 25vh,
+			#1c4470 36vh,
+			#173a5e 37.6vh,
+			#7396ac 38.2vh,
 			#16406a 39vh,
 			#0c2742 160vh,
 			#081826 320vh,
 			#050f1a 100%
 		);
-}
-
-:global(.dark) .oceanPlaceholderPermanent::before {
-	background:
-		radial-gradient(ellipse 10vw 7vh at 28% 100%, #1a2420 0%, #1a2420 99%, transparent 100%),
-		radial-gradient(ellipse 4vw 4vh at 35% 100%, #151e1b 0%, #151e1b 99%, transparent 100%),
-		radial-gradient(ellipse 8vw 6vh at 63% 100%, #18211d 0%, #18211d 99%, transparent 100%);
 }
