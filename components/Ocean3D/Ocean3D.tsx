@@ -17,7 +17,6 @@ import {
 	Group,
 	HemisphereLight,
 	Mesh,
-	MeshBasicMaterial,
 	MeshStandardMaterial,
 	Object3D,
 	PerspectiveCamera,
