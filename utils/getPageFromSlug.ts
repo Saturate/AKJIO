@@ -25,36 +25,28 @@ export async function findPageBySlug(slug: string[] | string) {
 
 	const contentFile = fs.readFileSync(path.join(page.filePath), "utf8");
 
-	try {
-		const mdxModule = await import(
-			`@/content/${importifyPath(page.relativeFilePath)}`
-		);
+	const mdxModule = await import(
+		`@/content/${importifyPath(page.relativeFilePath)}`
+	);
 
-		if (!mdxModule.default) {
-			return null;
-		}
-
-		const toc = await generateTableOfContentsFromMarkdown(contentFile);
-		const readTime = calculateReadTime(contentFile);
-
-		return {
-			Component: mdxModule.default,
-			title: mdxModule.frontmatter?.title ?? page.entryName,
-			description:
-				mdxModule.frontmatter?.description ?? mdxModule.frontmatter?.subtitle,
-			page,
-			toc,
-			readTime,
-			frontmatter: mdxModule.frontmatter,
-			link: `/${page.websitePath}`,
-		};
-	} catch (err) {
-		console.log({
-			relativeFilePath: page.relativeFilePath,
-			filePath: page.filePath,
-		});
-		throw err;
+	if (!mdxModule.default) {
+		return null;
 	}
+
+	const toc = await generateTableOfContentsFromMarkdown(contentFile);
+	const readTime = calculateReadTime(contentFile);
+
+	return {
+		Component: mdxModule.default,
+		title: mdxModule.frontmatter?.title ?? page.entryName,
+		description:
+			mdxModule.frontmatter?.description ?? mdxModule.frontmatter?.subtitle,
+		page,
+		toc,
+		readTime,
+		frontmatter: mdxModule.frontmatter,
+		link: `/${page.websitePath}`,
+	};
 }
 
 export default async function getPageFromSlug(slug: string[] | string) {
@@ -63,7 +55,6 @@ export default async function getPageFromSlug(slug: string[] | string) {
 	const result = await findPageBySlug(slug);
 
 	if (!result) {
-		console.warn("PAGE 404", slug);
 		notFound();
 	}
 
