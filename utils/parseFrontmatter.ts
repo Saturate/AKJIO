@@ -21,9 +21,11 @@ export function parseFrontmatter(
 	const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
 	const fm = fmMatch?.[1] ?? content;
 
-	const titleMatch = fm.match(/title:\s*(["'])(.+?)\1/);
-	const subtitleMatch = fm.match(/subtitle:\s*(["'])(.+?)\1/);
-	const descriptionMatch = fm.match(/description:\s*(["'])(.+?)\1/);
+	const titleMatch = fm.match(/title:\s*(?:(["'])(.+?)\1|(.+?)(?:\n|$))/);
+	const subtitleMatch = fm.match(/subtitle:\s*(?:(["'])(.+?)\1|(.+?)(?:\n|$))/);
+	const descriptionMatch = fm.match(
+		/description:\s*(?:(["'])(.+?)\1|(.+?)(?:\n|$))/,
+	);
 	const dateMatch = fm.match(/date:\s*["']?(\d{4}-\d{2}-\d{2})/);
 
 	const inlineTagsMatch = fm.match(/tags:\s*\[(.*?)\]/s);
@@ -43,9 +45,9 @@ export function parseFrontmatter(
 	}
 
 	return {
-		title: titleMatch?.[2] ?? fallbackTitle,
-		subtitle: subtitleMatch?.[2],
-		description: descriptionMatch?.[2],
+		title: titleMatch?.[2] ?? titleMatch?.[3]?.trim() ?? fallbackTitle,
+		subtitle: subtitleMatch?.[2] ?? subtitleMatch?.[3]?.trim(),
+		description: descriptionMatch?.[2] ?? descriptionMatch?.[3]?.trim(),
 		date: dateMatch?.[1],
 		tags,
 	};
@@ -57,14 +59,15 @@ export interface PostEntry {
 }
 
 export function readAllPosts(): PostEntry[] {
+	const postsPath = path.join(process.cwd(), POST_CONTENT_PATH);
 	const postIds = fs
-		.readdirSync(POST_CONTENT_PATH, { withFileTypes: true })
+		.readdirSync(postsPath, { withFileTypes: true })
 		.filter((item) => item.isDirectory() && item.name !== "_drafts")
 		.map((item) => item.name);
 
 	return postIds
 		.map((id) => {
-			const postPath = path.join(POST_CONTENT_PATH, id);
+			const postPath = path.join(postsPath, id);
 			const files = fs.readdirSync(postPath);
 			const mdxFile = files.find((f) => f.endsWith(".mdx"));
 			if (!mdxFile) return null;
