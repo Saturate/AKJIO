@@ -61,34 +61,7 @@ export default function PostLayout({
 						<TableOfContents entries={toc} introLabel={introLabel} />
 					</aside>
 
-					<div className={styles.postPanel}>
-						<svg width="0" height="0" aria-hidden="true">
-							<defs>
-								<clipPath id="organic-mask" clipPathUnits="objectBoundingBox">
-									<path
-										d="
-									M 0.015,0.002
-									C 0.08,0.0005 0.18,0.0015 0.30,0.0008
-									C 0.42,0.0004 0.56,0.0018 0.68,0.001
-									C 0.80,0.0005 0.90,0.0015 0.985,0.002
-									C 0.994,0.015 0.989,0.06 0.993,0.15
-									C 0.997,0.30 0.989,0.50 0.993,0.65
-									C 0.997,0.80 0.990,0.90 0.993,0.94
-									C 0.995,0.975 0.992,0.99 0.985,0.998
-									C 0.90,0.9995 0.80,0.998 0.68,0.999
-									C 0.56,0.9995 0.42,0.998 0.30,0.999
-									C 0.18,0.9995 0.08,0.998 0.015,0.998
-									C 0.008,0.99 0.011,0.975 0.007,0.94
-									C 0.003,0.90 0.011,0.80 0.007,0.65
-									C 0.003,0.50 0.011,0.30 0.007,0.15
-									C 0.004,0.06 0.009,0.015 0.015,0.002
-									Z
-								"
-									/>
-								</clipPath>
-							</defs>
-						</svg>
-						<article className={`${styles.postContent} glassPanel`}>
+					<article className={`${styles.postContent} glassPanel`}>
 							<h1>{frontmatter.title}</h1>
 							<h2>{frontmatter.subtitle ?? frontmatter.description}</h2>
 							{frontmatter.date && (
@@ -120,7 +93,6 @@ export default function PostLayout({
 							)}
 							<Comments />
 						</article>
-					</div>
 				</div>
 			</AnchorProvider>
 			<JsonLd data={jsonLd} nonce={nonce} />
