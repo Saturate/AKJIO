@@ -9,22 +9,9 @@
 	display: none;
 }
 
-.postPanel {
-	clip-path: url(#organic-mask);
-	background: rgba(255, 255, 255, 0.09);
-	padding: 1px;
-}
-
 .postContent {
 	min-width: 0;
 	width: 100%;
-	clip-path: url(#organic-mask);
-}
-
-.postContent:global(.glassPanel) {
-	border-radius: 0;
-	border: none;
-	box-shadow: none;
 }
 
 .postMeta {
@@ -57,11 +44,8 @@
 		margin-inline: calc((-280px - 3rem) / 2);
 	}
 
-	.postPanel {
-		grid-area: content;
-	}
-
 	.postContent {
+		grid-area: content;
 		max-width: 100%;
 	}
 
