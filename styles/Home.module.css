@@ -5,6 +5,7 @@
 	flex-direction: column;
 	/* Containing block for the document-height CSS-only ocean background. */
 	position: relative;
+	overflow-x: clip;
 }
 
 .content {
