@@ -23,6 +23,25 @@ figure[data-rehype-pretty-code-figure] {
 	overflow: auto;
 	tab-size: 2;
 	font-size: 0.875rem;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+figure[data-rehype-pretty-code-figure]::-webkit-scrollbar {
+	height: 6px;
+}
+
+figure[data-rehype-pretty-code-figure]::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+figure[data-rehype-pretty-code-figure]::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.15);
+	border-radius: 3px;
+}
+
+figure[data-rehype-pretty-code-figure]::-webkit-scrollbar-thumb:hover {
+	background: rgba(255, 255, 255, 0.3);
 }
 
 code[data-line-numbers] {
