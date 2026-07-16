@@ -1,44 +1,20 @@
 import type { MetadataRoute } from "next";
-import fs from "fs";
-import path from "path";
+import { parseFrontmatter, readAllPosts } from "@/utils/parseFrontmatter";
 
-const POST_CONTENT_PATH = "content/posts";
-
-async function getPostsData() {
-	const postIds = fs
-		.readdirSync(POST_CONTENT_PATH, { withFileTypes: true })
-		.filter((item) => item.isDirectory() && item.name !== "_drafts")
-		.map((item) => item.name);
-
-	const posts = (await Promise.all(
-		postIds.map(async (id) => {
-			const postPath = path.join(POST_CONTENT_PATH, id);
-			const files = fs.readdirSync(postPath);
-			const mdxFile = files.find((f) => f.endsWith(".mdx"));
-
-			if (!mdxFile) return null;
-
-			const content = fs.readFileSync(
-				path.join(postPath, mdxFile),
-				"utf8"
-			);
-
-			// Extract frontmatter date (simple regex for date field)
-			const dateMatch = content.match(/date:\s*["']?(\d{4}-\d{2}-\d{2})/);
-			const date = dateMatch ? new Date(dateMatch[1]) : new Date();
-
-			return { id, date };
-		})
-	)).filter((p): p is { id: string; date: Date } => p !== null);
-
-	return posts;
+function getPostsData(): Array<{ id: string; date: Date }> {
+	return readAllPosts().map(({ id, content }) => {
+		const fm = parseFrontmatter(content);
+		return {
+			id,
+			date: fm.date ? new Date(fm.date) : new Date(),
+		};
+	});
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
-	const posts = await getPostsData();
+	const posts = getPostsData();
 
-	// Static pages
 	const staticPages: MetadataRoute.Sitemap = [
 		{
 			url: siteUrl,
@@ -66,7 +42,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		},
 	];
 
-	// Blog posts
 	const postPages: MetadataRoute.Sitemap = posts.map(({ id, date }) => ({
 		url: `${siteUrl}/${id}`,
 		lastModified: date,

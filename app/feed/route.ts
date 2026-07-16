@@ -1,7 +1,7 @@
-import fs from "fs";
-import path from "path";
-
-const POST_CONTENT_PATH = "content/posts";
+import {
+	parseFrontmatter,
+	readAllPosts,
+} from "@/utils/parseFrontmatter";
 
 type PostData = {
 	id: string;
@@ -11,50 +11,23 @@ type PostData = {
 	tags: string[];
 };
 
-async function getPostsData(): Promise<PostData[]> {
-	const postIds = fs
-		.readdirSync(POST_CONTENT_PATH, { withFileTypes: true })
-		.filter((item) => item.isDirectory() && item.name !== "_drafts")
-		.map((item) => item.name);
-
-	const posts = (await Promise.all(
-		postIds.map(async (id) => {
-			const postPath = path.join(POST_CONTENT_PATH, id);
-			const files = fs.readdirSync(postPath);
-			const mdxFile = files.find((f) => f.endsWith(".mdx"));
-
-			if (!mdxFile) return null;
-
-			const content = fs.readFileSync(path.join(postPath, mdxFile), "utf8");
-
-			// Extract frontmatter (simple regex parsing)
-			const titleMatch = content.match(/title:\s*["'](.+?)["']/);
-			const subtitleMatch = content.match(/subtitle:\s*["'](.+?)["']/);
-			const dateMatch = content.match(/date:\s*["']?(\d{4}-\d{2}-\d{2})/);
-			const tagsMatch = content.match(/tags:\s*\[(.*?)\]/s);
-
-			const tags = tagsMatch
-				? tagsMatch[1]
-						.split(",")
-						.map((t) => t.trim().replace(/['"]/g, ""))
-						.filter((t) => t.length > 0)
-				: [];
-
+function getPostsData(): PostData[] {
+	return readAllPosts()
+		.map(({ id, content }) => {
+			const fm = parseFrontmatter(content, id);
 			return {
 				id,
-				title: titleMatch ? titleMatch[1] : id,
-				subtitle: subtitleMatch ? subtitleMatch[1] : undefined,
-				date: dateMatch ? new Date(dateMatch[1]) : new Date(),
-				tags,
+				title: fm.title,
+				subtitle: fm.subtitle,
+				date: fm.date ? new Date(fm.date) : new Date(),
+				tags: fm.tags,
 			};
 		})
-	)).filter((p): p is PostData => p !== null);
-
-	return posts.sort((a, b) => b.date.getTime() - a.date.getTime());
+		.sort((a, b) => b.date.getTime() - a.date.getTime());
 }
 
 export async function GET() {
-	const sortedPosts = await getPostsData();
+	const sortedPosts = getPostsData();
 	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
 
 	const feedXml = `<?xml version="1.0" encoding="UTF-8"?>
