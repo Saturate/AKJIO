@@ -98,5 +98,5 @@ export default async function Page({ params }: PageProps) {
 		);
 	}
 
-	return <>{page.Component()}</>;
+	return <div className="glassPanel">{page.Component()}</div>;
 }

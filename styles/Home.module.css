@@ -3,6 +3,8 @@
 	background: transparent;
 	display: flex;
 	flex-direction: column;
+	/* Containing block for the document-height CSS-only ocean background. */
+	position: relative;
 }
 
 .content {

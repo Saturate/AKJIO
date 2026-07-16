@@ -20,7 +20,6 @@ figure[data-rehype-pretty-code-figure] {
 	padding: 5px 17px;
 	margin: 0;
 	margin-bottom: 1rem;
-	border-radius: 11px;
 	overflow: auto;
 	tab-size: 2;
 	font-size: 0.875rem;
@@ -63,8 +62,16 @@ span[data-rehype-pretty-code-figure] > code {
 /* AI Prompt blocks - dark styling to differentiate from code */
 figure[data-rehype-pretty-code-figure]:has(code[data-language="prompt"]) {
 	background-color: rgba(20, 30, 45, 0.6);
-	border-left: 3px solid rgba(100, 120, 150, 0.5);
 	overflow: visible;
+	margin: 1.5rem -2.25rem;
+	padding: 1rem 2.5rem;
+}
+
+@media (max-width: 768px) {
+	figure[data-rehype-pretty-code-figure]:has(code[data-language="prompt"]) {
+		margin: 1.5rem -1.25rem;
+		padding: 1rem 1.5rem;
+	}
 }
 
 figure[data-rehype-pretty-code-figure]:has(code[data-language="prompt"]) pre {

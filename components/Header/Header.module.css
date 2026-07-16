@@ -6,24 +6,73 @@
 	z-index: 10;
 }
 
-.headerTitle {
+/* The name is the identity, anchored top-left like a signature; the domain
+   rides along as a small tag underneath. */
+.brand {
+	position: absolute;
+	top: 1.25rem;
+	left: 1.75rem;
+	margin: 0;
 	font-family: var(--font-jersey-25);
-	font-size: 4.5em;
-	margin: 0.4em;
+	font-size: 1.9em;
+	font-weight: 400;
+	line-height: 1;
 	color: var(--text-primary);
-	text-shadow: 3px 3px 2px #0000002e;
-	span {
-		margin-top: -26px;
-		display: block;
-		font-size: 0.3em;
-		font-weight: 400;
-	}
+	text-shadow: 2px 2px 1px #0000002e;
+	z-index: 10;
 }
 
+.brand span {
+	display: block;
+	margin-top: 0.25em;
+	font-size: 0.5em;
+	opacity: 0.7;
+	letter-spacing: 0.04em;
+}
+
+/* The header is the sky of the 3D diorama: the waterline sits at ~37vh at
+   scroll 0, so the menu floats in the sky band above it. */
 .websitetop {
 	position: relative;
 	background: transparent;
-	min-height: 100px;
-	overflow: hidden;
+	min-height: 32vh;
+	display: flex;
+	align-items: flex-start;
+	/* Same level as the corner signature. */
+	padding-top: 1.35rem;
 	z-index: 1;
+}
+
+/* Below this the centered nav would collide with the signature: stack
+   the menu underneath the name instead. */
+@media (max-width: 1279px) {
+	.websitetop {
+		display: block;
+		padding-top: 0;
+	}
+
+	.brand {
+		position: static;
+		display: inline-block;
+		margin: 1rem 0 0 1.5rem;
+	}
+
+	.header {
+		margin-top: 1rem;
+	}
+}
+
+@media (max-width: 768px) {
+	.websitetop {
+		min-height: 27vh;
+	}
+
+	.brand {
+		font-size: 1.45em;
+		margin: 0.9rem 0 0 1.1rem;
+	}
+
+	.header {
+		margin-top: 0.5rem;
+	}
 }

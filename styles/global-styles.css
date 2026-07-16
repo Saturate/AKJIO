@@ -108,6 +108,7 @@ h2 {
 .content {
 	margin: 0 auto;
 	max-width: 690px;
+	width: 100%;
 	flex: 1;
 	padding: 0 20px;
 	box-sizing: border-box;
@@ -133,6 +134,25 @@ h2 {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+}
+
+/* Translucent panel that lifts content off the animated ocean scene. */
+.glassPanel {
+	background: rgba(10, 28, 46, 0.34);
+	-webkit-backdrop-filter: blur(8px) saturate(1.15);
+	backdrop-filter: blur(8px) saturate(1.15);
+	border: 1px solid rgba(255, 255, 255, 0.09);
+	border-radius: 16px;
+	padding: 2rem 2.25rem;
+	box-shadow: 0 10px 36px rgba(2, 12, 26, 0.25);
+}
+
+@media (max-width: 768px) {
+	.glassPanel {
+		padding: 1.5rem 1.25rem;
+		border-radius: 12px;
+		overflow-x: clip;
+	}
 }
 
 blockquote {
@@ -196,11 +216,16 @@ dl {
 	display: grid;
 	grid-template-columns: auto 1fr;
 	gap: 0.5rem 1.5rem;
-	margin: 1.5rem 0;
-	padding: 1rem 1.5rem;
+	margin: 1.5rem -2.25rem;
+	padding: 1rem 2.5rem;
 	background: rgba(255, 255, 255, 0.05);
-	border-radius: 8px;
-	border-left: 4px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+	dl {
+		margin: 1.5rem -1.25rem;
+		padding: 1rem 1.5rem;
+	}
 }
 
 dt {

@@ -34,8 +34,8 @@ export default async function FrontPage({ params }: PageProps) {
 	return (
 		<>
 			<div className={styles.homeLayout}>
-				<article className={styles.mainContent}>{page.Component()}</article>
-				<div className={styles.sidebar}>
+				<article className={`${styles.mainContent} glassPanel`}>{page.Component()}</article>
+				<div className={`${styles.sidebar} glassPanel`}>
 					<RecentPosts limit={3} />
 					<PopularTags limit={10} />
 				</div>
