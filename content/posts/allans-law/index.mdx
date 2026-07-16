@@ -1,0 +1,68 @@
+---
+title: "Allan's Law"
+subtitle: "Any sufficiently advanced configuration contains a worse version of the programming language it was trying to avoid"
+description: "The recurring pattern of encoding program logic in config formats until you've reinvented an untyped, untestable programming language inside YAML."
+date: 2026-07-16
+tags:
+  - software-engineering
+  - architecture
+  - devops
+---
+
+It starts with a config file. YAML, JSON, TOML, pick your poison. "We just need a few settings," someone says. A feature flag here, an environment variable there. Simple.
+
+Then someone needs a conditional. "If production, use this database." Fair enough. The config format probably supports that, or you add a small template layer.
+
+Then expressions. Then loops. Then string interpolation. Then error handling for the expressions that can now fail. Then someone writes a function-like construct because copy-pasting the same block 40 times is untenable.
+
+At some point, you look up and realize: you've built a programming language. A bad one. No type checker, no debugger, no test framework, no stack traces. Just 600 lines of YAML with Jinja templates and custom expression syntax that three people understand and nobody can refactor.
+
+I keep seeing this. I've started calling it Allan's Law:
+
+> **Any sufficiently advanced configuration format will eventually contain a worse version of the programming language it was trying to avoid.**
+
+## Config-to-language drift
+
+It plays out the same way every time:
+
+1. **Config is chosen because "users shouldn't have to write code."** The intent is good. Operators, product managers, or end users need to change behavior without deploying new code.
+
+2. **Simple key-value pairs work for a while.** Feature flags, connection strings, timeouts. Nothing controversial.
+
+3. **The first conditional appears.** An `if` in config clothing. A Jinja `{% if %}` block, a `when:` clause, a `condition:` expression. It looks harmless.
+
+4. **Composition pressure builds.** Teams need to share config fragments, override defaults per environment, inject variables. The format grows template syntax, variable substitution, inheritance, and merge strategies.
+
+5. **You have a programming language.** Except it has no standard library, no package manager, no linter, no IDE support beyond syntax highlighting, and no way to write a unit test.
+
+## Unit tests stop at the YAML boundary
+
+Code can be unit tested. Config-trapped logic cannot.
+
+When your deployment behavior lives in a GitHub Actions workflow with nested `if:` conditions, matrix strategies, and expression syntax, how do you test it? You push a commit and wait. When your infrastructure lives in 2,000 lines of Terraform HCL with `count`, `for_each`, dynamic blocks, and string templates, how do you verify a change? You run `terraform plan` against a live API and hope.
+
+A function in TypeScript or Python can be called with test inputs and checked against expected outputs in milliseconds, locally, offline. A conditional buried in YAML can only be tested by running the entire pipeline it belongs to.
+
+The practical test for whether your config has crossed the line: can you write a unit test for this logic? If no, the logic is in the wrong place.
+
+## Prior art
+
+I'm not the first person to notice adjacent patterns. Greenspun's Tenth Rule (1993) says any sufficiently complex C or Fortran program will contain an ad-hoc implementation of half of Common Lisp. The Inner-Platform Effect describes systems so configurable they become worse copies of their host platform. Matt Rickard wrote in 2022 that "every sufficiently advanced configuration language is wrong."
+
+These overlap, but none of them describe the specific cycle: starting simple, adding expressions to avoid writing code, ending up with an untestable pseudo-language that is harder to work with than the code you were avoiding. Greenspun's is about programs containing Lisp. This is about config containing a worse programming language. The difference matters because config has no test infrastructure.
+
+## GitHub Actions, Terraform, Kubernetes
+
+GitHub Actions started as a way to define CI/CD workflows in YAML. It now has an expression language with functions (`contains()`, `fromJSON()`, `hashFiles()`), type coercion rules, context objects, conditional logic, matrix strategies, and reusable workflow composition. Debugging a failing workflow means reading error messages from a remote runner you cannot SSH into.
+
+Terraform HCL was designed as a declarative infrastructure language. It grew `count`, `for_each`, `for` expressions, conditional ternaries, `dynamic` blocks, `templatefile()`, `lookup()`, type constraints, and module composition. Refactoring a Terraform module has more in common with refactoring a program than editing a config file.
+
+The Kubernetes ecosystem stacks even more layers. You start with a Deployment manifest. Then you need Helm templates to parameterize it. Then `values.yaml` to configure the templates. Then `_helpers.tpl` to define template functions. Then helmfile to compose multiple Helm releases with environment-specific overrides. Each layer adds its own expression syntax on top of the last.
+
+Dagger, Pulumi, and AWS CDK exist because enough people hit this wall and decided to write infrastructure in actual programming languages instead.
+
+## Static values vs. program logic
+
+Not all config is bad. Static, declarative data is exactly what config formats are for. A list of allowed origins, a database connection string, a feature flag, the number of retry attempts. No logic, just values.
+
+The moment you add a conditional, you've crossed into program logic. The question then is: does this logic belong in a format with no test harness, or in a language that has one?
