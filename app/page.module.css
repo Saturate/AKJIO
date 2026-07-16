@@ -7,13 +7,6 @@
 		320px
 		minmax(2rem, 1fr);
 	align-items: start;
-	width: 100vw;
-	position: relative;
-	left: 50%;
-	right: 50%;
-	margin-left: -50vw;
-	margin-right: -50vw;
-	box-sizing: border-box;
 }
 
 .mainContent {
