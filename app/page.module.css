@@ -2,7 +2,7 @@
 	display: grid;
 	grid-template-columns:
 		minmax(2rem, 1fr)
-		minmax(auto, calc(1000px - 320px - 2rem))
+		minmax(auto, calc(1100px - 320px - 2rem))
 		2rem
 		320px
 		minmax(2rem, 1fr);
@@ -24,7 +24,7 @@
 
 @media (max-width: 1024px) {
 	.homeLayout {
-		grid-template-columns: minmax(2rem, 1fr) minmax(auto, 690px) minmax(2rem, 1fr);
+		grid-template-columns: minmax(2rem, 1fr) minmax(auto, 760px) minmax(2rem, 1fr);
 		grid-template-rows: auto auto;
 	}
 
@@ -42,7 +42,7 @@
 
 @media (max-width: 768px) {
 	.homeLayout {
-		grid-template-columns: minmax(1.5rem, 1fr) minmax(auto, 690px) minmax(
+		grid-template-columns: minmax(1.5rem, 1fr) minmax(auto, 760px) minmax(
 				1.5rem,
 				1fr
 			);
