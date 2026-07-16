@@ -955,6 +955,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		delete canvas.dataset.ready;
 	};
 	const onContextRestored = () => {
+		applyPalette(mix);
 		canvas.dataset.ready = "true";
 		if (!reducedMotion) {
 			lastTime = performance.now();
