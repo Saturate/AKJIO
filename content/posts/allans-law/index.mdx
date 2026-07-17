@@ -14,7 +14,7 @@ tags:
 
 I've been advocating for just using a programming language for things that usually seem smart as a templating/config language. For fun I've been telling people "This is what I call Allan's Law" and something like "Yeah sure it might already exist, but having a programming law would be pretty cool!"
 
-If you have been doing any kind of programming, you've most likely seen this pattern in build pipelines, but it's really in a lot of software especially enterprise software.
+If you have been doing any kind of programming, you've most likely seen this pattern in build pipelines, but it's really in a lot of software, especially enterprise software.
 
 > **Any sufficiently advanced configuration format will eventually contain a worse version of the programming language it was trying to avoid.**
 
@@ -29,7 +29,7 @@ Testing it? Well for pipelines mostly you have to push it and run it on the serv
 
 Say you need to build, test, and deploy three services, but only the ones that actually changed. Here's an Azure DevOps pipeline doing that:
 
-```yaml
+```yaml showLineNumbers
 trigger:
   branches:
     include: [main]
@@ -55,9 +55,9 @@ stages:
           pool:
             vmImage: 'ubuntu-latest'
           steps:
-            - task: NodeTool@0
+            - task: UseNode@1
               inputs:
-                versionSpec: '22.x'
+                version: '22.x'
             - script: npm ci --prefix services/${{ service }}
             - script: npm test --prefix services/${{ service }}
             - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
@@ -70,7 +70,7 @@ There's a compile-time loop (`${{ each }}`), runtime conditionals (`condition: o
 
 Now imagine if Azure Pipelines had a TypeScript SDK instead:
 
-```ts
+```ts showLineNumbers
 import { Pipeline, Stage, NodeTool } from "@azure/pipelines-sdk";
 import { getChangedServices } from "./git-utils";
 
@@ -110,7 +110,7 @@ This SDK doesn't exist, but Pulumi and CDK proved the pattern works for infrastr
 
 The TypeScript version is just code. You can write a test for the filtering logic with whatever you already use:
 
-```ts
+```ts showLineNumbers
 import { describe, it, expect } from "vitest";
 import { getChangedServices } from "./git-utils";
 
@@ -140,9 +140,9 @@ Having a schema is fine, but the moment you're writing conditionals or loops to 
 
 ## So is it really my law?
 
-Greenspun's Tenth Rule (1993) says any complex C or Fortran program contains an ad-hoc implementation of half of Common Lisp.
+Greenspun's Tenth Rule (~1993) says any sufficiently complicated C or Fortran program contains an ad-hoc, informally-specified, bug-ridden, slow implementation of half of Common Lisp.
 The Inner-Platform Effect is about systems so configurable they become worse copies of their host platform.
 
 Matt Rickard wrote in 2022 that "every sufficiently advanced configuration language is wrong."
 
-But for now I'll just call this my law, it's my website after all and once it's indexed and on waybackmachine who really knows the truth.
+But for now I'll just call this my law, it's my website after all and once it's indexed and on the Wayback Machine who really knows the truth.
