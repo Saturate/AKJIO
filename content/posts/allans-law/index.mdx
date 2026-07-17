@@ -1,12 +1,15 @@
 ---
 title: "Allan's Law"
 subtitle: "Any sufficiently advanced configuration contains a worse version of the programming language it was trying to avoid"
-description: "The recurring pattern of encoding program logic in config formats until you've reinvented an untyped, untestable programming language inside YAML."
-date: 2026-07-16
+description: "YAML pipelines, JSON rule engines, XML build files. The recurring pattern of encoding logic in config formats until you've reinvented an untyped, untestable programming language."
+date: 2026-07-17
 tags:
   - software-engineering
   - architecture
   - devops
+  - yaml
+  - ci-cd
+  - config-as-code
 ---
 
 I've been advocating for just using a programming language for things that usually seem smart as a templating/config language. For fun I've been telling people "This is what I call Allan's Law" and something like "Yeah sure it might already exist, but having a programming law would be pretty cool!"
@@ -133,7 +136,7 @@ It's not a given that it'll just be local first, but oh damn if you have somethi
 
 
 ## Just keep logic out of the config
-Having a schema is fine, but to make an artifact for this schema, just use code.
+Having a schema is fine, but the moment you're writing conditionals or loops to produce an artifact for that schema, just use code. If the consumer needs YAML, your code can emit it.
 
 ## So is it really my law?
 
