@@ -66,7 +66,10 @@ interface SceneApi {
 	dispose: () => void;
 }
 
-function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi | null {
+function buildScene(
+	canvas: HTMLCanvasElement,
+	initialDark: boolean,
+): SceneApi | null {
 	let renderer: WebGLRenderer;
 	try {
 		renderer = new WebGLRenderer({
@@ -132,17 +135,27 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 
 	// --- Sky / sun / moon ----------------------------------------------------
 	const ctx: SceneCtx = { scene, track, aboveWaterClip };
-	const { sky, stars, starMat, starGeo, meteors, meteorMat, meteorGeo, meteorPositions, meteorState } =
-		buildSky(ctx, skyTopColor, skyHorizonColor);
+	const {
+		sky,
+		stars,
+		starMat,
+		starGeo,
+		meteors,
+		meteorMat,
+		meteorGeo,
+		meteorPositions,
+		meteorState,
+	} = buildSky(ctx, skyTopColor, skyHorizonColor);
 	const glowTexture = track(makeGlowTexture());
-	const { sunPivot, moonPivot, glow, glowMat, moonGlowMat, moonIllumination } = buildCelestial(
-		ctx,
-		glowTexture,
-		SUN_X,
-	);
+	const { sunPivot, moonPivot, glow, glowMat, moonGlowMat, moonIllumination } =
+		buildCelestial(ctx, glowTexture, SUN_X);
 
 	// --- Lights ------------------------------------------------------------
-	const hemi = new HemisphereLight(DAY.hemiSky, DAY.hemiGround, DAY.hemiIntensity);
+	const hemi = new HemisphereLight(
+		DAY.hemiSky,
+		DAY.hemiGround,
+		DAY.hemiIntensity,
+	);
 	scene.add(hemi);
 	const dir = new DirectionalLight(DAY.dirColor, DAY.dirIntensity);
 	// Day: keyed from the sun's side (left). At night applyPalette swings it
@@ -162,12 +175,23 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 
 	// --- Islands, lighthouse, ship -------------------------------------------
 	const { rockMat } = buildIslands(ctx, glassShallowColor);
-	const { beacon, beamPivot, beamMat, beamSpot, beamSpotB, lampGlowMat, whiteMat, darkMat } =
-		buildLighthouse(ctx, glowTexture);
-	const { ship, navPortMat, navStarboardMat, navPortHaloMat, navStarboardHaloMat } = buildShip(
-		ctx,
-		{ whiteMat, darkMat },
-	);
+	const {
+		beacon,
+		beamPivot,
+		beamMat,
+		beamSpot,
+		beamSpotB,
+		lampGlowMat,
+		whiteMat,
+		darkMat,
+	} = buildLighthouse(ctx, glowTexture);
+	const {
+		ship,
+		navPortMat,
+		navStarboardMat,
+		navPortHaloMat,
+		navStarboardHaloMat,
+	} = buildShip(ctx, { whiteMat, darkMat });
 	let shipTargetX = 27;
 
 	// --- Clouds -----------------------------------------------------------------
@@ -195,7 +219,14 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	for (let r = 0; r < Z_SEGS; r++) {
 		for (let c = 0; c < X_SEGS; c++) {
 			const a = r * waterCols + c;
-			waterIndices.push(a, a + waterCols, a + 1, a + 1, a + waterCols, a + waterCols + 1);
+			waterIndices.push(
+				a,
+				a + waterCols,
+				a + 1,
+				a + 1,
+				a + waterCols,
+				a + waterCols + 1,
+			);
 		}
 	}
 	const wallRowStart = (Z_SEGS + 1) * waterCols;
@@ -207,7 +238,10 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	}
 	const waterGeo = track(new BufferGeometry());
 	waterGeo.setIndex(waterIndices);
-	waterGeo.setAttribute("position", new Float32BufferAttribute(waterPositions, 3));
+	waterGeo.setAttribute(
+		"position",
+		new Float32BufferAttribute(waterPositions, 3),
+	);
 	const waterMat = track(
 		new ShaderMaterial({
 			uniforms: {
@@ -315,7 +349,10 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	wreckBow.rotation.z = -Math.PI / 2;
 	wreckBow.position.x = 2.8;
 	wreck.add(wreckBow);
-	const wreckMast = new Mesh(track(new CylinderGeometry(0.08, 0.1, 2.6, 6)), underMat);
+	const wreckMast = new Mesh(
+		track(new CylinderGeometry(0.08, 0.1, 2.6, 6)),
+		underMat,
+	);
 	wreckMast.rotation.z = 0.5;
 	wreckMast.position.set(-0.6, 1.4, 0);
 	wreck.add(wreckMast);
@@ -389,7 +426,12 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		const f = new Group();
 		const tail = new Mesh(fishTailGeo, mat);
 		tail.position.x = -0.62;
-		f.add(new Mesh(fishHeadGeo, mat), new Mesh(fishBodyGeo, mat), new Mesh(fishFinGeo, mat), tail);
+		f.add(
+			new Mesh(fishHeadGeo, mat),
+			new Mesh(fishBodyGeo, mat),
+			new Mesh(fishFinGeo, mat),
+			tail,
+		);
 		const speed = (0.8 + fishRand() * 1.6) * (fishRand() > 0.5 ? 1 : -1);
 		const depthFrac = fishRand();
 		f.position.set((fishRand() - 0.5) * 50, -3, 10 - fishRand() * 40);
@@ -514,9 +556,11 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		fishAltMat.color.multiplyScalar(0.72);
 		lerpColor(hemiSkyBase, DAY.hemiSky, NIGHT.hemiSky, m);
 		lerpColor(hemi.groundColor, DAY.hemiGround, NIGHT.hemiGround, m);
-		hemiIntensityBase = DAY.hemiIntensity + (NIGHT.hemiIntensity - DAY.hemiIntensity) * m;
+		hemiIntensityBase =
+			DAY.hemiIntensity + (NIGHT.hemiIntensity - DAY.hemiIntensity) * m;
 		lerpColor(dirColorBase, DAY.dirColor, NIGHT.dirColor, m);
-		dirIntensityBase = DAY.dirIntensity + (NIGHT.dirIntensity - DAY.dirIntensity) * m;
+		dirIntensityBase =
+			DAY.dirIntensity + (NIGHT.dirIntensity - DAY.dirIntensity) * m;
 		// The light's matrix is frozen by freezeStaticMatrices, so a manual
 		// update is needed for the day/night reposition to take effect.
 		dir.position.lerpVectors(DIR_POS_DAY, DIR_POS_NIGHT, m);
@@ -524,14 +568,22 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		// Below the surface the sky dome is hidden, so the clear color is
 		// what shows behind the fogged water.
 		renderer.setClearColor(fog.color);
-		starMat.opacity = DAY.starsOpacity + (NIGHT.starsOpacity - DAY.starsOpacity) * m;
-		const visibleStars = Math.round(DAY.starCount + (NIGHT.starCount - DAY.starCount) * m);
+		starMat.opacity =
+			DAY.starsOpacity + (NIGHT.starsOpacity - DAY.starsOpacity) * m;
+		const visibleStars = Math.round(
+			DAY.starCount + (NIGHT.starCount - DAY.starCount) * m,
+		);
 		starGeo.setDrawRange(0, visibleStars);
 		lerpColor(cloudMat.color, DAY.cloudColor, NIGHT.cloudColor, m);
-		cloudMat.opacity = DAY.cloudOpacity + (NIGHT.cloudOpacity - DAY.cloudOpacity) * m;
-		const visibleClouds = Math.round(DAY.cloudCount + (NIGHT.cloudCount - DAY.cloudCount) * m);
-		for (let i = 0; i < clouds.length; i++) clouds[i].group.visible = i < visibleClouds;
-		beacon.intensity = DAY.beaconIntensity + (NIGHT.beaconIntensity - DAY.beaconIntensity) * m;
+		cloudMat.opacity =
+			DAY.cloudOpacity + (NIGHT.cloudOpacity - DAY.cloudOpacity) * m;
+		const visibleClouds = Math.round(
+			DAY.cloudCount + (NIGHT.cloudCount - DAY.cloudCount) * m,
+		);
+		for (let i = 0; i < clouds.length; i++)
+			clouds[i].group.visible = i < visibleClouds;
+		beacon.intensity =
+			DAY.beaconIntensity + (NIGHT.beaconIntensity - DAY.beaconIntensity) * m;
 		lampGlowMat.opacity = 0.25 + 0.6 * m;
 		beamMat.opacity = 0.2 * m;
 		beamSpot.intensity = 90 * m;
@@ -543,7 +595,13 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	// --- Static matrix freeze ------------------------------------------------
 	// Only a handful of objects move per frame; the rest of the scene keeps
 	// frozen local matrices. applyDepth() re-freezes after repositioning.
-	const animatedObjects = new Set<Object3D>([ship, sunPivot, moonPivot, glow, beamPivot]);
+	const animatedObjects = new Set<Object3D>([
+		ship,
+		sunPivot,
+		moonPivot,
+		glow,
+		beamPivot,
+	]);
 	for (const f of fish) {
 		animatedObjects.add(f.mesh);
 		animatedObjects.add(f.tail);
@@ -576,13 +634,16 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			const x = pos.getX(i);
 			const z = pos.getZ(i);
 			const ridges =
-				Math.sin(x * 0.12 + seabedOffsetX) * Math.cos(z * 0.1 + seabedOffsetZ) * 1.4 +
+				Math.sin(x * 0.12 + seabedOffsetX) *
+					Math.cos(z * 0.1 + seabedOffsetZ) *
+					1.4 +
 				Math.sin(x * 0.31 + z * 0.21 + seabedOffsetX) * 0.6 +
 				Math.sin(z * 0.45 - x * 0.07 + seabedOffsetZ) * 0.35;
 			// Rise must finish well inside fog range (~150 units) or the bowl
 			// is invisible: back wall completes by z=-120, sides by |x|=150.
 			const bowl =
-				ease((-30 - z) / 90) * rise + ease((Math.abs(x) - 70) / 80) * rise * 0.75;
+				ease((-30 - z) / 90) * rise +
+				ease((Math.abs(x) - 70) / 80) * rise * 0.75;
 			// Rim stays submerged: on shallow pages it would otherwise breach
 			// the surface as pale underwater-material hills.
 			pos.setY(i, Math.min(ridges + bowl, -0.8 - seabedY));
@@ -753,7 +814,9 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	let mouseX = 0;
 	let mouseCurrent = 0;
 
-	const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	const reducedMotion = window.matchMedia(
+		"(prefers-reduced-motion: reduce)",
+	).matches;
 
 	function readScroll() {
 		scrollTarget = window.scrollY;
@@ -766,7 +829,11 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 	// the waterline ripple.
 	const splashFromPointer = (clientX: number, clientY: number) => {
 		mouseRay
-			.set((clientX / window.innerWidth) * 2 - 1, -(clientY / window.innerHeight) * 2 + 1, 0.5)
+			.set(
+				(clientX / window.innerWidth) * 2 - 1,
+				-(clientY / window.innerHeight) * 2 + 1,
+				0.5,
+			)
 			.unproject(camera)
 			.sub(camera.position)
 			.normalize();
@@ -867,7 +934,8 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			// Slow one-way drift, wrapping off the far side of the frustum.
 			for (const c of clouds) {
 				c.group.position.x += c.speed * dt;
-				if (c.group.position.x > CLOUD_WRAP_X) c.group.position.x = -CLOUD_WRAP_X;
+				if (c.group.position.x > CLOUD_WRAP_X)
+					c.group.position.x = -CLOUD_WRAP_X;
 			}
 		}
 
@@ -881,7 +949,10 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 
 		// Camera and content move 1:1 — one viewport of scroll equals one
 		// frame-height of descent, so the scene feels attached to the page.
-		camera.position.y = Math.max(cameraFloorY, CAMERA_TOP_Y - scrollCurrent * worldPerPixel());
+		camera.position.y = Math.max(
+			cameraFloorY,
+			CAMERA_TOP_Y - scrollCurrent * worldPerPixel(),
+		);
 		camera.position.x = mouseCurrent * 0.5;
 		camera.rotation.set(0, -mouseCurrent * 0.01, 0);
 
@@ -893,7 +964,8 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		// Putters along at fishing-boat pace, easing out over the last stretch.
 		const shipDx = shipTargetX - ship.position.x;
 		const shipSpeed = Math.min(1.6, Math.abs(shipDx) * 0.2);
-		ship.position.x += Math.sign(shipDx) * Math.min(Math.abs(shipDx), shipSpeed * dt);
+		ship.position.x +=
+			Math.sign(shipDx) * Math.min(Math.abs(shipDx), shipSpeed * dt);
 		// Soft-edged blink so the lights don't strobe; the two sides pulse in
 		// counter-phase. Never fully off, like a lamp dimming between flashes.
 		const navPulse = (phase: number) =>
@@ -904,24 +976,30 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		navStarboardHaloMat.opacity = navStarboardMat.opacity * 0.3;
 
 		beacon.intensity =
-			(DAY.beaconIntensity + (NIGHT.beaconIntensity - DAY.beaconIntensity) * mix) *
+			(DAY.beaconIntensity +
+				(NIGHT.beaconIntensity - DAY.beaconIntensity) * mix) *
 			(0.7 + 0.3 * Math.sin(t * 2.4));
 		beamPivot.rotation.y = t * 0.55;
 		// World direction of the beam's local -x axis, for the water pool.
-		beamDirVec.set(-Math.cos(beamPivot.rotation.y), Math.sin(beamPivot.rotation.y));
+		beamDirVec.set(
+			-Math.cos(beamPivot.rotation.y),
+			Math.sin(beamPivot.rotation.y),
+		);
 		glow.scale.setScalar(68 + Math.sin(t * 0.5) * 3);
 
 		// Kelp sways gently from the base, like current pushing through.
 		for (const blade of seaweed) {
 			blade.mesh.rotation.z = Math.sin(t * blade.speed + blade.phase) * 0.14;
-			blade.mesh.rotation.x = Math.sin(t * blade.speed * 0.7 + blade.phase * 1.3) * 0.06;
+			blade.mesh.rotation.x =
+				Math.sin(t * blade.speed * 0.7 + blade.phase * 1.3) * 0.06;
 		}
 
 		for (const f of fish) {
 			f.mesh.position.x += f.speed * dt;
 			f.mesh.position.y = f.baseY + Math.sin(t * 1.4 + f.phase) * 0.3;
 			// Tail wag speed follows swim speed; slight body roll sells the motion.
-			f.tail.rotation.y = Math.sin(t * (4 + Math.abs(f.speed) * 2) + f.phase) * 0.5;
+			f.tail.rotation.y =
+				Math.sin(t * (4 + Math.abs(f.speed) * 2) + f.phase) * 0.5;
 			f.mesh.rotation.z = Math.sin(t * 1.4 + f.phase) * 0.07;
 			if (f.mesh.position.x > 32) f.mesh.position.x = -32;
 			if (f.mesh.position.x < -32) f.mesh.position.x = 32;
@@ -1123,7 +1201,11 @@ export default function Ocean3D() {
 
 	return (
 		<>
-			<canvas ref={canvasRef} className={styles.oceanCanvas} aria-hidden="true" />
+			<canvas
+				ref={canvasRef}
+				className={styles.oceanCanvas}
+				aria-hidden="true"
+			/>
 			<DevPalettePanel onReapply={reapply} />
 		</>
 	);

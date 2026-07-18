@@ -33,7 +33,11 @@ const MOON_ARC_RADIUS = 26;
 // rotates the pivots by mix * SET_ANGLE on theme change.
 export const SET_ANGLE = 0.7 * Math.PI;
 
-export function buildSky(ctx: SceneCtx, skyTopColor: Color, skyHorizonColor: Color) {
+export function buildSky(
+	ctx: SceneCtx,
+	skyTopColor: Color,
+	skyHorizonColor: Color,
+) {
 	const { scene, track } = ctx;
 	const skyMat = track(
 		new ShaderMaterial({
@@ -66,7 +70,10 @@ export function buildSky(ctx: SceneCtx, skyTopColor: Color, skyHorizonColor: Col
 		starSizes.push(0.6 + starRand() * 1.8);
 	}
 	const starGeo = track(new BufferGeometry());
-	starGeo.setAttribute("position", new Float32BufferAttribute(starPositions, 3));
+	starGeo.setAttribute(
+		"position",
+		new Float32BufferAttribute(starPositions, 3),
+	);
 	starGeo.setAttribute("size", new Float32BufferAttribute(starSizes, 1));
 	starGeo.setDrawRange(0, 500);
 	const starMat = track(
@@ -89,7 +96,10 @@ export function buildSky(ctx: SceneCtx, skyTopColor: Color, skyHorizonColor: Col
 	const METEOR_COUNT = 3;
 	const meteorPositions = new Float32Array(METEOR_COUNT * 6);
 	const meteorGeo = track(new BufferGeometry());
-	meteorGeo.setAttribute("position", new Float32BufferAttribute(meteorPositions, 3));
+	meteorGeo.setAttribute(
+		"position",
+		new Float32BufferAttribute(meteorPositions, 3),
+	);
 	const meteorMat = track(
 		new PointsMaterial({
 			color: 0xffffff,
@@ -118,14 +128,28 @@ export function buildSky(ctx: SceneCtx, skyTopColor: Color, skyHorizonColor: Col
 		cooldown: 4 + i * 6,
 	}));
 
-	return { sky, stars, starMat, starGeo, meteors, meteorMat, meteorGeo, meteorPositions, meteorState };
+	return {
+		sky,
+		stars,
+		starMat,
+		starGeo,
+		meteors,
+		meteorMat,
+		meteorGeo,
+		meteorPositions,
+		meteorState,
+	};
 }
 
 // Sun and moon are distinct bodies on separate arcs. On theme change the
 // sun swings down-left out of the scene while the smaller moon rises
 // from the right into a higher spot; the waterline clip sells the
 // set/rise as they cross y=0.
-export function buildCelestial(ctx: SceneCtx, glowTexture: CanvasTexture, sunX: number) {
+export function buildCelestial(
+	ctx: SceneCtx,
+	glowTexture: CanvasTexture,
+	sunX: number,
+) {
 	const { scene, track, aboveWaterClip } = ctx;
 
 	const makeCelestialGlow = (
@@ -159,7 +183,11 @@ export function buildCelestial(ctx: SceneCtx, glowTexture: CanvasTexture, sunX: 
 	sunPivot.position.set(sunX, 2.5 - SUN_ARC_RADIUS, -190);
 	scene.add(sunPivot);
 	const sunMat = track(
-		new MeshBasicMaterial({ color: DAY.sun, fog: false, clippingPlanes: [aboveWaterClip] }),
+		new MeshBasicMaterial({
+			color: DAY.sun,
+			fog: false,
+			clippingPlanes: [aboveWaterClip],
+		}),
 	);
 	const sun = new Mesh(track(new CircleGeometry(17, 48)), sunMat);
 	sun.position.set(0, SUN_ARC_RADIUS, 0);
@@ -173,7 +201,8 @@ export function buildCelestial(ctx: SceneCtx, glowTexture: CanvasTexture, sunX: 
 	);
 
 	const moonPhase = REAL_MOON_PHASES ? getMoonPhase() : null;
-	const moonIllumination = moonPhase === null ? 1 : getIlluminationFraction(moonPhase);
+	const moonIllumination =
+		moonPhase === null ? 1 : getIlluminationFraction(moonPhase);
 	const moonTexture = track(makeMoonTexture(moonPhase));
 	const moonMat = track(
 		new MeshBasicMaterial({

@@ -1,6 +1,11 @@
 "use client";
 
-import { useState, useCallback, type ChangeEvent, type CSSProperties } from "react";
+import {
+	useState,
+	useCallback,
+	type ChangeEvent,
+	type CSSProperties,
+} from "react";
 import { DAY, NIGHT, type Palette } from "./palette";
 
 const NUM_KEYS = new Set<keyof Palette>([
@@ -127,9 +132,7 @@ export function DevPalettePanel({ onReapply }: Props) {
 									}
 								/>
 							)}
-							<span style={valueLabel}>
-								{isNum ? v.toFixed(2) : toHex(v)}
-							</span>
+							<span style={valueLabel}>{isNum ? v.toFixed(2) : toHex(v)}</span>
 						</div>
 					);
 				})}
