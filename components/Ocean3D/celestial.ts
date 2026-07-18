@@ -51,9 +51,11 @@ export function buildSky(ctx: SceneCtx, skyTopColor: Color, skyHorizonColor: Col
 	const sky = new Mesh(track(new SphereGeometry(300, 24, 12)), skyMat);
 	scene.add(sky);
 
+	const STAR_MAX = 1000;
 	const starRand = mulberry32(7);
 	const starPositions: number[] = [];
-	for (let i = 0; i < 220; i++) {
+	const starSizes: number[] = [];
+	for (let i = 0; i < STAR_MAX; i++) {
 		const theta = starRand() * Math.PI * 2;
 		const phi = Math.acos(starRand() * 0.85 + 0.08);
 		starPositions.push(
@@ -61,9 +63,12 @@ export function buildSky(ctx: SceneCtx, skyTopColor: Color, skyHorizonColor: Col
 			280 * Math.cos(phi),
 			280 * Math.sin(phi) * Math.sin(theta) - 40,
 		);
+		starSizes.push(0.6 + starRand() * 1.8);
 	}
 	const starGeo = track(new BufferGeometry());
 	starGeo.setAttribute("position", new Float32BufferAttribute(starPositions, 3));
+	starGeo.setAttribute("size", new Float32BufferAttribute(starSizes, 1));
+	starGeo.setDrawRange(0, 500);
 	const starMat = track(
 		new PointsMaterial({
 			color: 0xffffff,
@@ -78,7 +83,42 @@ export function buildSky(ctx: SceneCtx, skyTopColor: Color, skyHorizonColor: Col
 	const stars = new Points(starGeo, starMat);
 	scene.add(stars);
 
-	return { sky, stars, starMat };
+	// Shooting stars: a small pool of line segments that streak across
+	// the sky dome. Each has a random start position, direction, speed,
+	// and cooldown timer so they fire sporadically.
+	const METEOR_COUNT = 3;
+	const meteorPositions = new Float32Array(METEOR_COUNT * 6);
+	const meteorGeo = track(new BufferGeometry());
+	meteorGeo.setAttribute("position", new Float32BufferAttribute(meteorPositions, 3));
+	const meteorMat = track(
+		new PointsMaterial({
+			color: 0xffffff,
+			size: 1.2,
+			sizeAttenuation: false,
+			transparent: true,
+			opacity: 0,
+			fog: false,
+			depthWrite: false,
+			blending: AdditiveBlending,
+		}),
+	);
+	const meteors = new Points(meteorGeo, meteorMat);
+	scene.add(meteors);
+
+	const meteorState = Array.from({ length: METEOR_COUNT }, (_, i) => ({
+		active: false,
+		life: 0,
+		maxLife: 0,
+		x: 0,
+		y: 0,
+		z: 0,
+		dx: 0,
+		dy: 0,
+		dz: 0,
+		cooldown: 4 + i * 6,
+	}));
+
+	return { sky, stars, starMat, starGeo, meteors, meteorMat, meteorGeo, meteorPositions, meteorState };
 }
 
 // Sun and moon are distinct bodies on separate arcs. On theme change the

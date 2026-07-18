@@ -21,10 +21,14 @@ export interface Palette {
 	dirColor: number;
 	dirIntensity: number;
 	starsOpacity: number;
+	starCount: number;
 	beaconIntensity: number;
 	glint: number;
 	seaweed: number;
 	starfish: number;
+	cloudColor: number;
+	cloudOpacity: number;
+	cloudCount: number;
 }
 
 export const DAY: Palette = {
@@ -47,10 +51,14 @@ export const DAY: Palette = {
 	dirColor: 0xffe4be,
 	dirIntensity: 1.4,
 	starsOpacity: 0,
+	starCount: 0,
 	beaconIntensity: 2,
 	glint: 0.55,
 	seaweed: 0x3a7a5e,
 	starfish: 0xcf7d52,
+	cloudColor: 0xfff4e6,
+	cloudOpacity: 0.8,
+	cloudCount: 8,
 };
 
 export const NIGHT: Palette = {
@@ -73,8 +81,12 @@ export const NIGHT: Palette = {
 	dirColor: 0xc4d8ec,
 	dirIntensity: 1.25,
 	starsOpacity: 0.9,
+	starCount: 500,
 	beaconIntensity: 30,
 	glint: 0.3,
 	seaweed: 0x1f4a42,
 	starfish: 0x70453a,
+	cloudColor: 0x27364a,
+	cloudOpacity: 0.15,
+	cloudCount: 4,
 };

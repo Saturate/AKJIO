@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import {
 	ACESFilmicToneMapping,
@@ -37,10 +37,12 @@ import { jitterByPosition, makeRock } from "./geometry";
 import { makeGlowTexture } from "./textures";
 import { WATER_VERT, WATER_FRAG } from "./shaders";
 import { buildSky, buildCelestial, SET_ANGLE } from "./celestial";
+import { buildClouds, scatterClouds, CLOUD_WRAP_X } from "./clouds";
 import { buildIslands } from "./islands";
 import { buildLighthouse } from "./lighthouse";
 import { buildShip } from "./ship";
 import type { SceneCtx } from "./types";
+import { DevPalettePanel } from "./DevPalettePanel";
 import styles from "./Ocean3D.module.css";
 
 // World layout: the waterline is y=0. The camera sits at a fixed x/z and
@@ -60,6 +62,7 @@ const SUN_X = -70;
 interface SceneApi {
 	setDark: (dark: boolean) => void;
 	setSeed: (seed: number) => void;
+	reapplyPalette: () => void;
 	dispose: () => void;
 }
 
@@ -129,7 +132,8 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 
 	// --- Sky / sun / moon ----------------------------------------------------
 	const ctx: SceneCtx = { scene, track, aboveWaterClip };
-	const { sky, stars, starMat } = buildSky(ctx, skyTopColor, skyHorizonColor);
+	const { sky, stars, starMat, starGeo, meteors, meteorMat, meteorGeo, meteorPositions, meteorState } =
+		buildSky(ctx, skyTopColor, skyHorizonColor);
 	const glowTexture = track(makeGlowTexture());
 	const { sunPivot, moonPivot, glow, glowMat, moonGlowMat, moonIllumination } = buildCelestial(
 		ctx,
@@ -165,6 +169,9 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		{ whiteMat, darkMat },
 	);
 	let shipTargetX = 27;
+
+	// --- Clouds -----------------------------------------------------------------
+	const { clouds, cloudsRoot, cloudMat } = buildClouds(ctx);
 
 	// --- Water block ------------------------------------------------------------
 	// One welded mesh, like a low-poly water cube: the wavy top sheet spans
@@ -518,6 +525,12 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		// what shows behind the fogged water.
 		renderer.setClearColor(fog.color);
 		starMat.opacity = DAY.starsOpacity + (NIGHT.starsOpacity - DAY.starsOpacity) * m;
+		const visibleStars = Math.round(DAY.starCount + (NIGHT.starCount - DAY.starCount) * m);
+		starGeo.setDrawRange(0, visibleStars);
+		lerpColor(cloudMat.color, DAY.cloudColor, NIGHT.cloudColor, m);
+		cloudMat.opacity = DAY.cloudOpacity + (NIGHT.cloudOpacity - DAY.cloudOpacity) * m;
+		const visibleClouds = Math.round(DAY.cloudCount + (NIGHT.cloudCount - DAY.cloudCount) * m);
+		for (let i = 0; i < clouds.length; i++) clouds[i].group.visible = i < visibleClouds;
 		beacon.intensity = DAY.beaconIntensity + (NIGHT.beaconIntensity - DAY.beaconIntensity) * m;
 		lampGlowMat.opacity = 0.25 + 0.6 * m;
 		beamMat.opacity = 0.2 * m;
@@ -536,6 +549,7 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		animatedObjects.add(f.tail);
 	}
 	for (const blade of seaweed) animatedObjects.add(blade.mesh);
+	for (const c of clouds) animatedObjects.add(c.group);
 	function freezeStaticMatrices() {
 		scene.traverse((obj) => {
 			if (animatedObjects.has(obj)) return;
@@ -666,6 +680,8 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 			bp.setZ(i, 22 - rand() * 18);
 		}
 		bp.needsUpdate = true;
+
+		scatterClouds(clouds, rand);
 
 		applyDepth();
 	}
@@ -846,6 +862,14 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		// The dome too: at depth its warm horizon would smear through the
 		// water; the fog-colored clear color takes over instead.
 		sky.visible = skyVisible;
+		cloudsRoot.visible = skyVisible;
+		if (skyVisible) {
+			// Slow one-way drift, wrapping off the far side of the frustum.
+			for (const c of clouds) {
+				c.group.position.x += c.speed * dt;
+				if (c.group.position.x > CLOUD_WRAP_X) c.group.position.x = -CLOUD_WRAP_X;
+			}
+		}
 
 		// Depth swallows warm light: cool and dim the lights as the camera
 		// descends so the deep seabed stays blue instead of washing out.
@@ -927,6 +951,55 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		}
 		if (splashAlive) splashGeo.getAttribute("position").needsUpdate = true;
 
+		// Shooting stars: only visible at night, fire sporadically.
+		meteorMat.opacity = starMat.opacity;
+		meteors.visible = skyVisible && mix > 0.3;
+		let meteorDirty = false;
+		for (let mi = 0; mi < meteorState.length; mi++) {
+			const ms = meteorState[mi];
+			if (!ms.active) {
+				ms.cooldown -= dt;
+				if (ms.cooldown <= 0 && mix > 0.5) {
+					const theta = Math.random() * Math.PI * 2;
+					const phi = Math.acos(Math.random() * 0.6 + 0.15);
+					const r = 270;
+					ms.x = r * Math.sin(phi) * Math.cos(theta);
+					ms.y = r * Math.cos(phi);
+					ms.z = r * Math.sin(phi) * Math.sin(theta) - 40;
+					const speed = 180 + Math.random() * 120;
+					const dTheta = theta + 0.3 + Math.random() * 0.4;
+					ms.dx = -speed * Math.sin(phi) * Math.cos(dTheta);
+					ms.dy = -speed * Math.cos(phi) * 0.5;
+					ms.dz = -speed * Math.sin(phi) * Math.sin(dTheta);
+					ms.maxLife = 0.4 + Math.random() * 0.5;
+					ms.life = ms.maxLife;
+					ms.active = true;
+				}
+				continue;
+			}
+			ms.life -= dt;
+			if (ms.life <= 0) {
+				ms.active = false;
+				ms.cooldown = 5 + Math.random() * 12;
+				meteorPositions[mi * 6] = 9999;
+				meteorPositions[mi * 6 + 3] = 9999;
+				meteorDirty = true;
+				continue;
+			}
+			ms.x += ms.dx * dt;
+			ms.y += ms.dy * dt;
+			ms.z += ms.dz * dt;
+			const tailF = 0.06;
+			meteorPositions[mi * 6] = ms.x;
+			meteorPositions[mi * 6 + 1] = ms.y;
+			meteorPositions[mi * 6 + 2] = ms.z;
+			meteorPositions[mi * 6 + 3] = ms.x - ms.dx * tailF;
+			meteorPositions[mi * 6 + 4] = ms.y - ms.dy * tailF;
+			meteorPositions[mi * 6 + 5] = ms.z - ms.dz * tailF;
+			meteorDirty = true;
+		}
+		if (meteorDirty) meteorGeo.getAttribute("position").needsUpdate = true;
+
 		renderer.render(scene, camera);
 	}
 
@@ -978,6 +1051,10 @@ function buildScene(canvas: HTMLCanvasElement, initialDark: boolean): SceneApi |
 		},
 		setSeed: (seed: number) => {
 			scatter(seed);
+			if (reducedMotion) renderFrame(0.016);
+		},
+		reapplyPalette: () => {
+			applyPalette(mix);
 			if (reducedMotion) renderFrame(0.016);
 		},
 		dispose: () => {
@@ -1040,5 +1117,14 @@ export default function Ocean3D() {
 		apiRef.current?.setSeed(hashString(pathname));
 	}, [pathname]);
 
-	return <canvas ref={canvasRef} className={styles.oceanCanvas} aria-hidden="true" />;
+	const reapply = useCallback(() => {
+		apiRef.current?.reapplyPalette();
+	}, []);
+
+	return (
+		<>
+			<canvas ref={canvasRef} className={styles.oceanCanvas} aria-hidden="true" />
+			<DevPalettePanel onReapply={reapply} />
+		</>
+	);
 }

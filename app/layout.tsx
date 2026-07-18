@@ -6,6 +6,7 @@ import Navigation from "@/components/Navigation/Navigation";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import Ocean3DLazy from "@/components/Ocean3D/Ocean3DLazy";
+import Script from "next/script";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { getNonce } from "@/utils/nonce";
 
@@ -83,13 +84,13 @@ export default async function RootLayout({
 
 	return (
 		<html lang="en" className={`${font.variable} ${inter.variable}`} suppressHydrationWarning>
-			<head>
-				<script
-					nonce={nonce}
-					dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem("theme")||"system";var r=t;if(t==="system")r=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.classList.add(r);document.documentElement.style.colorScheme=r}catch(e){}})()` }}
-				/>
-			</head>
+			<head />
 			<body className={styles.page}>
+				<Script
+					src="/theme-init.js"
+					nonce={nonce}
+					strategy="beforeInteractive"
+				/>
 				<ThemeProvider>
 					<Ocean3DLazy />
 
