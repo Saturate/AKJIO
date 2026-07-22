@@ -82,11 +82,17 @@ export default async function RootLayout({
 	const nonce = await getNonce();
 
 	return (
-		<html lang="en" className={`${font.variable} ${inter.variable}`} suppressHydrationWarning>
+		<html
+			lang="en"
+			className={`${font.variable} ${inter.variable}`}
+			suppressHydrationWarning
+		>
 			<head>
 				<script
 					nonce={nonce}
-					dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem("theme")||"system";var r=t;if(t==="system")r=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.classList.add(r);document.documentElement.style.colorScheme=r}catch(e){}})()` }}
+					dangerouslySetInnerHTML={{
+						__html: `(function(){try{var t=localStorage.getItem("theme")||"system";var r=t;if(t==="system")r=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.classList.add(r);document.documentElement.style.colorScheme=r}catch{}})()`,
+					}}
 				/>
 			</head>
 			<body className={styles.page}>

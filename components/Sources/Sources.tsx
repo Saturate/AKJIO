@@ -9,13 +9,14 @@ import styles from "./Sources.module.css";
 
 interface SourcesProps {
 	sources: Array<{ title: string; url: string }>;
+	label?: string;
 }
 
-export default function Sources({ sources }: SourcesProps) {
+export default function Sources({ sources, label = "Sources" }: SourcesProps) {
 	return (
 		<Collapsible className={styles.sources}>
 			<CollapsibleTrigger className={styles.trigger}>
-				Sources ({sources.length})
+				{label} ({sources.length})
 				<svg
 					className={styles.chevron}
 					width="12"
