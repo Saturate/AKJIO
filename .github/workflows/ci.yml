@@ -24,11 +24,23 @@ jobs:
       - name: "Install dependencies"
         run: pnpm install --frozen-lockfile
 
+      - name: "Generate content token"
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: Saturate
+          repositories: akjio-content
+
       #- name: "Check format"
       #  run: pnpm format:check
 
       - name: "Build"
         run: pnpm build
+        env:
+          CONTENT_TOKEN: ${{ steps.app-token.outputs.token }}
+          CONTENT_REPO_URL: ${{ secrets.CONTENT_REPO_URL }}
 
       - name: "Lint"
         run: pnpm lint

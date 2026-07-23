@@ -9,6 +9,7 @@ export interface PostFrontmatter {
 	description?: string;
 	date?: string;
 	tags: string[];
+	draft?: boolean;
 }
 
 /**
@@ -27,6 +28,8 @@ export function parseFrontmatter(
 		/description:\s*(?:(["'])(.+?)\1|(.+?)(?:\n|$))/,
 	);
 	const dateMatch = fm.match(/date:\s*["']?(\d{4}-\d{2}-\d{2})/);
+
+	const draftMatch = fm.match(/draft:\s*(true|false)/);
 
 	const inlineTagsMatch = fm.match(/tags:\s*\[(.*?)\]/s);
 	const yamlTagsMatch = fm.match(/tags:\s*\n((?:\s+-\s+.+\n?)+)/);
@@ -50,6 +53,7 @@ export function parseFrontmatter(
 		description: descriptionMatch?.[2] ?? descriptionMatch?.[3]?.trim(),
 		date: dateMatch?.[1],
 		tags,
+		draft: draftMatch?.[1] === "true",
 	};
 }
 
@@ -62,7 +66,7 @@ export function readAllPosts(): PostEntry[] {
 	const postsPath = path.join(process.cwd(), POST_CONTENT_PATH);
 	const postIds = fs
 		.readdirSync(postsPath, { withFileTypes: true })
-		.filter((item) => item.isDirectory() && item.name !== "_drafts")
+		.filter((item) => item.isDirectory())
 		.map((item) => item.name);
 
 	return postIds
@@ -72,6 +76,8 @@ export function readAllPosts(): PostEntry[] {
 			const mdxFile = files.find((f) => f.endsWith(".mdx"));
 			if (!mdxFile) return null;
 			const content = fs.readFileSync(path.join(postPath, mdxFile), "utf8");
+			const fm = parseFrontmatter(content, id);
+			if (fm.draft) return null;
 			return { id, content };
 		})
 		.filter((p): p is PostEntry => p !== null);

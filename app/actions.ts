@@ -13,6 +13,7 @@ type FrontmatterType = {
 	series?: string;
 	tags?: string[];
 	sources?: Array<{ title: string; url: string }>;
+	draft?: boolean;
 };
 
 const POST_CONTENT_PATH = "content/posts";
@@ -78,10 +79,20 @@ export async function getPage(id: string) {
 
 export async function getPostsIds() {
 	"use server";
-	const postIds = fs
+	const dirs = fs
 		.readdirSync(`${POST_CONTENT_PATH}/`, { withFileTypes: true })
-		.filter((item) => item.isDirectory() && item.name !== "_drafts")
+		.filter((item) => item.isDirectory())
 		.map((item) => item.name);
+
+	const postIds = dirs.filter((id) => {
+		const postDir = path.join(POST_CONTENT_PATH, id);
+		const files = fs.readdirSync(postDir);
+		const mdxFile = files.find((f) => f.endsWith(".mdx"));
+		if (!mdxFile) return false;
+		const content = fs.readFileSync(path.join(postDir, mdxFile), "utf8");
+		const draftMatch = content.match(/draft:\s*true/);
+		return !draftMatch;
+	});
 
 	return { postIds };
 }
