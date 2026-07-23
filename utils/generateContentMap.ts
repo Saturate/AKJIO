@@ -20,7 +20,7 @@ export default async function generateContentMap() {
 
 	return await Promise.all(
 		content
-			.filter((path) => !path.isDirectory())
+			.filter((entry) => !entry.isDirectory() && entry.name.endsWith(".mdx"))
 			.map(async (entry) => {
 				// In newer Node.js versions, readdirSync with recursive returns parentPath instead of path
 				const entryWithPath = entry as fs.Dirent & { path?: string; parentPath?: string };
