@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack -p 4404",
+    "prebuild": "bash scripts/clone-content.sh",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint .",

@@ -21,7 +21,7 @@ type PageData = {
 async function getPostsData(): Promise<PostData[]> {
 	const postIds = fs
 		.readdirSync(POST_CONTENT_PATH, { withFileTypes: true })
-		.filter((item) => item.isDirectory() && item.name !== "_drafts")
+		.filter((item) => item.isDirectory())
 		.map((item) => item.name);
 
 	const posts = (
@@ -37,6 +37,8 @@ async function getPostsData(): Promise<PostData[]> {
 					path.join(postPath, mdxFile),
 					"utf8",
 				);
+
+				if (content.match(/draft:\s*true/)) return null;
 
 				const titleMatch = content.match(/title:\s*["']?(.+?)["']?\s*$/m);
 				const subtitleMatch = content.match(
