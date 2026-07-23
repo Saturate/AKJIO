@@ -34,11 +34,11 @@ export default async function FrontPage({ params }: PageProps) {
 	return (
 		<>
 			<div className={styles.homeLayout} data-layout="full-width">
-				<article className={`${styles.mainContent} glassPanel`}>{page.Component()}</article>
-				<div className={`${styles.sidebar} glassPanel`}>
-					<RecentPosts limit={3} />
+				<article className={styles.greeting}>{page.Component()}</article>
+				<aside className={styles.recentWork}>
+					<RecentPosts limit={5} />
 					<PopularTags limit={10} />
-				</div>
+				</aside>
 			</div>
 			<JsonLd data={personJsonLd} nonce={nonce} />
 			<JsonLd data={orgJsonLd} nonce={nonce} />

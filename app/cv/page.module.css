@@ -4,17 +4,16 @@
 }
 
 .header {
-  margin-bottom: 4rem;
-  text-align: center;
+  margin-bottom: 3rem;
 }
 
 .header h1 {
-  font-size: 4rem;
-  margin-bottom: 1rem;
+  font-size: 3.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .subtitle {
-  color: var(--color-text-secondary, #bababa);
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 
@@ -26,16 +25,14 @@
   font-size: 2.5rem;
   margin-bottom: 2rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--color-border, #333);
+  border-bottom: 2px solid var(--color-rule);
 }
 
 /* Work Experience */
 .workItem {
   margin-bottom: 3rem;
-  padding: 1.5rem;
-  border-left: 3px solid var(--color-accent, #4a9eff);
-  background: var(--color-card-bg, rgba(255, 255, 255, 0.02));
-  border-radius: 4px;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .sectionHeader {
@@ -48,7 +45,7 @@
 
 .workTitle {
   font-size: 1.8rem;
-  margin: 0 0 1rem;
+  margin: 0 0 0.5rem;
   line-height: 1.1;
 }
 
@@ -58,25 +55,25 @@
 }
 
 .workTitle a:hover {
-  color: var(--color-accent, #4a9eff);
+  color: var(--color-accent);
 }
 
 .workPosition {
   font-size: 1.2rem;
-  color: var(--color-text-secondary, #bababa);
+  color: var(--text-secondary);
   margin: 0;
   line-height: 1.2;
 }
 
 .workLocation {
   font-size: 0.9rem;
-  color: var(--color-text-tertiary, #888);
+  color: var(--text-tertiary);
   margin: 0;
   line-height: 1.2;
 }
 
 .dateRange {
-  color: var(--color-text-secondary, #bababa);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   white-space: nowrap;
 }
@@ -103,7 +100,7 @@
   content: "▸";
   position: absolute;
   left: 0;
-  color: var(--color-accent, #4a9eff);
+  color: var(--color-accent);
 }
 
 .technologies {
@@ -116,33 +113,33 @@
 .tag {
   display: inline-block;
   padding: 0.25rem 0.75rem;
-  background: var(--color-tag-bg, rgba(74, 158, 255, 0.1));
-  border: 1px solid var(--color-tag-border, rgba(74, 158, 255, 0.3));
+  background: var(--color-accent-bg);
+  border: 1px solid var(--color-accent-border);
   border-radius: 3px;
   font-size: 0.85rem;
-  color: var(--color-accent, #4a9eff);
+  color: var(--color-accent);
 }
 
 .tagSmall {
   display: inline-block;
   padding: 0.15rem 0.5rem;
-  background: var(--color-tag-bg, rgba(74, 158, 255, 0.1));
-  border: 1px solid var(--color-tag-border, rgba(74, 158, 255, 0.2));
+  background: var(--color-accent-bg);
+  border: 1px solid var(--color-accent-border);
   border-radius: 3px;
   font-size: 0.75rem;
-  color: var(--color-accent, #4a9eff);
+  color: var(--color-accent);
 }
 
 .projects {
   margin-top: 1.5rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--color-border, #333);
+  border-top: 1px solid var(--color-border-subtle);
 }
 
 .projects summary {
   cursor: pointer;
   font-weight: 600;
-  color: var(--color-accent, #4a9eff);
+  color: var(--color-accent);
   margin-bottom: 1rem;
 }
 
@@ -162,7 +159,7 @@
 
 .projects li p {
   margin-top: 0.5rem;
-  color: var(--color-text-secondary, #bababa);
+  color: var(--text-secondary);
 }
 
 .projectLink {
@@ -174,17 +171,15 @@
 }
 
 .projectLink:hover {
-  color: var(--color-accent, #4a9eff);
+  color: var(--color-accent);
 }
 
 /* Awards */
 .awardItem {
   margin-bottom: 1rem;
-  padding: 1rem 1.5rem;
-  background: var(--color-card-bg, rgba(255, 255, 255, 0.02));
-  border-radius: 4px;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--color-border-subtle);
 }
-
 
 .awardTitle {
   font-size: 1.1rem;
@@ -197,13 +192,13 @@
 }
 
 .awardTitle a:hover {
-  color: var(--color-accent, #4a9eff);
+  color: var(--color-accent);
 }
 
 .awardMeta {
   margin: 0;
   font-size: 0.85rem;
-  color: var(--color-text-tertiary, #888);
+  color: var(--text-tertiary);
 }
 
 .awardPlacement {
@@ -214,18 +209,16 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  color: var(--color-text-secondary, #bababa);
-  background: var(--color-tag-bg, rgba(74, 158, 255, 0.1));
-  border: 1px solid var(--color-tag-border, rgba(74, 158, 255, 0.2));
+  color: var(--text-secondary);
+  background: var(--color-accent-bg);
+  border: 1px solid var(--color-accent-border);
 }
 
 /* Featured Projects */
 .projectItem {
   margin-bottom: 2.5rem;
-  padding: 1.5rem;
-  border-left: 3px solid var(--color-secondary, #ff6b6b);
-  background: var(--color-card-bg, rgba(255, 255, 255, 0.02));
-  border-radius: 4px;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 
@@ -240,7 +233,7 @@
 }
 
 .projectTitle a:hover {
-  color: var(--color-secondary, #ff6b6b);
+  color: var(--color-secondary);
 }
 
 /* Skills */
@@ -252,15 +245,15 @@
 
 .skillCategory {
   padding: 1.5rem;
-  background: var(--color-card-bg, rgba(255, 255, 255, 0.02));
+  background: var(--color-surface);
   border-radius: 4px;
-  border: 1px solid var(--color-border, #333);
+  border: 1px solid var(--color-rule);
 }
 
 .skillCategoryTitle {
   font-size: 1.3rem;
   margin-bottom: 1rem;
-  color: var(--color-accent, #4a9eff);
+  color: var(--color-accent);
 }
 
 .skillList {
@@ -273,7 +266,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  border-bottom: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.05));
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .skillList li:last-child {
@@ -286,18 +279,16 @@
 
 .proficiency {
   font-size: 0.8rem;
-  color: var(--color-text-tertiary, #888);
+  color: var(--text-tertiary);
   text-transform: capitalize;
 }
 
 /* Education */
 .educationItem {
   margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: var(--color-card-bg, rgba(255, 255, 255, 0.02));
-  border-radius: 4px;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--color-border-subtle);
 }
-
 
 .educationTitle {
   font-size: 1.5rem;
@@ -310,19 +301,18 @@
 }
 
 .educationTitle a:hover {
-  color: var(--color-accent, #4a9eff);
+  color: var(--color-accent);
 }
 
 .educationDegree {
-  color: var(--color-text-secondary, #bababa);
+  color: var(--text-secondary);
 }
 
 /* Certifications */
 .certItem {
   margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: var(--color-card-bg, rgba(255, 255, 255, 0.02));
-  border-radius: 4px;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .certTitle {
@@ -336,20 +326,19 @@
 }
 
 .certTitle a:hover {
-  color: var(--color-accent, #4a9eff);
+  color: var(--color-accent);
 }
 
 .certIssuer {
-  color: var(--color-text-secondary, #bababa);
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
 /* Publications */
 .publicationItem {
   margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: var(--color-card-bg, rgba(255, 255, 255, 0.02));
-  border-radius: 4px;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .publicationTitle {
@@ -363,11 +352,11 @@
 }
 
 .publicationTitle a:hover {
-  color: var(--color-accent, #4a9eff);
+  color: var(--color-accent);
 }
 
 .publicationVenue {
-  color: var(--color-text-secondary, #bababa);
+  color: var(--text-secondary);
   font-style: italic;
   margin-bottom: 0.5rem;
 }

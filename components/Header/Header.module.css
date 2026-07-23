@@ -3,7 +3,7 @@
 	max-width: 600px;
 	flex: 1;
 	text-align: center;
-	z-index: 10;
+	z-index: var(--z-header);
 }
 
 /* The name is the identity, anchored top-left like a signature; the domain
@@ -19,7 +19,7 @@
 	line-height: 1;
 	color: var(--text-primary);
 	text-shadow: 2px 2px 1px #0000002e;
-	z-index: 10;
+	z-index: var(--z-header);
 }
 
 .brand span {
@@ -40,7 +40,7 @@
 	align-items: flex-start;
 	/* Same level as the corner signature. */
 	padding-top: 1.35rem;
-	z-index: 1;
+	z-index: var(--z-base);
 }
 
 /* Below this the centered nav would collide with the signature: stack

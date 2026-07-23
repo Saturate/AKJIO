@@ -13,8 +13,28 @@
 	--light-ray-color: #6aa0c4;
 	--text-primary: #fbf1f1;
 	--text-muted: rgba(251, 241, 241, 0.6);
+	--text-secondary: #bababa;
+	--text-tertiary: #889aab;
 	--toc-active: #fbf1f1;
 	--cloud-color: rgba(255, 255, 255, 0.4);
+	--color-accent: #4a9eff;
+	--color-accent-dim: rgba(74, 158, 255, 0.5);
+	--color-accent-bg: rgba(74, 158, 255, 0.1);
+	--color-accent-border: rgba(74, 158, 255, 0.3);
+	--color-secondary: #ff6b6b;
+	--color-link-hover: #a0c4e0;
+	--color-rule: rgba(255, 255, 255, 0.2);
+	--color-surface: rgba(255, 255, 255, 0.02);
+	--color-surface-hover: rgba(255, 255, 255, 0.1);
+	--color-border-subtle: rgba(255, 255, 255, 0.05);
+
+	/* z-index scale */
+	--z-base: 1;
+	--z-sticky: 5;
+	--z-header: 10;
+	--z-overlay: 20;
+	--z-modal: 30;
+	--z-toast: 40;
 }
 
 .dark {
@@ -32,6 +52,8 @@
 	--light-ray-color: #3d5a7c;
 	--text-primary: #fbf1f1;
 	--text-muted: rgba(251, 241, 241, 0.6);
+	--text-secondary: #9ab0c0;
+	--text-tertiary: #6d8494;
 	--toc-active: rgba(74, 158, 255, 1);
 	--cloud-color: rgba(50, 60, 80, 0.4);
 	--moon-color: #f4f1de;
@@ -149,7 +171,15 @@ h2 {
 	border: 1px solid rgba(255, 255, 255, 0.09);
 	border-radius: 16px;
 	padding: 2rem 2.25rem;
-	box-shadow: 0 10px 36px rgba(2, 12, 26, 0.25);
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.glassPanel--tight {
+	padding: 1.5rem 1.75rem;
+}
+
+.glassPanel--sparse {
+	padding: 2.5rem 3rem;
 }
 
 @media (max-width: 768px) {
@@ -171,8 +201,8 @@ h2 {
 blockquote {
 	margin: 1.5rem 0;
 	padding: 1rem 1.5rem;
-	border-left: 4px solid rgba(74, 158, 255, 0.5);
-	background: rgba(255, 255, 255, 0.05);
+	border-left: 4px solid var(--color-accent-dim);
+	background: var(--color-border-subtle);
 	border-radius: 0 4px 4px 0;
 }
 
@@ -194,8 +224,8 @@ hr {
 	background: linear-gradient(
 		to right,
 		transparent,
-		rgba(74, 158, 255, 0.3) 20%,
-		rgba(74, 158, 255, 0.3) 80%,
+		var(--color-accent-border) 20%,
+		var(--color-accent-border) 80%,
 		transparent
 	);
 	margin: 2.5rem 0;
@@ -260,6 +290,10 @@ dd a {
 
 dd a:hover {
 	opacity: 1;
+}
+
+.tagFilter {
+	margin-bottom: 2rem;
 }
 
 .spoiler {
