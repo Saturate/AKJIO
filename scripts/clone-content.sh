@@ -86,5 +86,6 @@ git clone --depth 1 --quiet --branch "$CONTENT_BRANCH" \
 
 rm -rf "$CONTENT_DIR/.git"
 rm -rf "$CONTENT_DIR/.obsidian"
+rm -f "$CONTENT_DIR/.gitignore"
 
 echo "Content ready."
