@@ -2,14 +2,14 @@
    rocks and wreck show through, with a dark fade for legibility. */
 .footer {
 	background: linear-gradient(180deg, transparent 0%, rgba(3, 12, 22, 0.55) 70%);
-	color: #cfe2ee;
+	color: var(--text-primary);
 	display: flex;
 	flex: 0;
 	padding: 22vh 1rem 2.5rem;
 	justify-content: flex-end;
 	align-items: center;
 	position: relative;
-	z-index: 1;
+	z-index: var(--z-base);
 	gap: 1.5rem;
 	flex-direction: column;
 	text-shadow: 0 1px 4px rgba(0, 10, 20, 0.6);
@@ -22,7 +22,7 @@
 }
 
 .links a {
-	color: #cfe2ee;
+	color: var(--text-primary);
 	text-decoration: none;
 	transition: color 0.2s;
 	font-size: 0.75rem;
@@ -40,7 +40,7 @@
 }
 
 .copyright {
-	color: #9fbccd;
+	color: var(--text-muted);
 	font-size: 0.6875rem;
 }
 

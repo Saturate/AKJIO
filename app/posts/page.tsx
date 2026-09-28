@@ -80,7 +80,7 @@ export default async function PostsOverviewPage({ searchParams }: Props) {
 	return (
 		<div className="glassPanel">
 			{tag && (
-				<div style={{ marginBottom: "2rem" }}>
+				<div className="tagFilter">
 					<p>
 						Showing posts tagged with: <strong>{tag}</strong>
 					</p>

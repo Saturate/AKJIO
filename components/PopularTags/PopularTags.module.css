@@ -8,7 +8,7 @@
 	line-height: 1.6;
 	color: var(--text-primary);
 	font-family: var(--font-jersey-25);
-	border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+	border-bottom: 2px solid var(--color-rule);
 	padding-bottom: 0.5rem;
 }
 
@@ -27,7 +27,7 @@
 	padding: 0.4rem 0.8rem;
 	border-radius: 20px;
 	font-size: 0.85rem;
-	transition: all 0.2s ease;
+	transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 	border: 1px solid rgba(255, 255, 255, 0.15);
 	cursor: pointer;
 }
