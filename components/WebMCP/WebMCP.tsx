@@ -10,7 +10,11 @@ declare global {
 		title?: string;
 		description: string;
 		inputSchema?: object;
-		annotations?: { readOnlyHint?: boolean };
+		annotations?: {
+			readOnlyHint?: boolean;
+			untrustedContentHint?: boolean;
+			consequentialHint?: boolean;
+		};
 		execute: (
 			input: Record<string, unknown>,
 			options: { signal: AbortSignal },
@@ -115,11 +119,14 @@ export default function WebMCP() {
 
 		const controller = new AbortController();
 		for (const tool of TOOLS) {
-			// Older Chrome builds return void instead of a promise
-			Promise.resolve(
-				modelContext.registerTool(tool, { signal: controller.signal }),
-			).catch((error) =>
-				console.warn(`WebMCP: could not register ${tool.name}`, error),
+			// Async wrapper catches both sync throws and rejections; older Chrome builds return void
+			(async () =>
+				modelContext.registerTool(tool, { signal: controller.signal }))().catch(
+				(error) => {
+					// Strict mode's unmount aborts pending registrations, which isn't a failure
+					if (controller.signal.aborted) return;
+					console.warn(`WebMCP: could not register ${tool.name}`, error);
+				},
 			);
 		}
 
