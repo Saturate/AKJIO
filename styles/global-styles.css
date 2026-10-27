@@ -262,8 +262,10 @@ dd a {
 	display: none;
 }
 
-/* Underline that grows from the left; the site's replacement for bracketed buttons. */
-.grow-underline {
+/* Underline that grows from the left; the site's replacement for bracketed buttons.
+   :where() keeps this at zero specificity so a component that positions the element itself
+   (the code copy button is absolute) wins regardless of which stylesheet loads last. */
+:where(.grow-underline) {
 	position: relative;
 }
 
