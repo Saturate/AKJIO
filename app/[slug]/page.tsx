@@ -3,7 +3,6 @@ import { PageProps } from "@/app/types";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PostLayout from "./_components/PostLayout";
-import { getNonce } from "@/utils/nonce";
 import shell from "@/styles/Page.module.css";
 
 async function resolveSlug(slug: string) {
@@ -83,7 +82,6 @@ export default async function Page({ params }: PageProps) {
 
 	if (!resolved) notFound();
 
-	const nonce = await getNonce();
 	const { kind, page } = resolved;
 
 	if (kind === "post") {
@@ -94,7 +92,6 @@ export default async function Page({ params }: PageProps) {
 				frontmatter={page.frontmatter}
 				toc={page.toc ?? []}
 				readTime={page.readTime}
-				nonce={nonce}
 			/>
 		);
 	}

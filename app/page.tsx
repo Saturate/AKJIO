@@ -4,9 +4,8 @@ import RecentPosts from "@/components/RecentPosts/RecentPosts";
 import PopularTags from "@/components/PopularTags/PopularTags";
 import Colony from "@/components/Colony/Colony";
 import page from "@/styles/Page.module.css";
-import { generatePersonSchema, generateOrganizationSchema } from "@/utils/generateJsonLd";
+import { generateHomeSchema } from "@/utils/generateJsonLd";
 import JsonLd from "@/components/JsonLd/JsonLd";
-import { getNonce } from "@/utils/nonce";
 import { hashStr } from "@/lib/random";
 import { getPostSummaries, tagCounts } from "@/utils/postSummaries";
 
@@ -25,7 +24,7 @@ export async function generateMetadata() {
 
 export default async function FrontPage({ params }: PageProps) {
 	const slug = (await params).slug;
-	const [content, posts, nonce] = await Promise.all([getPageFromSlug([slug]), getPostSummaries(), getNonce()]);
+	const [content, posts] = await Promise.all([getPageFromSlug([slug]), getPostSummaries()]);
 
 	return (
 		<>
@@ -43,8 +42,7 @@ export default async function FrontPage({ params }: PageProps) {
 					</section>
 				</div>
 			</div>
-			<JsonLd data={generatePersonSchema()} nonce={nonce} />
-			<JsonLd data={generateOrganizationSchema()} nonce={nonce} />
+			<JsonLd data={generateHomeSchema()} />
 		</>
 	);
 }

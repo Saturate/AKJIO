@@ -5,7 +5,6 @@ import PopularTags from "@/components/PopularTags/PopularTags";
 import JsonLd from "@/components/JsonLd/JsonLd";
 import page from "@/styles/Page.module.css";
 import { generateCollectionPageSchema } from "@/utils/generateJsonLd";
-import { getNonce } from "@/utils/nonce";
 import { getPostSummaries, tagCounts } from "@/utils/postSummaries";
 import { hashStr } from "@/lib/random";
 
@@ -37,7 +36,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
 export default async function PostsOverviewPage({ searchParams }: Props) {
 	const { tag } = await searchParams;
-	const [all, nonce] = await Promise.all([getPostSummaries(), getNonce()]);
+	const all = await getPostSummaries();
 	const posts = tag ? all.filter((p) => p.tags.includes(tag)) : all;
 	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
 
@@ -74,7 +73,7 @@ export default async function PostsOverviewPage({ searchParams }: Props) {
 					<p className={page.label}>No posts tagged {tag}.</p>
 				)}
 			</div>
-			<JsonLd data={jsonLd} nonce={nonce} />
+			<JsonLd data={jsonLd} />
 		</div>
 	);
 }
