@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useSettings } from "@/providers/ThemeProvider";
+import { createSettingsTools } from "./settingsTools";
 
 // WebMCP (https://webmachinelearning.github.io/webmcp/): not yet in lib.dom.
 // Chrome 150 moved it from navigator to document; older builds only have navigator.
@@ -51,6 +53,7 @@ const TOOLS: ModelContextTool[] = [
 		title: "List posts",
 		description:
 			"List every blog post and page on akj.io with its title, short description and a link to its markdown.",
+		inputSchema: { type: "object", properties: {} },
 		annotations: { readOnlyHint: true },
 		execute: (_input, { signal }) => fetchText("/llms.txt", signal),
 	},
@@ -107,18 +110,35 @@ const TOOLS: ModelContextTool[] = [
 		title: "Support Allan",
 		description:
 			"Ways to support Allan Kimmer Jensen, the author of akj.io, with money.",
+		inputSchema: { type: "object", properties: {} },
 		annotations: { readOnlyHint: true },
 		execute: (_input, { signal }) => fetchText("/funding.txt", signal),
 	},
 ];
 
 export default function WebMCP() {
+	const { settings, update, reset } = useSettings();
+	// Tools read through a ref so changing a setting doesn't unregister and re-register everything
+	const settingsRef = useRef(settings);
+	useEffect(() => {
+		settingsRef.current = settings;
+	}, [settings]);
+
 	useEffect(() => {
 		const modelContext = document.modelContext ?? navigator.modelContext;
 		if (!modelContext) return;
 
+		const tools = [
+			...TOOLS,
+			...createSettingsTools({
+				current: () => settingsRef.current,
+				update,
+				reset,
+			}),
+		];
+
 		const controller = new AbortController();
-		for (const tool of TOOLS) {
+		for (const tool of tools) {
 			// Async wrapper catches both sync throws and rejections; older Chrome builds return void
 			(async () =>
 				modelContext.registerTool(tool, { signal: controller.signal }))().catch(
@@ -131,7 +151,7 @@ export default function WebMCP() {
 		}
 
 		return () => controller.abort();
-	}, []);
+	}, [update, reset]);
 
 	return null;
 }
