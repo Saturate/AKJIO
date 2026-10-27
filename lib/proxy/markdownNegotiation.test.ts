@@ -39,16 +39,23 @@ describe("markdownPathFor", () => {
 	// Any top-level route that isn't MDX content must be excluded, or agents asking for
 	// markdown get a 404 where browsers get a page. This fails when a new one is added.
 	it("skips every top-level app route that has no llm.txt twin", () => {
-		const appDir = path.join(process.cwd(), "app");
 		const metadataRoutes = ["icon", "apple-icon", "opengraph-image", "twitter-image"];
 
-		const routes = fs.readdirSync(appDir, { withFileTypes: true }).flatMap((entry) => {
-			if (entry.isDirectory()) {
-				return /^[_[(]/.test(entry.name) || entry.name.includes(".") ? [] : [entry.name];
-			}
-			const base = entry.name.replace(/\.(tsx?|jsx?)$/, "");
-			return metadataRoutes.includes(base) ? [base] : [];
-		});
+		// Route groups like (site) don't add a URL segment, so their children are top-level too
+		const topLevelRoutes = (dir: string): string[] =>
+			fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+				if (entry.isDirectory()) {
+					if (/^\(.+\)$/.test(entry.name)) {
+						return topLevelRoutes(path.join(dir, entry.name));
+					}
+					// _private folders, [dynamic] and @slot segments, and dotted routes like llms.txt
+					return /^[_[@]/.test(entry.name) || entry.name.includes(".") ? [] : [entry.name];
+				}
+				const base = entry.name.replace(/\.(tsx?|jsx?)$/, "");
+				return metadataRoutes.includes(base) ? [base] : [];
+			});
+
+		const routes = topLevelRoutes(path.join(process.cwd(), "app"));
 
 		expect(routes.length).toBeGreaterThan(0);
 		for (const route of routes) {
