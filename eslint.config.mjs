@@ -11,6 +11,8 @@ export default  [
 			'out/**',
 			'.vercel/**',
 			'next-env.d.ts',
+			// Local-only Obsidian plugin bundles; CI deletes them, and content components should be linted
+			'content/.obsidian/**',
 		],
 	},
 	eslintConfigPrettier,

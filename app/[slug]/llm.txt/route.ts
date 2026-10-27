@@ -1,11 +1,6 @@
 import fs from "fs";
+import { stripFrontmatter } from "@/lib/content/frontmatter";
 import generateContentMap from "@/utils/generateContentMap";
-
-function stripFrontmatter(content: string): string {
-	const match = content.match(/^---\s*\n[\s\S]*?\n---\s*\n/);
-	if (!match) return content;
-	return content.slice(match[0].length).trim();
-}
 
 // Same lookup as the HTML route, so ordered files like content/1_about.mdx resolve too
 async function resolveContentPath(slug: string): Promise<string | null> {

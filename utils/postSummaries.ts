@@ -1,4 +1,4 @@
-import { getPost, getPostsIds } from "@/app/actions";
+import { getPost, getPostsIds } from "@/lib/content/compiledPost";
 
 export type PostSummary = {
 	link: string;
@@ -24,7 +24,11 @@ export async function getPostSummaries(): Promise<PostSummary[]> {
 			readTime: p.readTime,
 			tags: p.frontmatter.tags ?? [],
 		}))
-		.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+		// An undated post would make the comparator return NaN and land anywhere; sort it last
+		.sort(
+			(a, b) =>
+				(new Date(b.date).getTime() || 0) - (new Date(a.date).getTime() || 0),
+		);
 }
 
 export function tagCounts(posts: PostSummary[]): Array<[string, number]> {

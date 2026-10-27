@@ -1,10 +1,5 @@
 import fs from "fs";
-
-function stripFrontmatter(content: string): string {
-	const match = content.match(/^---\s*\n[\s\S]*?\n---\s*\n/);
-	if (!match) return content;
-	return content.slice(match[0].length).trim();
-}
+import { stripFrontmatter } from "@/lib/content/frontmatter";
 
 export async function GET() {
 	const raw = fs.readFileSync("content/index.mdx", "utf8");

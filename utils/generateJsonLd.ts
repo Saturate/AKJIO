@@ -4,8 +4,8 @@
  */
 
 import { cvData, type Skill, type WorkExperience } from "@/data/cv";
+import { SITE_URL } from "@/lib/site";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
 const AUTHOR_NAME = "Allan Kimmer Jensen";
 // Stable @id so every page's Person resolves to the same entity
 const PERSON_ID = `${SITE_URL}/#person`;

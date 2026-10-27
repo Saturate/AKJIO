@@ -9,7 +9,7 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint .",
-    "test": "echo No tests found.",
+    "test": "vitest run",
     "format": "prettier --write --ignore-path=.gitignore .",
     "format:check": "prettier --check --ignore-path=.gitignore .",
     "deploy:vercel": "vercel"
@@ -41,7 +41,8 @@
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
     "remark-mdx-frontmatter": "^6.0.0",
-    "shiki": "^4.5.0"
+    "shiki": "^4.5.0",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^16.4.3",
@@ -56,7 +57,9 @@
     "prettier": "^3.9.10",
     "typescript": "6.0.3",
     "typescript-eslint": "^8.72.0",
-    "vercel": "^65.2.0"
+    "vercel": "^65.2.0",
+    "vite": "8.3.5",
+    "vitest": "5.0.5"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"

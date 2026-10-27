@@ -7,7 +7,6 @@ import calculateReadTime from "@/utils/calculateReadTime";
 import importifyPath from "./importifyPath";
 
 export async function findPageBySlug(slug: string[] | string) {
-	"use server";
 
 	const contentMap = await generateContentMap();
 	const slugPath = "/" + (typeof slug === "string" ? slug : slug.join("/"));
@@ -50,7 +49,6 @@ export async function findPageBySlug(slug: string[] | string) {
 }
 
 export default async function getPageFromSlug(slug: string[] | string) {
-	"use server";
 
 	const result = await findPageBySlug(slug);
 

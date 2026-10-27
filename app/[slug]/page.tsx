@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PostLayout from "./_components/PostLayout";
 import shell from "@/styles/Page.module.css";
+import { SITE_URL } from "@/lib/site";
 
 async function resolveSlug(slug: string) {
 	const post = await findPageBySlug(["posts", slug]);
@@ -28,8 +29,7 @@ export async function generateMetadata({
 	const { title, description, frontmatter } = page;
 
 	if (kind === "post") {
-		const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
-		const postUrl = `${siteUrl}/${slug}`;
+		const postUrl = `${SITE_URL}/${slug}`;
 
 		return {
 			title: { default: title, template: "%s | AKJ.IO" },
