@@ -13,6 +13,7 @@ import { strainCss } from "@/lib/strains";
 import { SETTINGS_COOKIE, parseSettings } from "@/lib/settings";
 import { cookies } from "next/headers";
 import CulturePanel from "@/components/CulturePanel/CulturePanel";
+import ImageViewer from "@/components/ImageViewer/ImageViewer";
 
 const fraunces = Fraunces({
 	subsets: ["latin"],
@@ -125,6 +126,7 @@ export default async function RootLayout({
 				<ThemeProvider initial={settings}>
 					<SporeField />
 					<CulturePanel />
+					<ImageViewer />
 					<Header>
 						<Navigation />
 					</Header>

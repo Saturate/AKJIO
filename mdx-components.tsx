@@ -1,7 +1,12 @@
 import type { MDXComponents } from "mdx/types";
-import Image, { ImageProps } from "next/image";
 import React from "react";
 import CodeFrame from "@/components/CodeFrame/CodeFrame";
+import ProseImage from "@/components/ProseImage/ProseImage";
+
+function toSize(v: string | number | undefined): number | undefined {
+	const n = typeof v === "number" ? v : Number(v);
+	return Number.isFinite(n) && n > 0 ? n : undefined;
+}
 import { slugify } from "@/utils/slugify";
 
 function getTextContent(node: React.ReactNode): string {
@@ -76,13 +81,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 		h4: createHeading(4),
 		h5: createHeading(5),
 		h6: createHeading(6),
-		img: (props) => (
-			<Image
-				sizes="100vw"
-				style={{ width: "100%", height: "auto" }}
-				{...(props as ImageProps)}
-			/>
-		),
+		img: ({ src, alt, width, height }) =>
+			typeof src === "string" ? <ProseImage src={src} alt={alt ?? ""} width={toSize(width)} height={toSize(height)} /> : null,
 		...components,
 	};
 }

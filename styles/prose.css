@@ -117,8 +117,29 @@
 	}
 }
 
+/* Screenshots used to fill the column; keep them to a glance and let the viewer show the rest.
+   Covers markdown images, ProseImage and raw <img> in MDX alike. */
 .prose img {
+	display: block;
+	max-width: 100%;
+	max-height: 420px;
+	width: auto;
+	height: auto;
+	margin: 28px auto;
+	padding: 6px;
+	object-fit: contain;
 	border: 1px solid var(--line);
+	background: color-mix(in srgb, var(--raised) 50%, transparent);
+	transition: border-color 0.3s;
+}
+
+.prose img[data-zoomable] {
+	cursor: zoom-in;
+}
+
+.prose img[data-zoomable]:hover,
+.prose img[data-zoomable]:focus-visible {
+	border-color: var(--growth);
 }
 
 .prose figure:not([data-rehype-pretty-code-figure]) {
