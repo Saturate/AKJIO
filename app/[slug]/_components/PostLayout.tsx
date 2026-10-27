@@ -14,6 +14,7 @@ import InfectedTitle from "@/components/InfectedTitle/InfectedTitle";
 import RelatedPosts from "@/components/RelatedPosts/RelatedPosts";
 import { hashStr } from "@/lib/random";
 import type { TOCEntry } from "@/utils/generateTableOfContentsFromMarkdown";
+import { SITE_URL } from "@/lib/site";
 
 type PostLayoutProps = {
 	slug: string;
@@ -33,8 +34,7 @@ type PostLayoutProps = {
 };
 
 export default function PostLayout({ slug, Component, frontmatter, toc, readTime }: PostLayoutProps) {
-	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
-	const postUrl = `${siteUrl}/${slug}`;
+	const postUrl = `${SITE_URL}/${slug}`;
 	const introLabel = frontmatter.subtitle ?? frontmatter.description ?? "";
 	const updated = frontmatter.updated && frontmatter.updated !== frontmatter.date ? frontmatter.updated : null;
 

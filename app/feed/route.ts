@@ -1,4 +1,5 @@
 import { readAllPosts } from "@/lib/content/posts";
+import { SITE_URL } from "@/lib/site";
 
 type PostData = {
 	id: string;
@@ -23,23 +24,22 @@ function getPostsData(): PostData[] {
 
 export async function GET() {
 	const sortedPosts = getPostsData();
-	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
 
 	const feedXml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Allan Kimmer Jensen</title>
-    <link>${siteUrl}</link>
+    <link>${SITE_URL}</link>
     <description>Writing on security, development, and CTF</description>
     <language>en</language>
-    <atom:link href="${siteUrl}/feed" rel="self" type="application/rss+xml" />
+    <atom:link href="${SITE_URL}/feed" rel="self" type="application/rss+xml" />
     ${sortedPosts
 			.map(
 				(post) => `
     <item>
       <title>${escapeXml(post.title)}</title>
-      <link>${siteUrl}/${post.id}</link>
-      <guid>${siteUrl}/${post.id}</guid>
+      <link>${SITE_URL}/${post.id}</link>
+      <guid>${SITE_URL}/${post.id}</guid>
       ${post.date ? `<pubDate>${post.date.toUTCString()}</pubDate>` : ""}
       ${post.subtitle ? `<description>${escapeXml(post.subtitle)}</description>` : ""}
       ${post.tags?.map((tag) => `<category>${escapeXml(tag)}</category>`).join("\n      ") || ""}

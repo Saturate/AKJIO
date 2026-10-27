@@ -1,7 +1,7 @@
 import { getLlmPages, getLlmPosts } from "@/utils/llmContent";
+import { SITE_URL } from "@/lib/site";
 
 export async function GET() {
-	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
 	const posts = getLlmPosts();
 	const pages = getLlmPages();
 
@@ -10,19 +10,19 @@ export async function GET() {
 		"",
 		"> Software engineer and security enthusiast. Writing about CTF challenges, web security, frontend development, and software architecture.",
 		"",
-		`Everything below in one file: ${siteUrl}/llms-full.txt`,
+		`Everything below in one file: ${SITE_URL}/llms-full.txt`,
 		"",
 		"## Blog Posts",
 		"",
 		...posts.map((post) => {
 			const desc = post.description ? `: ${post.description}` : "";
-			return `- [${post.title}](${siteUrl}/${post.id}/llm.txt)${desc}`;
+			return `- [${post.title}](${SITE_URL}/${post.id}/llm.txt)${desc}`;
 		}),
 		"",
 		"## Pages",
 		"",
 		...pages.map(
-			(page) => `- [${page.title}](${siteUrl}/${page.slug}/llm.txt)`,
+			(page) => `- [${page.title}](${SITE_URL}/${page.slug}/llm.txt)`,
 		),
 		"",
 	];

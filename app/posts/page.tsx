@@ -7,6 +7,7 @@ import page from "@/styles/Page.module.css";
 import { generateCollectionPageSchema } from "@/utils/generateJsonLd";
 import { getPostSummaries, tagCounts } from "@/utils/postSummaries";
 import { hashStr } from "@/lib/random";
+import { SITE_URL } from "@/lib/site";
 
 type Props = {
 	searchParams: Promise<{ tag?: string }>;
@@ -38,7 +39,6 @@ export default async function PostsOverviewPage({ searchParams }: Props) {
 	const { tag } = await searchParams;
 	const all = await getPostSummaries();
 	const posts = tag ? all.filter((p) => p.tags.includes(tag)) : all;
-	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
 
 	const jsonLd = generateCollectionPageSchema(
 		posts.map((p) => ({
@@ -47,7 +47,7 @@ export default async function PostsOverviewPage({ searchParams }: Props) {
 			subtitle: p.subtitle,
 			date: p.date instanceof Date ? p.date.toISOString() : p.date,
 			tags: p.tags,
-			url: `${siteUrl}${p.link}`,
+			url: `${SITE_URL}${p.link}`,
 		})),
 	);
 
