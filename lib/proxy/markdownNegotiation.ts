@@ -1,10 +1,17 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import type { ProxyMiddleware } from "./chain";
 
-// Top-level app routes that aren't MDX content, so they have no llm.txt twin
-const NON_CONTENT_ROUTES = new Set(["cv", "feed", "opengraph-image"]);
+// Top-level app routes that aren't MDX content, so they have no llm.txt twin.
+// markdownNegotiation.test.ts fails if a new one is added without being listed here.
+const NON_CONTENT_ROUTES = new Set([
+	"cv",
+	"feed",
+	"opengraph-image",
+	"icon",
+	"apple-icon",
+]);
 
-function markdownPathFor(pathname: string): string | null {
+export function markdownPathFor(pathname: string): string | null {
 	if (pathname === "/") return "/llm.txt";
 	if (pathname === "/posts") return "/llms.txt";
 
@@ -28,8 +35,7 @@ function acceptQuality(accept: string, mediaType: string): number | null {
 
 // Agents often send "text/markdown, text/html;q=0.9", so markdown wins only
 // when it ranks at least as high as HTML (or the wildcards that cover it)
-function prefersMarkdown(request: NextRequest): boolean {
-	const accept = request.headers.get("accept");
+export function prefersMarkdown(accept: string | null): boolean {
 	if (!accept) return false;
 
 	const markdown = acceptQuality(accept, "text/markdown") ?? 0;
@@ -44,7 +50,7 @@ function prefersMarkdown(request: NextRequest): boolean {
 
 export const markdownNegotiation: ProxyMiddleware = (request, next) => {
 	const markdownPath = markdownPathFor(request.nextUrl.pathname);
-	if (!markdownPath || !prefersMarkdown(request)) return next();
+	if (!markdownPath || !prefersMarkdown(request.headers.get("accept"))) return next();
 
 	// Vary on the HTML variant would be pointless: Next's renderer overwrites it
 	const response = NextResponse.rewrite(new URL(markdownPath, request.url));
