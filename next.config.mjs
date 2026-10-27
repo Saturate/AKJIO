@@ -34,8 +34,21 @@ const nextConfig = {
 					},
 					{
 						key: "Permissions-Policy",
-						value:
-							"camera=(), microphone=(), geolocation=(), browsing-topics=()",
+						// Off for everything the site never uses. `tools` is left at its default
+						// (self) because WebMCP registers through it.
+						value: [
+							"camera=()",
+							"microphone=()",
+							"geolocation=()",
+							"browsing-topics=()",
+							"payment=()",
+							"usb=()",
+							"serial=()",
+							"midi=()",
+							"accelerometer=()",
+							"gyroscope=()",
+							"magnetometer=()",
+						].join(", "),
 					},
 					{
 						key: "X-Content-Type-Options",
@@ -43,7 +56,8 @@ const nextConfig = {
 					},
 					{
 						key: "Referrer-Policy",
-						value: "origin-when-cross-origin",
+						// Unlike origin-when-cross-origin, sends nothing on an HTTPS to HTTP downgrade
+						value: "strict-origin-when-cross-origin",
 					},
 					{
 						key: "Strict-Transport-Security",
