@@ -1,5 +1,7 @@
+/* backwards, not both: a transform left behind after the animation makes this wrapper the
+   containing block for position: fixed descendants (the mobile TOC ended up off-screen). */
 .pageEnter {
-	animation: pageEnter 0.45s ease both;
+	animation: pageEnter 0.45s ease backwards;
 }
 
 @keyframes pageEnter {

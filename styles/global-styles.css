@@ -7,6 +7,7 @@
 	--head-fvs: "SOFT" 100, "WONK" 1, "opsz" 144;
 	--ease: cubic-bezier(0.19, 1, 0.22, 1);
 	--gutter: clamp(16px, 4vw, 40px);
+	--site-header-h: 52px;
 
 	/* Aliases for components that still use the old names until they are restyled. */
 	--text-primary: var(--text);

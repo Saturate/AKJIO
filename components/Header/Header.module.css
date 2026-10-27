@@ -5,7 +5,8 @@
 	display: flex;
 	align-items: center;
 	gap: 28px;
-	padding: 16px var(--gutter);
+	height: var(--site-header-h);
+	padding: 0 var(--gutter);
 	background: color-mix(in srgb, var(--bg) 80%, transparent);
 	-webkit-backdrop-filter: blur(12px);
 	backdrop-filter: blur(12px);

@@ -5,7 +5,7 @@ import styles from "./Header.module.css";
 
 export default function Header({ children }: { children: React.ReactNode }) {
 	return (
-		<header className={styles.top}>
+		<header className={styles.top} data-site-header="">
 			<Link href="/" className={styles.mark} aria-label="akj.io, home">
 				akj.io
 			</Link>

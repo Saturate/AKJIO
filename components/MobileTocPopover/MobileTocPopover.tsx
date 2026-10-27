@@ -51,7 +51,9 @@ export default function MobileTocPopover({ entries, introLabel }: MobileTocPopov
 		if (!placeholder) return;
 
 		function onScroll() {
-			setIsStuck(placeholder!.getBoundingClientRect().top <= 0);
+			if (!placeholder) return;
+			const headerHeight = document.querySelector("[data-site-header]")?.getBoundingClientRect().height ?? 0;
+			setIsStuck(placeholder.getBoundingClientRect().top <= headerHeight);
 		}
 
 		window.addEventListener("scroll", onScroll, { passive: true });
@@ -62,10 +64,7 @@ export default function MobileTocPopover({ entries, introLabel }: MobileTocPopov
 	useEffect(() => {
 		function onClick(e: MouseEvent) {
 			if (!open) return;
-			if (
-				headerRef.current &&
-				!headerRef.current.contains(e.target as HTMLElement)
-			) {
+			if (headerRef.current && e.target instanceof Node && !headerRef.current.contains(e.target)) {
 				setOpen(false);
 			}
 		}
@@ -149,7 +148,7 @@ export default function MobileTocPopover({ entries, introLabel }: MobileTocPopov
 								}}
 								className={`${styles.tocLink} ${activeAnchors.includes(entry.slug.slice(1)) ? styles.tocLinkActive : ""}`}
 								style={{
-									paddingInlineStart: `${entry.level <= 2 ? 0 : (entry.level - 2) * 12}px`,
+									paddingInlineStart: `${16 + Math.max(0, entry.level - 2) * 12}px`,
 								}}
 							>
 								{entry.text}
