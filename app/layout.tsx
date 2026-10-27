@@ -32,7 +32,7 @@ const geistMono = Geist_Mono({
 
 const silkscreen = Silkscreen({
 	subsets: ["latin"],
-	weight: ["400", "700"],
+	weight: "700",
 	variable: "--font-silkscreen",
 	display: "swap",
 });

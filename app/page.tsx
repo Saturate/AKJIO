@@ -9,6 +9,8 @@ import {
 } from "@/utils/generateJsonLd";
 import JsonLd from "@/components/JsonLd/JsonLd";
 import { getNonce } from "@/utils/nonce";
+import Colony from "@/components/Colony/Colony";
+import { hashStr } from "@/lib/random";
 
 export async function generateMetadata() {
 	return {
@@ -34,7 +36,9 @@ export default async function FrontPage({ params }: PageProps) {
 	return (
 		<>
 			<div className={styles.homeLayout} data-layout="full-width">
-				<article className={`${styles.mainContent} glassPanel`}>{page.Component()}</article>
+				<Colony as="article" seed={hashStr("home")} inward={0.4} reach={40} className={`${styles.mainContent} glassPanel`}>
+					{page.Component()}
+				</Colony>
 				<div className={`${styles.sidebar} glassPanel`}>
 					<RecentPosts limit={3} />
 					<PopularTags limit={10} />
