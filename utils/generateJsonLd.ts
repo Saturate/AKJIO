@@ -3,8 +3,36 @@
  * https://schema.org/
  */
 
+import { cvData, type Skill, type WorkExperience } from "@/data/cv";
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
 const AUTHOR_NAME = "Allan Kimmer Jensen";
+// Stable @id so every page's Person resolves to the same entity
+const PERSON_ID = `${SITE_URL}/#person`;
+
+function buildPerson(work: WorkExperience[], skills: Skill[]) {
+	const currentJobs = work.filter((w) => w.dateRange.end === "present");
+
+	return {
+		"@type": "Person",
+		"@id": PERSON_ID,
+		name: AUTHOR_NAME,
+		url: SITE_URL,
+		jobTitle: currentJobs[0]?.position,
+		...(currentJobs[0] && {
+			worksFor: currentJobs.map((job) => ({
+				"@type": "Organization",
+				name: job.company,
+				...(job.url && { url: job.url }),
+			})),
+		}),
+		knowsAbout: skills.flatMap((s) => s.items.map((i) => i.name)),
+		sameAs: [
+			"https://github.com/Saturate",
+			"https://www.linkedin.com/in/allankimmerjensen/",
+		],
+	};
+}
 
 interface BlogPostData {
 	title: string;
@@ -30,6 +58,7 @@ export function generateBlogPostingSchema(post: BlogPostData, url: string) {
 		dateModified,
 		author: {
 			"@type": "Person",
+			"@id": PERSON_ID,
 			name: AUTHOR_NAME,
 			url: SITE_URL,
 		},
@@ -42,29 +71,18 @@ export function generateBlogPostingSchema(post: BlogPostData, url: string) {
 	};
 }
 
-export function generatePersonSchema() {
+// A personal site is about one person, so the WebSite points at them instead of a stand-in Organization
+export function generateHomeSchema() {
 	return {
 		"@context": "https://schema.org",
-		"@type": "Person",
-		name: AUTHOR_NAME,
-		url: SITE_URL,
-		sameAs: [
-			"https://github.com/Saturate",
-			"https://www.linkedin.com/in/allankimmerjensen/",
-		],
-	};
-}
-
-export function generateOrganizationSchema() {
-	return {
-		"@context": "https://schema.org",
-		"@type": "Organization",
-		name: "AKJ.IO",
-		url: SITE_URL,
-		logo: `${SITE_URL}/logo.png`,
-		sameAs: [
-			"https://github.com/Saturate",
-			"https://www.linkedin.com/in/allankimmerjensen/",
+		"@graph": [
+			buildPerson(cvData.work, cvData.skills),
+			{
+				"@type": "WebSite",
+				name: "AKJ.IO",
+				url: SITE_URL,
+				author: { "@id": PERSON_ID },
+			},
 		],
 	};
 }
@@ -105,34 +123,11 @@ export function generateCollectionPageSchema(
 	};
 }
 
-export function generateProfilePageSchema(
-	work: Array<{ company: string; position: string; dateRange: { start?: string; end?: string }; url?: string }>,
-	skills: Array<{ category: string; items: Array<{ name: string }> }>,
-) {
-	const currentJobs = work.filter((w) => w.dateRange.end === "present");
-	const allSkills = skills.flatMap((s) => s.items.map((i) => i.name));
-
+export function generateProfilePageSchema(work: WorkExperience[], skills: Skill[]) {
 	return {
 		"@context": "https://schema.org",
 		"@type": "ProfilePage",
-		mainEntity: {
-			"@type": "Person",
-			name: AUTHOR_NAME,
-			url: SITE_URL,
-			jobTitle: currentJobs[0]?.position,
-			...(currentJobs[0] && {
-				worksFor: currentJobs.map((job) => ({
-					"@type": "Organization",
-					name: job.company,
-					...(job.url && { url: job.url }),
-				})),
-			}),
-			knowsAbout: allSkills,
-			sameAs: [
-				"https://github.com/Saturate",
-				"https://www.linkedin.com/in/allankimmerjensen/",
-			],
-		},
+		mainEntity: buildPerson(work, skills),
 	};
 }
 
@@ -140,5 +135,6 @@ export function generateProfilePageSchema(
  * Helper to safely serialize JSON-LD for use in dangerouslySetInnerHTML
  */
 export function serializeJsonLd(data: Record<string, unknown>): string {
-	return JSON.stringify(data);
+	// Post titles and descriptions end up in here; "</script>" in one would close the tag early
+	return JSON.stringify(data).replace(/</g, "\\u003c");
 }
