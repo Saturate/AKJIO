@@ -1,29 +1,24 @@
-import {
-	parseFrontmatter,
-	readAllPosts,
-} from "@/utils/parseFrontmatter";
+import { readAllPosts } from "@/lib/content/posts";
 
 type PostData = {
 	id: string;
 	title: string;
 	subtitle: string | undefined;
-	date: Date;
+	date: Date | undefined;
 	tags: string[];
 };
 
+// Undated posts sort last and get no pubDate, rather than claiming they were published now
 function getPostsData(): PostData[] {
 	return readAllPosts()
-		.map(({ id, content }) => {
-			const fm = parseFrontmatter(content, id);
-			return {
-				id,
-				title: fm.title,
-				subtitle: fm.subtitle,
-				date: fm.date ? new Date(fm.date) : new Date(),
-				tags: fm.tags,
-			};
-		})
-		.sort((a, b) => b.date.getTime() - a.date.getTime());
+		.map(({ id, frontmatter: fm }) => ({
+			id,
+			title: fm.title,
+			subtitle: fm.subtitle,
+			date: fm.date ? new Date(fm.date) : undefined,
+			tags: fm.tags,
+		}))
+		.sort((a, b) => (b.date?.getTime() ?? 0) - (a.date?.getTime() ?? 0));
 }
 
 export async function GET() {
@@ -45,7 +40,7 @@ export async function GET() {
       <title>${escapeXml(post.title)}</title>
       <link>${siteUrl}/${post.id}</link>
       <guid>${siteUrl}/${post.id}</guid>
-      <pubDate>${post.date.toUTCString()}</pubDate>
+      ${post.date ? `<pubDate>${post.date.toUTCString()}</pubDate>` : ""}
       ${post.subtitle ? `<description>${escapeXml(post.subtitle)}</description>` : ""}
       ${post.tags?.map((tag) => `<category>${escapeXml(tag)}</category>`).join("\n      ") || ""}
     </item>`,

@@ -1,5 +1,6 @@
 import fs from "fs";
-import { getLlmPages, getLlmPosts, stripFrontmatter } from "@/utils/llmContent";
+import { stripFrontmatter } from "@/lib/content/frontmatter";
+import { getLlmPages, getLlmPosts } from "@/utils/llmContent";
 
 // The whole site in one file, so an agent can answer "who is Allan" with a single fetch
 export async function GET() {

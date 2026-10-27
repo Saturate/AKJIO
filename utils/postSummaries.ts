@@ -1,4 +1,4 @@
-import { getPost, getPostsIds } from "@/app/actions";
+import { getPost, getPostsIds } from "@/lib/content/compiledPost";
 
 export type PostSummary = {
 	link: string;

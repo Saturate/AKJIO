@@ -1,14 +1,11 @@
 import type { MetadataRoute } from "next";
-import { parseFrontmatter, readAllPosts } from "@/utils/parseFrontmatter";
+import { readAllPosts } from "@/lib/content/posts";
 
-function getPostsData(): Array<{ id: string; date: Date }> {
-	return readAllPosts().map(({ id, content }) => {
-		const fm = parseFrontmatter(content);
-		return {
-			id,
-			date: fm.date ? new Date(fm.date) : new Date(),
-		};
-	});
+function getPostsData(): Array<{ id: string; date: Date | undefined }> {
+	return readAllPosts().map(({ id, frontmatter }) => ({
+		id,
+		date: frontmatter.date ? new Date(frontmatter.date) : undefined,
+	}));
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

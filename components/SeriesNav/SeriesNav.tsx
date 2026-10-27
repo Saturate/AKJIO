@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getPost, getPostsIds } from "@/app/actions";
+import { getPost, getPostsIds } from "@/lib/content/compiledPost";
 import styles from "./SeriesNav.module.css";
 
 interface SeriesNavProps {

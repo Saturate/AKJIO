@@ -1,4 +1,4 @@
-import { getPost, getPostsIds } from "@/app/actions";
+import { getPost, getPostsIds } from "@/lib/content/compiledPost";
 import PostRows from "@/components/PostRows/PostRows";
 import { hashStr } from "@/lib/random";
 import styles from "./RelatedPosts.module.css";

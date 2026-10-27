@@ -1,8 +1,8 @@
 import {
 	parseFrontmatter,
-	readPostContent,
 	type PostFrontmatter,
-} from "@/utils/parseFrontmatter";
+} from "@/lib/content/frontmatter";
+import { readPostContent } from "@/lib/content/posts";
 
 export type { PostFrontmatter };
 
