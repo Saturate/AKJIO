@@ -11,6 +11,7 @@ export default  [
 			'out/**',
 			'.vercel/**',
 			'next-env.d.ts',
+			'content/**',
 		],
 	},
 	eslintConfigPrettier,
