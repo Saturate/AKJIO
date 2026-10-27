@@ -14,6 +14,7 @@ import { SETTINGS_COOKIE, parseSettings } from "@/lib/settings";
 import { cookies } from "next/headers";
 import CulturePanel from "@/components/CulturePanel/CulturePanel";
 import ImageViewer from "@/components/ImageViewer/ImageViewer";
+import WebMCP from "@/components/WebMCP/WebMCP";
 
 const fraunces = Fraunces({
 	subsets: ["latin"],
@@ -141,6 +142,7 @@ export default async function RootLayout({
 					</main>
 
 					<Footer />
+					<WebMCP />
 					{/* After the footer so it is the last tab stop, not the first; it's fixed, so position doesn't change. */}
 					<CulturePanel />
 				</ThemeProvider>
