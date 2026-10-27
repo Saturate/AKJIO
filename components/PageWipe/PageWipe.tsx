@@ -22,7 +22,8 @@ export default function PageWipe({ targetId }: { targetId: string }) {
 	useEffect(() => {
 		const previous = lastPath;
 		lastPath = pathname;
-		if (previous === null || previous === pathname || prefersReducedMotion()) return;
+		if (previous === null || previous === pathname || prefersReducedMotion())
+			return;
 		setPlay(true);
 		const target = document.getElementById(targetId);
 		if (target) {

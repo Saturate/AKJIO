@@ -67,6 +67,8 @@ figure[data-rehype-pretty-code-figure]:has(code[data-language="prompt"]) code {
 	color: var(--muted);
 }
 
-figure[data-rehype-pretty-code-figure]:has(code[data-language="prompt"]) code span {
+figure[data-rehype-pretty-code-figure]:has(code[data-language="prompt"])
+	code
+	span {
 	color: inherit !important;
 }

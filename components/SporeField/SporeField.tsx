@@ -25,16 +25,43 @@ type Spore = {
 	sy: number;
 };
 
-type Puff = { x: number; y: number; vx: number; vy: number; r: number; life: number; decay: number };
+type Puff = {
+	x: number;
+	y: number;
+	vx: number;
+	vy: number;
+	r: number;
+	life: number;
+	decay: number;
+};
 
 function makeSpores(): Spore[] {
 	const r = mulberry(7);
 	const out: Spore[] = [];
-	const add = (n: number, layer: Spore["layer"], rmin: number, rmax: number, par: number) => {
+	const add = (
+		n: number,
+		layer: Spore["layer"],
+		rmin: number,
+		rmax: number,
+		par: number,
+	) => {
 		for (let i = 0; i < n; i++) {
 			out.push({
-				x: r(), y: r(), r: rmin + r() * (rmax - rmin), par, layer, ph: r() * 6.28, drift: (r() - 0.5) * 0.004, tint: r(),
-				rank: r(), dx: 0, dy: 0, vx: 0, vy: 0, sx: 0, sy: 0,
+				x: r(),
+				y: r(),
+				r: rmin + r() * (rmax - rmin),
+				par,
+				layer,
+				ph: r() * 6.28,
+				drift: (r() - 0.5) * 0.004,
+				tint: r(),
+				rank: r(),
+				dx: 0,
+				dy: 0,
+				vx: 0,
+				vy: 0,
+				sx: 0,
+				sy: 0,
 			});
 		}
 	};
@@ -66,7 +93,15 @@ export default function SporeField() {
 			for (let i = 0; i < n; i++) {
 				const a = Math.random() * 6.283;
 				const s = 0.6 + Math.random() * 2.2;
-				puffs.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 0.4, r: 0.6 + Math.random() * 1.4, life: 1, decay: 0.012 + Math.random() * 0.012 });
+				puffs.push({
+					x,
+					y,
+					vx: Math.cos(a) * s,
+					vy: Math.sin(a) * s - 0.4,
+					r: 0.6 + Math.random() * 1.4,
+					life: 1,
+					decay: 0.012 + Math.random() * 0.012,
+				});
 			}
 			for (const p of spores) {
 				if (p.layer === 2) continue;
@@ -98,7 +133,15 @@ export default function SporeField() {
 			ptr.y = -1e4;
 		};
 		const onKey = (e: KeyboardEvent) => {
-			if (e.repeat || e.metaKey || e.ctrlKey || e.altKey || !runtimeSettings().react || runtimeSettings().spores === 0) return;
+			if (
+				e.repeat ||
+				e.metaKey ||
+				e.ctrlKey ||
+				e.altKey ||
+				!runtimeSettings().react ||
+				runtimeSettings().spores === 0
+			)
+				return;
 			let x = window.innerWidth / 2;
 			let y = window.innerHeight / 2;
 			const focused = document.activeElement;
@@ -129,7 +172,10 @@ export default function SporeField() {
 			const w = window.innerWidth;
 			const h = window.innerHeight;
 			const dpr = Math.min(2, window.devicePixelRatio || 1);
-			if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+			if (
+				canvas.width !== Math.round(w * dpr) ||
+				canvas.height !== Math.round(h * dpr)
+			) {
 				canvas.width = Math.round(w * dpr);
 				canvas.height = Math.round(h * dpr);
 			}
@@ -144,7 +190,10 @@ export default function SporeField() {
 			for (const p of spores) {
 				if (p.rank >= density) continue;
 				const hx = ((((p.x + p.drift * t) % 1) + 1) % 1) * w;
-				const hy = (((p.y * h - sy * p.par - t * (p.layer ? 3 * p.layer : 1.2)) % h) + h) % h;
+				const hy =
+					(((p.y * h - sy * p.par - t * (p.layer ? 3 * p.layer : 1.2)) % h) +
+						h) %
+					h;
 				if (!reduced && p.layer < 2) {
 					const ddx = hx + p.dx - ptr.x;
 					const ddy = hy + p.dy - ptr.y;
@@ -176,7 +225,9 @@ export default function SporeField() {
 				}
 				const tw = 0.5 + 0.5 * Math.sin(t * 1.3 + p.ph);
 				const stirred = Math.min(1, Math.hypot(p.vx, p.vy) * 0.4);
-				const base = dark ? (0.15 + 0.45 * tw) * (p.layer ? 1 : 0.6) : 0.12 + 0.25 * tw;
+				const base = dark
+					? (0.15 + 0.45 * tw) * (p.layer ? 1 : 0.6)
+					: 0.12 + 0.25 * tw;
 				ctx.globalAlpha = Math.min(1, base + stirred * 0.4);
 				ctx.fillStyle = dark
 					? p.tint < 0.12 || stirred > 0.5

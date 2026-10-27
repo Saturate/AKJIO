@@ -2,12 +2,12 @@ import type { MDXComponents } from "mdx/types";
 import React from "react";
 import CodeFrame from "@/components/CodeFrame/CodeFrame";
 import ProseImage from "@/components/ProseImage/ProseImage";
+import { slugify } from "@/utils/slugify";
 
 function toSize(v: string | number | undefined): number | undefined {
 	const n = typeof v === "number" ? v : Number(v);
 	return Number.isFinite(n) && n > 0 ? n : undefined;
 }
-import { slugify } from "@/utils/slugify";
 
 function getTextContent(node: React.ReactNode): string {
 	if (typeof node === "string" || typeof node === "number") {
@@ -58,14 +58,22 @@ function preLanguage(children: React.ReactNode): string | null {
 }
 
 function hasFigcaption(children: React.ReactNode): boolean {
-	return React.Children.toArray(children).some((c) => React.isValidElement(c) && c.type === "figcaption");
+	return React.Children.toArray(children).some(
+		(c) => React.isValidElement(c) && c.type === "figcaption",
+	);
 }
 
 // rehype-pretty-code wraps block code in a figure; give those the code frame (colony + copy).
 function Figure({ children, ...props }: React.ComponentProps<"figure">) {
-	if (!("data-rehype-pretty-code-figure" in props)) return <figure {...props}>{children}</figure>;
+	if (!("data-rehype-pretty-code-figure" in props))
+		return <figure {...props}>{children}</figure>;
 	return (
-		<CodeFrame language={preLanguage(children)} hasTitle={hasFigcaption(children)} seedText={getTextContent(children).slice(0, 240)} data-rehype-pretty-code-figure="">
+		<CodeFrame
+			language={preLanguage(children)}
+			hasTitle={hasFigcaption(children)}
+			seedText={getTextContent(children).slice(0, 240)}
+			data-rehype-pretty-code-figure=""
+		>
 			{children}
 		</CodeFrame>
 	);
@@ -82,7 +90,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 		h5: createHeading(5),
 		h6: createHeading(6),
 		img: ({ src, alt, width, height }) =>
-			typeof src === "string" ? <ProseImage src={src} alt={alt ?? ""} width={toSize(width)} height={toSize(height)} /> : null,
+			typeof src === "string" ? (
+				<ProseImage
+					src={src}
+					alt={alt ?? ""}
+					width={toSize(width)}
+					height={toSize(height)}
+				/>
+			) : null,
 		...components,
 	};
 }

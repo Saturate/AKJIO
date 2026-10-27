@@ -5,7 +5,14 @@ import { ColonyEngine } from "@/lib/colony/engine";
 import { registerColony } from "@/lib/colony/loop";
 import styles from "./Colony.module.css";
 
-type Tag = "div" | "section" | "header" | "footer" | "article" | "figure" | "aside";
+type Tag =
+	| "div"
+	| "section"
+	| "header"
+	| "footer"
+	| "article"
+	| "figure"
+	| "aside";
 
 type ColonyProps = {
 	as?: Tag;
@@ -65,10 +72,20 @@ export default function Colony({
 
 	return createElement(
 		as,
-		{ ...rest, ref: setNode, className: `${styles.colonized} ${className ?? ""}` },
+		{
+			...rest,
+			ref: setNode,
+			className: `${styles.colonized} ${className ?? ""}`,
+		},
 		<canvas ref={trail} className={styles.canvas} aria-hidden="true" />,
 		<canvas ref={glow} className={styles.canvas} aria-hidden="true" />,
 		children,
-		...corners.map((ci) => <span key={ci} className={`${styles.reg} ${styles[REG[ci]]}`} aria-hidden="true" />),
+		...corners.map((ci) => (
+			<span
+				key={ci}
+				className={`${styles.reg} ${styles[REG[ci]]}`}
+				aria-hidden="true"
+			/>
+		)),
 	);
 }

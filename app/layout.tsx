@@ -42,7 +42,9 @@ const silkscreen = Silkscreen({
 	display: "swap",
 });
 
-const fontVars = [fraunces, geist, geistMono, silkscreen].map((f) => f.variable).join(" ");
+const fontVars = [fraunces, geist, geistMono, silkscreen]
+	.map((f) => f.variable)
+	.join(" ");
 
 // Strain and an explicit mode are rendered on the server from the settings cookie. Only "system"
 // needs the browser, so this resolves it before paint to avoid a flash.
@@ -115,7 +117,11 @@ export default async function RootLayout({
 			className={fontVars + modeClass}
 			data-strain={settings.strain}
 			data-theme={settings.theme}
-			style={settings.theme === "system" ? undefined : { colorScheme: settings.theme }}
+			style={
+				settings.theme === "system"
+					? undefined
+					: { colorScheme: settings.theme }
+			}
 			suppressHydrationWarning
 		>
 			<head>
@@ -125,7 +131,6 @@ export default async function RootLayout({
 			<body className={styles.page}>
 				<ThemeProvider initial={settings}>
 					<SporeField />
-					<CulturePanel />
 					<ImageViewer />
 					<Header>
 						<Navigation />
@@ -136,6 +141,8 @@ export default async function RootLayout({
 					</main>
 
 					<Footer />
+					{/* After the footer so it is the last tab stop, not the first; it's fixed, so position doesn't change. */}
+					<CulturePanel />
 				</ThemeProvider>
 			</body>
 		</html>

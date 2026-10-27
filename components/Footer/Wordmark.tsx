@@ -17,17 +17,24 @@ export default function Wordmark() {
 		if (!cell || !mark || !(span instanceof HTMLElement) || !grid) return;
 
 		const fit = () => {
-			const vertical = getComputedStyle(mark).writingMode.startsWith("vertical");
+			const vertical =
+				getComputedStyle(mark).writingMode.startsWith("vertical");
 			mark.style.fontSize = "100px";
 			const r = span.getBoundingClientRect();
 			if (vertical) {
 				const avail = cell.clientHeight;
 				if (!r.height || !avail) return;
-				mark.style.fontSize = Math.floor((100 * avail) / r.height * 0.995) + "px";
-				cell.style.setProperty("--wm-w", Math.ceil(mark.getBoundingClientRect().width) + "px");
+				mark.style.fontSize =
+					Math.floor(((100 * avail) / r.height) * 0.995) + "px";
+				cell.style.setProperty(
+					"--wm-w",
+					Math.ceil(mark.getBoundingClientRect().width) + "px",
+				);
 			} else {
 				const avail = cell.clientWidth;
-				if (r.width && avail) mark.style.fontSize = Math.floor((100 * avail) / r.width * 0.995) + "px";
+				if (r.width && avail)
+					mark.style.fontSize =
+						Math.floor(((100 * avail) / r.width) * 0.995) + "px";
 			}
 		};
 

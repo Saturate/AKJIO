@@ -4,7 +4,13 @@ import { hashStr } from "@/lib/random";
 import type { PostSummary } from "@/utils/postSummaries";
 import styles from "./RecentPosts.module.css";
 
-export default function RecentPosts({ posts, limit = 5 }: { posts: PostSummary[]; limit?: number }) {
+export default function RecentPosts({
+	posts,
+	limit = 5,
+}: {
+	posts: PostSummary[];
+	limit?: number;
+}) {
 	return (
 		<section className={styles.recent} aria-labelledby="recent-heading">
 			<div className={styles.head}>

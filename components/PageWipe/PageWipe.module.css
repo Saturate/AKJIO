@@ -33,11 +33,13 @@
 
 @keyframes rgb {
 	0% {
-		filter: drop-shadow(-3px 0 var(--glitch-a)) drop-shadow(3px 0 var(--glitch-b));
+		filter: drop-shadow(-3px 0 var(--glitch-a))
+			drop-shadow(3px 0 var(--glitch-b));
 		translate: 3px 0;
 	}
 	50% {
-		filter: drop-shadow(2px 0 var(--glitch-a)) drop-shadow(-2px 0 var(--glitch-b));
+		filter: drop-shadow(2px 0 var(--glitch-a))
+			drop-shadow(-2px 0 var(--glitch-b));
 		translate: -2px 0;
 	}
 	100% {

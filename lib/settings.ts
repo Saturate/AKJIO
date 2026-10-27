@@ -7,6 +7,8 @@ export type Settings = {
 	theme: ThemeChoice;
 	/** Growth speed multiplier for the hyphae; 0 freezes them. */
 	growth: number;
+	/** How far strands crawl and tendrils reach, as a multiplier. */
+	length: number;
 	/** Background spore density; 1 is the default field, 0 hides it. */
 	spores: number;
 	/** Spores move away from the pointer and puff on keypress. */
@@ -16,13 +18,16 @@ export type Settings = {
 };
 
 export const SETTINGS_COOKIE = "akj-culture";
-export const GROWTH_RANGE = { min: 0, max: 3, step: 0.25 } as const;
+// Growth and length use log-scaled sliders in the panel, so the wide ranges stay usable at the low end.
+export const GROWTH_RANGE = { min: 0, max: 50 } as const;
+export const LENGTH_RANGE = { min: 0.25, max: 10 } as const;
 export const SPORES_RANGE = { min: 0, max: 2, step: 0.25 } as const;
 
 export const DEFAULT_SETTINGS: Settings = {
 	strain: DEFAULT_STRAIN,
 	theme: "system",
 	growth: 1,
+	length: 1,
 	spores: 1,
 	react: true,
 	pulses: true,
@@ -37,8 +42,14 @@ function isThemeChoice(v: unknown): v is ThemeChoice {
 	return v === "system" || v === "dark" || v === "light";
 }
 
-function clamp(v: unknown, range: { min: number; max: number }, fallback: number): number {
-	return typeof v === "number" && Number.isFinite(v) ? Math.min(range.max, Math.max(range.min, v)) : fallback;
+function clamp(
+	v: unknown,
+	range: { min: number; max: number },
+	fallback: number,
+): number {
+	return typeof v === "number" && Number.isFinite(v)
+		? Math.min(range.max, Math.max(range.min, v))
+		: fallback;
 }
 
 function bool(v: unknown, fallback: boolean): boolean {
@@ -60,6 +71,7 @@ export function parseSettings(raw: string | undefined): Settings {
 		strain: isStrainKey(data.strain) ? data.strain : d.strain,
 		theme: isThemeChoice(data.theme) ? data.theme : d.theme,
 		growth: clamp(data.growth, GROWTH_RANGE, d.growth),
+		length: clamp(data.length, LENGTH_RANGE, d.length),
 		spores: clamp(data.spores, SPORES_RANGE, d.spores),
 		react: bool(data.react, d.react),
 		pulses: bool(data.pulses, d.pulses),
@@ -77,6 +89,7 @@ export function isDefaultSettings(s: Settings): boolean {
 		s.strain === d.strain &&
 		s.theme === d.theme &&
 		s.growth === d.growth &&
+		s.length === d.length &&
 		s.spores === d.spores &&
 		s.react === d.react &&
 		s.pulses === d.pulses &&

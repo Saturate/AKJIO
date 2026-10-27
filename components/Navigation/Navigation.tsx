@@ -17,9 +17,11 @@ export default function Navigation() {
 	return (
 		<nav className={styles.nav} aria-label="Main">
 			{ITEMS.map((item, i) => {
-				const current = pathname === item.href || pathname.startsWith(item.href + "/");
+				const current =
+					pathname === item.href || pathname.startsWith(item.href + "/");
 				const run = (e: React.SyntheticEvent<HTMLAnchorElement>) => {
-					const label = e.currentTarget.querySelector<HTMLElement>("[data-label]");
+					const label =
+						e.currentTarget.querySelector<HTMLElement>("[data-label]");
 					if (label) scramble(label, item.label);
 				};
 				return (

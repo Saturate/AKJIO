@@ -2,8 +2,20 @@
 
 import type { Tokens } from "@/lib/strains";
 
-const KEYS: Array<keyof Tokens> = ["bg", "raised", "line", "text", "muted", "accent", "growth", "tip", "glitchA", "glitchB"];
-const cssName = (key: string) => "--" + key.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
+const KEYS: Array<keyof Tokens> = [
+	"bg",
+	"raised",
+	"line",
+	"text",
+	"muted",
+	"accent",
+	"growth",
+	"tip",
+	"glitchA",
+	"glitchB",
+];
+const cssName = (key: string) =>
+	"--" + key.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
 
 let cache: { tokens: Tokens; dark: boolean } | null = null;
 const listeners = new Set<() => void>();
@@ -12,9 +24,20 @@ let observer: MutationObserver | null = null;
 function read() {
 	const root = document.documentElement;
 	const cs = getComputedStyle(root);
-	const entries = KEYS.map((k) => [k, cs.getPropertyValue(cssName(k)).trim()] as const);
+	const entries = KEYS.map(
+		(k) => [k, cs.getPropertyValue(cssName(k)).trim()] as const,
+	);
 	const tokens: Tokens = {
-		bg: "", raised: "", line: "", text: "", muted: "", accent: "", growth: "", tip: "", glitchA: "", glitchB: "",
+		bg: "",
+		raised: "",
+		line: "",
+		text: "",
+		muted: "",
+		accent: "",
+		growth: "",
+		tip: "",
+		glitchA: "",
+		glitchB: "",
 	};
 	for (const [k, v] of entries) tokens[k] = v;
 	cache = { tokens, dark: !root.classList.contains("light") };
@@ -26,7 +49,10 @@ function ensureObserver() {
 		read();
 		listeners.forEach((fn) => fn());
 	});
-	observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class", "data-strain"] });
+	observer.observe(document.documentElement, {
+		attributes: true,
+		attributeFilter: ["class", "data-strain"],
+	});
 }
 
 // Canvas code can't use var(--x); this mirrors the current strain's tokens and notifies on change.

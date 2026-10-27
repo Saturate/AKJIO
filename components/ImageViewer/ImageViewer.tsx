@@ -21,7 +21,10 @@ export default function ImageViewer() {
 				img.dataset.zoomable = "";
 				img.tabIndex = 0;
 				img.setAttribute("role", "button");
-				img.setAttribute("aria-label", img.alt ? `Enlarge image: ${img.alt}` : "Enlarge image");
+				img.setAttribute(
+					"aria-label",
+					img.alt ? `Enlarge image: ${img.alt}` : "Enlarge image",
+				);
 			}
 		};
 		enhance();
@@ -33,7 +36,8 @@ export default function ImageViewer() {
 
 	useEffect(() => {
 		const open = (target: EventTarget | null) => {
-			if (!(target instanceof HTMLImageElement) || !target.matches(SELECTOR)) return false;
+			if (!(target instanceof HTMLImageElement) || !target.matches(SELECTOR))
+				return false;
 			// src, not currentSrc: for next/image it is the largest candidate, which is what a viewer wants.
 			setImage({ src: target.src, alt: target.alt });
 			dialog.current?.showModal();
@@ -43,7 +47,8 @@ export default function ImageViewer() {
 			open(e.target);
 		};
 		const onKey = (e: KeyboardEvent) => {
-			if ((e.key === "Enter" || e.key === " ") && open(e.target)) e.preventDefault();
+			if ((e.key === "Enter" || e.key === " ") && open(e.target))
+				e.preventDefault();
 		};
 		document.addEventListener("click", onClick);
 		document.addEventListener("keydown", onKey);
@@ -63,7 +68,12 @@ export default function ImageViewer() {
 			}}
 			onClose={() => setImage(null)}
 		>
-			<button type="button" className={styles.close} onClick={() => dialog.current?.close()} aria-label="Close image">
+			<button
+				type="button"
+				className={styles.close}
+				onClick={() => dialog.current?.close()}
+				aria-label="Close image"
+			>
 				×
 			</button>
 			{image && (

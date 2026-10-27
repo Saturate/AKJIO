@@ -13,7 +13,10 @@ export default function ScrollProgress() {
 		const update = () => {
 			raf = 0;
 			const max = document.documentElement.scrollHeight - window.innerHeight;
-			el.style.setProperty("--p", max > 0 ? String(Math.min(1, window.scrollY / max)) : "0");
+			el.style.setProperty(
+				"--p",
+				max > 0 ? String(Math.min(1, window.scrollY / max)) : "0",
+			);
 		};
 		const onScroll = () => {
 			if (!raf) raf = requestAnimationFrame(update);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Colony from "@/components/Colony/Colony";
 import { scramble } from "@/lib/motion";
 import { hashStr } from "@/lib/random";
@@ -13,9 +13,17 @@ type CodeFrameProps = {
 	children: React.ReactNode;
 } & React.HTMLAttributes<HTMLElement>;
 
-export default function CodeFrame({ language, hasTitle, seedText, children, ...rest }: CodeFrameProps) {
+export default function CodeFrame({
+	language,
+	hasTitle,
+	seedText,
+	children,
+	...rest
+}: CodeFrameProps) {
 	const label = useRef<HTMLSpanElement>(null);
 	const [status, setStatus] = useState("");
+	const resetTimer = useRef(0);
+	useEffect(() => () => window.clearTimeout(resetTimer.current), []);
 
 	const copy = async (e: React.MouseEvent<HTMLButtonElement>) => {
 		const pre = e.currentTarget.closest("figure")?.querySelector("pre");
@@ -29,16 +37,33 @@ export default function CodeFrame({ language, hasTitle, seedText, children, ...r
 		setStatus("Copied");
 		const el = label.current;
 		if (el) scramble(el, "Copied");
-		window.setTimeout(() => {
+		window.clearTimeout(resetTimer.current);
+		resetTimer.current = window.setTimeout(() => {
 			setStatus("");
 			if (label.current) scramble(label.current, "Copy");
 		}, 1400);
 	};
 
 	return (
-		<Colony as="figure" seed={hashStr(seedText)} inward={0.2} reach={22} className={styles.frame} {...rest}>
-			{!hasTitle && <div className={styles.bar}>{language && language !== "plaintext" ? language : "code"}</div>}
-			<button type="button" className={`${styles.copy} grow-underline`} onClick={copy} aria-label="Copy code">
+		<Colony
+			as="figure"
+			seed={hashStr(seedText)}
+			inward={0.2}
+			reach={22}
+			className={styles.frame}
+			{...rest}
+		>
+			{!hasTitle && (
+				<div className={styles.bar}>
+					{language && language !== "plaintext" ? language : "code"}
+				</div>
+			)}
+			<button
+				type="button"
+				className={`${styles.copy} grow-underline`}
+				onClick={copy}
+				aria-label="Copy code"
+			>
 				<span ref={label} aria-hidden="true">
 					Copy
 				</span>

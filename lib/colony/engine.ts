@@ -28,24 +28,58 @@ export type ColonyOptions = {
 };
 
 type Point = [x: number, y: number, w: number];
-type Strand = { id: number; parentId: number; pts: Point[]; children: Array<{ at: number; s: Strand }> };
-type Runner = { kind: "runner"; e: number; dir: 1 | -1; t: number; off: number; w: number; len: number; max: number; turns: number; s: Strand };
-type Tendril = { kind: "tendril"; x: number; y: number; ang: number; w: number; len: number; max: number; depth: number; s: Strand };
+type Strand = {
+	id: number;
+	parentId: number;
+	pts: Point[];
+	children: Array<{ at: number; s: Strand }>;
+};
+type Runner = {
+	kind: "runner";
+	e: number;
+	dir: 1 | -1;
+	t: number;
+	off: number;
+	w: number;
+	len: number;
+	max: number;
+	turns: number;
+	s: Strand;
+};
+type Tendril = {
+	kind: "tendril";
+	x: number;
+	y: number;
+	ang: number;
+	w: number;
+	len: number;
+	max: number;
+	depth: number;
+	s: Strand;
+};
 type Agent = Runner | Tendril;
 type Pulse = { s: Strand; pos: number; v: number; ci: number };
 type Target = { el: HTMLElement; x: number; y: number; w: number; h: number };
 
 export function glitchChar(el: HTMLElement): void {
-	if (prefersReducedMotion() || !runtimeSettings().glitch || el.dataset.glitching) return;
+	if (
+		prefersReducedMotion() ||
+		!runtimeSettings().glitch ||
+		el.dataset.glitching
+	)
+		return;
 	el.dataset.glitching = "1";
 	const original = el.dataset.c ?? el.textContent ?? "";
 	el.textContent = randomGlyph();
 	el.classList.add("ch-gl");
-	window.setTimeout(() => {
-		el.textContent = original;
-		el.classList.remove("ch-gl");
-		delete el.dataset.glitching;
-	}, 70 + Math.random() * 90);
+	window.setTimeout(
+		() => {
+			el.textContent = original;
+			el.classList.remove("ch-gl");
+			delete el.dataset.glitching;
+		},
+		70 + Math.random() * 90,
+	);
 }
 
 // One hyphae network living on an element's border. Seeded, so a resize replays the same growth.
@@ -61,10 +95,12 @@ export class ColonyEngine {
 	private readonly io: IntersectionObserver;
 
 	visible = false;
-	/** Set by the loop so a colony scrolling into view can restart a stopped rAF. */
-	onVisible: () => void = () => {};
+	/** Set by the loop so a colony scrolling into view or starting a pulse can restart a stopped rAF. */
+	onWake: () => void = () => {};
 	private size = "";
 	private lastKnotFrame = 0;
+	/** Length multiplier captured at reset, so a layout replay grows the same shape. */
+	private length = 1;
 	private w = 0;
 	private h = 0;
 	W = 0;
@@ -86,16 +122,24 @@ export class ColonyEngine {
 	private targets: Target[] | null = null;
 	private bounds: [number, number, number, number] = [0, 0, 0, 0];
 
-	constructor(el: HTMLElement, trail: HTMLCanvasElement, glow: HTMLCanvasElement, options: ColonyOptions) {
+	constructor(
+		el: HTMLElement,
+		trail: HTMLCanvasElement,
+		glow: HTMLCanvasElement,
+		options: ColonyOptions,
+	) {
 		this.el = el;
 		this.trail = trail;
 		this.glow = glow;
 		this.o = options;
 		this.ro = new ResizeObserver(() => this.layout(false));
-		this.io = new IntersectionObserver(([entry]) => {
-			this.visible = entry?.isIntersecting ?? false;
-			if (this.visible) this.onVisible();
-		}, { rootMargin: "120px" });
+		this.io = new IntersectionObserver(
+			([entry]) => {
+				this.visible = entry?.isIntersecting ?? false;
+				if (this.visible) this.onWake();
+			},
+			{ rootMargin: "120px" },
+		);
 		this.ro.observe(el);
 		this.io.observe(el);
 	}
@@ -134,12 +178,14 @@ export class ColonyEngine {
 		this.reset();
 		this.measure();
 		let guard = 0;
-		while (this.steps < target && this.agents.length && guard++ < 30000) this.step(false);
+		while (this.steps < target && this.agents.length && guard++ < 30000)
+			this.step(false);
 		this.redraw();
 	}
 
 	private reset(): void {
 		const rnd = (this.rnd = mulberry(this.o.seed));
+		this.length = runtimeSettings().length;
 		this.strands = [];
 		this.agents = [];
 		this.spawned = [];
@@ -159,15 +205,36 @@ export class ColonyEngine {
 		const perimeter = 2 * (this.w + this.h);
 		for (const ci of this.o.corners) {
 			if (rnd() < 0.12) continue;
-			if (rnd() < 0.85) this.runner(ci, 1, perimeter);
-			if (rnd() < 0.85) this.runner((ci + 3) % 4, -1, perimeter);
+			if (rnd() < 0.85) this.runner(ci, 1, perimeter, 0);
+			if (rnd() < 0.85) this.runner((ci + 3) % 4, -1, perimeter, 0);
+		}
+		// Long frames (the posts list) would otherwise only grow at the corners and stay bare in
+		// the middle, so they get extra seeds along the edges, growing both ways from each point.
+		// Seeds are spread by length along the allowed edges, so long sides get proportionally more.
+		const allowed = this.o.edges.filter((e) => this.edgeLength(e) >= 240);
+		const span = allowed.reduce((sum, e) => sum + this.edgeLength(e), 0);
+		const seeds = Math.floor(span / 600);
+		const local = Math.min(perimeter, 1200);
+		for (let i = 0; i < seeds; i++) {
+			let d = rnd() * span;
+			const e = allowed.find((edge) => (d -= this.edgeLength(edge)) < 0);
+			if (e === undefined) continue;
+			const L = this.edgeLength(e);
+			const pos = Math.min(L * 0.92, Math.max(L * 0.08, d + L));
+			if (rnd() < 0.85) this.runner(e, 1, local, pos);
+			if (rnd() < 0.85) this.runner(e, -1, local, L - pos);
 		}
 		this.agents = this.spawned;
 		this.spawned = [];
 	}
 
 	private newStrand(parent: Strand | null): Strand {
-		const s: Strand = { id: this.strands.length, parentId: parent ? parent.id : -1, pts: [], children: [] };
+		const s: Strand = {
+			id: this.strands.length,
+			parentId: parent ? parent.id : -1,
+			pts: [],
+			children: [],
+		};
 		this.strands.push(s);
 		return s;
 	}
@@ -176,10 +243,22 @@ export class ColonyEngine {
 		return e % 2 ? this.h : this.w;
 	}
 
-	private runner(e: number, dir: 1 | -1, perimeter: number): void {
+	/** t0: start distance along the edge, measured in the runner's direction of travel. */
+	private runner(e: number, dir: 1 | -1, perimeter: number, t0: number): void {
 		if (!this.o.edges.includes(e)) return;
 		const s = this.newStrand(null);
-		const a: Runner = { kind: "runner", e, dir, t: 0, off: 0, w: 0.9 + this.rnd() * 0.5, len: 0, max: perimeter * (0.08 + this.rnd() * 0.2), turns: 0, s };
+		const a: Runner = {
+			kind: "runner",
+			e,
+			dir,
+			t: t0,
+			off: 0,
+			w: 0.9 + this.rnd() * 0.5,
+			len: 0,
+			max: perimeter * (0.08 + this.rnd() * 0.2) * this.length,
+			turns: 0,
+			s,
+		};
 		const [x, y] = this.runnerPos(a);
 		s.pts.push([x, y, a.w]);
 		this.spawned.push(a);
@@ -192,10 +271,21 @@ export class ColonyEngine {
 		const E = a.dir > 0 ? B : A;
 		const k = a.t / this.edgeLength(a.e);
 		const [nx, ny] = NORMALS[a.e];
-		return [S[0] + (E[0] - S[0]) * k + nx * a.off, S[1] + (E[1] - S[1]) * k + ny * a.off];
+		return [
+			S[0] + (E[0] - S[0]) * k + nx * a.off,
+			S[1] + (E[1] - S[1]) * k + ny * a.off,
+		];
 	}
 
-	private tendril(parent: Agent, x: number, y: number, ang: number, w: number, max: number, depth: number): void {
+	private tendril(
+		parent: Agent,
+		x: number,
+		y: number,
+		ang: number,
+		w: number,
+		max: number,
+		depth: number,
+	): void {
 		if (max < 4) return;
 		const s = this.newStrand(parent.s);
 		parent.s.children.push({ at: parent.s.pts.length - 1, s });
@@ -235,7 +325,15 @@ export class ColonyEngine {
 					const inward = rnd() < this.o.inward;
 					const base = Math.atan2(ny, nx) + (inward ? Math.PI : 0);
 					const reach = inward ? this.o.reach : this.o.reach * 0.6;
-					this.tendril(a, x, y, base + (rnd() - 0.5) * 1.1, Math.max(0.6, a.w * 0.8), 8 + rnd() * reach, 1);
+					this.tendril(
+						a,
+						x,
+						y,
+						base + (rnd() - 0.5) * 1.1,
+						Math.max(0.6, a.w * 0.8),
+						(8 + rnd() * reach) * this.length,
+						1,
+					);
 				}
 			} else {
 				a.ang += (rnd() - 0.5) * 0.55;
@@ -247,17 +345,37 @@ export class ColonyEngine {
 				a.w *= 0.982;
 				if (a.depth < 3 && rnd() < 0.035) {
 					const side = rnd() < 0.5 ? -1 : 1;
-					this.tendril(a, x, y, a.ang + side * (0.6 + rnd() * 0.5), a.w * 0.85, (a.max - a.len) * 0.6, a.depth + 1);
+					this.tendril(
+						a,
+						x,
+						y,
+						a.ang + side * (0.6 + rnd() * 0.5),
+						a.w * 0.85,
+						(a.max - a.len) * 0.6,
+						a.depth + 1,
+					);
 				}
 			}
-			if (a.w < 0.2 || a.len > a.max || x < 1 || y < 1 || x > this.W - 1 || y > this.H - 1) {
+			if (
+				a.w < 0.2 ||
+				a.len > a.max ||
+				x < 1 ||
+				y < 1 ||
+				x > this.W - 1 ||
+				y > this.H - 1
+			) {
 				this.die(a, a.kind === "tendril" && rnd() < 0.4);
 				continue;
 			}
 			// Strands that meet fuse instead of crossing.
 			const key = (x >> 2) * 4096 + (y >> 2);
 			const hit = this.hash.get(key);
-			if (hit !== undefined && hit !== a.s.id && hit !== a.s.parentId && a.len > 8) {
+			if (
+				hit !== undefined &&
+				hit !== a.s.id &&
+				hit !== a.s.parentId &&
+				a.len > 8
+			) {
 				this.push(a, x, y);
 				this.die(a, false);
 				continue;
@@ -315,7 +433,8 @@ export class ColonyEngine {
 	redraw(): void {
 		if (!this.ctx) return;
 		this.ctx.clearRect(0, 0, this.W, this.H);
-		for (const s of this.strands) for (let i = 1; i < s.pts.length; i++) this.seg(s.pts[i - 1], s.pts[i]);
+		for (const s of this.strands)
+			for (let i = 1; i < s.pts.length; i++) this.seg(s.pts[i - 1], s.pts[i]);
 		for (const k of this.knots) this.knot(k);
 		this.glowDirty = true;
 	}
@@ -330,7 +449,13 @@ export class ColonyEngine {
 		for (const el of host.querySelectorAll<HTMLElement>(".ch")) {
 			if (!el.dataset.c?.trim()) continue;
 			const r = el.getBoundingClientRect();
-			targets.push({ el, x: r.left - er.left + MARGIN, y: r.top - er.top + MARGIN, w: r.width, h: r.height });
+			targets.push({
+				el,
+				x: r.left - er.left + MARGIN,
+				y: r.top - er.top + MARGIN,
+				w: r.width,
+				h: r.height,
+			});
 		}
 		if (!targets.length) return;
 		this.targets = targets;
@@ -347,7 +472,12 @@ export class ColonyEngine {
 		if (!this.targets || x < bx0 || y < by0 || x > bx1 || y > by1) return;
 		for (const t of this.targets) {
 			if (t.el.classList.contains("ch-inf")) continue;
-			if (x > t.x - 2 && x < t.x + t.w + 2 && y > t.y - 2 && y < t.y + t.h + 2) {
+			if (
+				x > t.x - 2 &&
+				x < t.x + t.w + 2 &&
+				y > t.y - 2 &&
+				y < t.y + t.h + 2
+			) {
 				t.el.classList.add("ch-inf");
 				if (this.drawing) glitchChar(t.el);
 			}
@@ -355,7 +485,8 @@ export class ColonyEngine {
 	}
 
 	tick(dt: number, speed: number): void {
-		if (this.reduced || !this.ctx) return;
+		// Frozen colonies don't age, so unfreezing resumes the curve where it stopped.
+		if (this.reduced || !this.ctx || speed === 0) return;
 		this.age += dt;
 		const rate = (2 + 32 * Math.exp(-this.age / 6)) * speed;
 		this.acc += rate * dt;
@@ -369,7 +500,19 @@ export class ColonyEngine {
 
 	/** True while something is animating: growth, tips or pulses. Knots alone don't count. */
 	get active(): boolean {
-		return (this.agents.length > 0 && runtimeSettings().growth > 0) || this.pulses.length > 0;
+		return (
+			(this.agents.length > 0 && runtimeSettings().growth > 0) ||
+			this.pulses.length > 0
+		);
+	}
+
+	/** Whether the loop needs to keep calling this colony: growing, pulsing, or knots breathing in dark mode. */
+	get needsFrames(): boolean {
+		return (
+			this.active ||
+			(!this.reduced && this.knots.length > 0 && liveTokens().dark) ||
+			this.glowDirty
+		);
 	}
 
 	pulse(force: boolean): void {
@@ -377,15 +520,26 @@ export class ColonyEngine {
 		const now = performance.now();
 		if (!force && now - this.lastPulse < 1500) return;
 		this.lastPulse = now;
-		const roots = this.strands.filter((s) => s.parentId < 0 && s.pts.length > 2);
-		const n = Math.min(roots.length, force ? 2 : 1 + (Math.random() < 0.4 ? 1 : 0));
+		const roots = this.strands.filter(
+			(s) => s.parentId < 0 && s.pts.length > 2,
+		);
+		const n = Math.min(
+			roots.length,
+			force ? 2 : 1 + (Math.random() < 0.4 ? 1 : 0),
+		);
 		for (let i = 0; i < n && this.pulses.length < 4; i++) {
 			const [s] = roots.splice(Math.floor(Math.random() * roots.length), 1);
-			if (s) this.pulses.push({ s, pos: 0, v: 110 + Math.random() * 50, ci: 0 });
+			if (s)
+				this.pulses.push({ s, pos: 0, v: 110 + Math.random() * 50, ci: 0 });
 		}
+		if (this.pulses.length) this.onWake();
 	}
 
-	private nearest(x: number, y: number, max: number): { d: number; s: Strand; i: number } | null {
+	private nearest(
+		x: number,
+		y: number,
+		max: number,
+	): { d: number; s: Strand; i: number } | null {
 		let best: { d: number; s: Strand; i: number } | null = null;
 		let bd = max;
 		for (const s of this.strands) {
@@ -415,7 +569,17 @@ export class ColonyEngine {
 			hit.s.children.sort((a, b) => a.at - b.at);
 			s.pts.push([p[0], p[1], 0.9]);
 			const ang = base + (k - (n - 1) / 2) * 0.5 + (Math.random() - 0.5) * 0.3;
-			this.agents.push({ kind: "tendril", x: p[0], y: p[1], ang, w: 0.95, len: 0, max: hit.d + 18 + Math.random() * 30, depth: 1, s });
+			this.agents.push({
+				kind: "tendril",
+				x: p[0],
+				y: p[1],
+				ang,
+				w: 0.95,
+				len: 0,
+				max: hit.d + 18 + Math.random() * 30,
+				depth: 1,
+				s,
+			});
 		}
 		this.age = Math.min(this.age, 2);
 		return true;
@@ -454,7 +618,8 @@ export class ColonyEngine {
 		}
 		if (breathing) {
 			this.knots.forEach((k, i) => {
-				g.globalAlpha = 0.16 + 0.24 * (0.5 + 0.5 * Math.sin(now / 1300 + i * 1.7));
+				g.globalAlpha =
+					0.16 + 0.24 * (0.5 + 0.5 * Math.sin(now / 1300 + i * 1.7));
 				g.beginPath();
 				g.arc(k[0], k[1], k[2] * 0.8, 0, 6.283);
 				g.fill();
@@ -471,7 +636,8 @@ export class ColonyEngine {
 			const pts = p.s.pts;
 			const kids = p.s.children;
 			while (p.ci < kids.length && kids[p.ci].at <= i) {
-				if (keep.length + queue.length < 4 && Math.random() < 0.35) queue.push({ s: kids[p.ci].s, pos: 0, v: p.v * 0.9, ci: 0 });
+				if (keep.length + queue.length < 4 && Math.random() < 0.35)
+					queue.push({ s: kids[p.ci].s, pos: 0, v: p.v * 0.9, ci: 0 });
 				p.ci++;
 			}
 			if (i >= pts.length + TRAIL) continue;

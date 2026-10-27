@@ -6,9 +6,17 @@ import styles from "./RelatedPosts.module.css";
 const LIMIT = 5;
 
 // Shared tags first, newest first within a tie.
-export default async function RelatedPosts({ currentSlug, tags }: { currentSlug: string; tags: string[] }) {
+export default async function RelatedPosts({
+	currentSlug,
+	tags,
+}: {
+	currentSlug: string;
+	tags: string[];
+}) {
 	const { postIds } = await getPostsIds();
-	const posts = await Promise.all(postIds.filter((id) => id !== currentSlug).map((id) => getPost(id)));
+	const posts = await Promise.all(
+		postIds.filter((id) => id !== currentSlug).map((id) => getPost(id)),
+	);
 	const own = new Set(tags);
 
 	const ranked = posts
@@ -19,7 +27,12 @@ export default async function RelatedPosts({ currentSlug, tags }: { currentSlug:
 		}))
 		.sort((a, b) => b.shared - a.shared || b.time - a.time)
 		.slice(0, LIMIT)
-		.map(({ p }) => ({ link: p.link, title: p.frontmatter.title, date: p.frontmatter.date, readTime: p.readTime }));
+		.map(({ p }) => ({
+			link: p.link,
+			title: p.frontmatter.title,
+			date: p.frontmatter.date,
+			readTime: p.readTime,
+		}));
 
 	if (!ranked.length) return null;
 

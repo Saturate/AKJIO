@@ -9,7 +9,11 @@ import styles from "./FieldStation.module.css";
 type Spore = { x: number; y: number; vx: number; vy: number; life: number };
 
 // Halftone moon in today's phase with a few spores lifting off it.
-export default function MoonCanvas({ phase: rawPhase }: { phase: number | null }) {
+export default function MoonCanvas({
+	phase: rawPhase,
+}: {
+	phase: number | null;
+}) {
 	const ref = useRef<HTMLCanvasElement>(null);
 	// Rounded so the 20s clock tick in the parent doesn't redraw the moon every time.
 	const phase = rawPhase === null ? null : Math.round(rawPhase * 1000) / 1000;
@@ -32,7 +36,14 @@ export default function MoonCanvas({ phase: rawPhase }: { phase: number | null }
 			const dpr = Math.min(2, window.devicePixelRatio || 1);
 			canvas.width = Math.round(w * dpr);
 			canvas.height = Math.round(h * dpr);
-			Object.assign(size, { w, h, dpr, cx: w / 2, cy: h / 2, R: Math.min(w, h) * 0.36 });
+			Object.assign(size, {
+				w,
+				h,
+				dpr,
+				cx: w / 2,
+				cy: h / 2,
+				R: Math.min(w, h) * 0.36,
+			});
 			const off = document.createElement("canvas");
 			off.width = canvas.width;
 			off.height = canvas.height;
@@ -43,7 +54,11 @@ export default function MoonCanvas({ phase: rawPhase }: { phase: number | null }
 			const r = mulberry(42);
 			const gap = 4.5;
 			const k = Math.cos(2 * Math.PI * phase);
-			const craters = Array.from({ length: 7 }, () => [r() * 1.4 - 0.7, r() * 1.4 - 0.7, 0.08 + r() * 0.16]);
+			const craters = Array.from({ length: 7 }, () => [
+				r() * 1.4 - 0.7,
+				r() * 1.4 - 0.7,
+				0.08 + r() * 0.16,
+			]);
 			for (let gx = gap / 2; gx < w; gx += gap) {
 				for (let gy = gap / 2; gy < h; gy += gap) {
 					const nx = (gx - size.cx) / size.R;
@@ -62,7 +77,9 @@ export default function MoonCanvas({ phase: rawPhase }: { phase: number | null }
 					// Terminator: lit side grows from the right while waxing, shrinks from the right while waning.
 					const s = Math.sqrt(1 - ny * ny);
 					const lit = phase < 0.5 ? nx > k * s : nx < -k * s;
-					const crater = craters.some(([cx, cy, cr]) => (nx - cx) ** 2 + (ny - cy) ** 2 < cr * cr);
+					const crater = craters.some(
+						([cx, cy, cr]) => (nx - cx) ** 2 + (ny - cy) ** 2 < cr * cr,
+					);
 					const limb = 0.7 + 0.3 * Math.sqrt(1 - d2);
 					g.globalAlpha = lit ? 0.85 : 0.2;
 					g.fillStyle = lit ? tokens.text : tokens.muted;
@@ -90,7 +107,13 @@ export default function MoonCanvas({ phase: rawPhase }: { phase: number | null }
 			ctx.setTransform(size.dpr, 0, 0, size.dpr, 0, 0);
 			if (spores.length < 6 && Math.random() < 0.03) {
 				const a = Math.random() * 6.283;
-				spores.push({ x: size.cx + Math.cos(a) * size.R * 0.9, y: size.cy + Math.sin(a) * size.R * 0.9, vx: (Math.random() - 0.5) * 0.1, vy: -0.08 - Math.random() * 0.12, life: 1 });
+				spores.push({
+					x: size.cx + Math.cos(a) * size.R * 0.9,
+					y: size.cy + Math.sin(a) * size.R * 0.9,
+					vx: (Math.random() - 0.5) * 0.1,
+					vy: -0.08 - Math.random() * 0.12,
+					life: 1,
+				});
 			}
 			const { tokens, dark } = liveTokens();
 			ctx.fillStyle = tokens.tip;
