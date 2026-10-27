@@ -1,3 +1,5 @@
+import { slugify, stripInlineMarkdown } from "./slugify";
+
 export type TOCEntry = {
 	level: number;
 	text: string;
@@ -32,15 +34,10 @@ export async function generateTableOfContentsFromMarkdown(markdown: string) {
 			}
 		}
 
-		// Generate slug
-		slug ??= `#${text
-			.replace(/`([^`]+)`/g, "$1") // Remove inline code formatting
-			.replace(/[^\w\s-]/g, "") // Remove special characters
-			.trim()
-			.replace(/\s+/g, "-") // Replace spaces with hyphens
-			.toLowerCase()}`;
+		const plain = stripInlineMarkdown(text);
+		slug ??= `#${slugify(plain)}`;
 
-		return { level, text, slug, children: [] };
+		return { level, text: plain, slug, children: [] };
 	});
 
 	const toc: TOCEntry[] = [];

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import TableOfContents from "@/components/TableOfContents/TableOfContents";
 import MobileTocPopover from "@/components/MobileTocPopover/MobileTocPopover";
 import { AnchorProvider } from "@/hooks/useActiveHeading";
@@ -8,6 +9,10 @@ import JsonLd from "@/components/JsonLd/JsonLd";
 import Comments from "@/components/Comments/Comments";
 import SeriesNav from "@/components/SeriesNav/SeriesNav";
 import Sources from "@/components/Sources/Sources";
+import Colony from "@/components/Colony/Colony";
+import InfectedTitle from "@/components/InfectedTitle/InfectedTitle";
+import RelatedPosts from "@/components/RelatedPosts/RelatedPosts";
+import { hashStr } from "@/lib/random";
 import type { TOCEntry } from "@/utils/generateTableOfContentsFromMarkdown";
 
 type PostLayoutProps = {
@@ -28,17 +33,11 @@ type PostLayoutProps = {
 	nonce?: string;
 };
 
-export default function PostLayout({
-	slug,
-	Component,
-	frontmatter,
-	toc,
-	readTime,
-	nonce,
-}: PostLayoutProps) {
+export default function PostLayout({ slug, Component, frontmatter, toc, readTime, nonce }: PostLayoutProps) {
 	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
 	const postUrl = `${siteUrl}/${slug}`;
 	const introLabel = frontmatter.subtitle ?? frontmatter.description ?? "";
+	const updated = frontmatter.updated && frontmatter.updated !== frontmatter.date ? frontmatter.updated : null;
 
 	const jsonLd = generateBlogPostingSchema(
 		{
@@ -56,43 +55,64 @@ export default function PostLayout({
 		<>
 			<AnchorProvider toc={toc}>
 				<MobileTocPopover entries={toc} introLabel={introLabel} />
-				<div className={styles.postLayout}>
-					<aside className={styles.postToc}>
-						<TableOfContents entries={toc} introLabel={introLabel} />
+				<div className={styles.layout} data-layout="full-width">
+					<article className={styles.article}>
+						<Colony as="header" className={styles.head} seed={hashStr(slug)} inward={0.65} reach={70} infect>
+							<InfectedTitle text={frontmatter.title} className={styles.title} />
+							{introLabel && <p className={styles.lede}>{introLabel}</p>}
+							<dl className={styles.meta}>
+								{frontmatter.date && (
+									<div>
+										<dt>Published</dt>
+										<dd>
+											<time dateTime={frontmatter.date}>{format(new Date(frontmatter.date), "MMM d, yyyy")}</time>
+										</dd>
+									</div>
+								)}
+								{updated && (
+									<div>
+										<dt>Updated</dt>
+										<dd>
+											<time dateTime={updated}>{format(new Date(updated), "MMM d, yyyy")}</time>
+										</dd>
+									</div>
+								)}
+								<div>
+									<dt>Reading</dt>
+									<dd>{readTime} min</dd>
+								</div>
+								{frontmatter.tags && frontmatter.tags.length > 0 && (
+									<div className={styles.tagsRow}>
+										<dt>Tags</dt>
+										<dd className={styles.tags}>
+											{frontmatter.tags.map((tag) => (
+												<Link key={tag} href={`/posts?tag=${encodeURIComponent(tag)}`} className={styles.tag}>
+													{tag}
+												</Link>
+											))}
+										</dd>
+									</div>
+								)}
+							</dl>
+						</Colony>
+
+						<div className="prose">
+							<Component />
+						</div>
+						{frontmatter.sources && frontmatter.sources.length > 0 && <Sources sources={frontmatter.sources} />}
+						{frontmatter.series && <SeriesNav seriesName={frontmatter.series} currentSlug={slug} />}
+						<Comments />
+					</article>
+
+					<aside className={styles.toc}>
+						<div className={styles.tocInner}>
+							<TableOfContents entries={toc} introLabel={introLabel} />
+						</div>
 					</aside>
 
-					<article className={`${styles.postContent} glassPanel`}>
-							<h1>{frontmatter.title}</h1>
-							<h2>{frontmatter.subtitle ?? frontmatter.description}</h2>
-							{frontmatter.date && (
-								<div className={styles.postMeta}>
-									<time dateTime={frontmatter.date}>
-										{format(new Date(frontmatter.date), "EEEE, MMMM do, yyyy")}
-									</time>
-									{frontmatter.updated &&
-										frontmatter.updated !== frontmatter.date && (
-											<span>
-												Updated{" "}
-												<time dateTime={frontmatter.updated}>
-													{format(
-														new Date(frontmatter.updated),
-														"MMMM do, yyyy",
-													)}
-												</time>
-											</span>
-										)}
-									<span>{readTime} min read</span>
-								</div>
-							)}
-							<Component />
-							{frontmatter.sources && frontmatter.sources.length > 0 && (
-								<Sources sources={frontmatter.sources} />
-							)}
-							{frontmatter.series && (
-								<SeriesNav seriesName={frontmatter.series} currentSlug={slug} />
-							)}
-							<Comments />
-						</article>
+					<div className={styles.below}>
+						<RelatedPosts currentSlug={slug} tags={frontmatter.tags ?? []} />
+					</div>
 				</div>
 			</AnchorProvider>
 			<JsonLd data={jsonLd} nonce={nonce} />

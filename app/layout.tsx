@@ -1,26 +1,54 @@
-import { Jersey_25, Inter } from "next/font/google";
+import { Fraunces, Geist, Geist_Mono, Silkscreen } from "next/font/google";
 import styles from "../styles/Home.module.css";
 import "../styles/global-styles.css";
 import "../styles/syntaxhighlighting.css";
+import "../styles/prose.css";
 import Navigation from "@/components/Navigation/Navigation";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
-import Ocean3DLazy from "@/components/Ocean3D/Ocean3DLazy";
+import SporeField from "@/components/SporeField/SporeField";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { getNonce } from "@/utils/nonce";
+import { strainCss } from "@/lib/strains";
+import { SETTINGS_COOKIE, parseSettings } from "@/lib/settings";
+import { cookies } from "next/headers";
+import CulturePanel from "@/components/CulturePanel/CulturePanel";
+import ImageViewer from "@/components/ImageViewer/ImageViewer";
 
-const font = Jersey_25({
+const fraunces = Fraunces({
 	subsets: ["latin"],
-	weight: "400",
-	variable: "--font-jersey-25",
+	axes: ["SOFT", "WONK", "opsz"],
+	style: ["normal", "italic"],
+	variable: "--font-fraunces",
 	display: "swap",
 });
 
-const inter = Inter({
+const geist = Geist({
 	subsets: ["latin"],
-	variable: "--font-inter",
+	variable: "--font-geist",
 	display: "swap",
 });
+
+const geistMono = Geist_Mono({
+	subsets: ["latin"],
+	variable: "--font-geist-mono",
+	display: "swap",
+});
+
+const silkscreen = Silkscreen({
+	subsets: ["latin"],
+	weight: "700",
+	variable: "--font-silkscreen",
+	display: "swap",
+});
+
+const fontVars = [fraunces, geist, geistMono, silkscreen]
+	.map((f) => f.variable)
+	.join(" ");
+
+// Strain and an explicit mode are rendered on the server from the settings cookie. Only "system"
+// needs the browser, so this resolves it before paint to avoid a flash.
+const prePaint = `(function(){try{var d=document.documentElement;if(d.dataset.theme!=="system")return;var r=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";d.classList.add(r);d.style.colorScheme=r}catch(e){}})()`;
 
 export const metadata = {
 	metadataBase: new URL("https://akj.io"),
@@ -80,25 +108,30 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }) {
 	const nonce = await getNonce();
+	const settings = parseSettings((await cookies()).get(SETTINGS_COOKIE)?.value);
+	const modeClass = settings.theme === "system" ? "" : ` ${settings.theme}`;
 
 	return (
 		<html
 			lang="en"
-			className={`${font.variable} ${inter.variable}`}
+			className={fontVars + modeClass}
+			data-strain={settings.strain}
+			data-theme={settings.theme}
+			style={
+				settings.theme === "system"
+					? undefined
+					: { colorScheme: settings.theme }
+			}
 			suppressHydrationWarning
 		>
 			<head>
-				<script
-					nonce={nonce}
-					dangerouslySetInnerHTML={{
-						__html: `(function(){try{var t=localStorage.getItem("theme")||"system";var r=t;if(t==="system")r=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.classList.add(r);document.documentElement.style.colorScheme=r}catch{}})()`,
-					}}
-				/>
+				<script nonce={nonce} dangerouslySetInnerHTML={{ __html: prePaint }} />
+				<style dangerouslySetInnerHTML={{ __html: strainCss() }} />
 			</head>
 			<body className={styles.page}>
-				<ThemeProvider>
-					<Ocean3DLazy />
-
+				<ThemeProvider initial={settings}>
+					<SporeField />
+					<ImageViewer />
 					<Header>
 						<Navigation />
 					</Header>
@@ -108,6 +141,8 @@ export default async function RootLayout({
 					</main>
 
 					<Footer />
+					{/* After the footer so it is the last tab stop, not the first; it's fixed, so position doesn't change. */}
+					<CulturePanel />
 				</ThemeProvider>
 			</body>
 		</html>

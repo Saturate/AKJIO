@@ -39,7 +39,7 @@ function formatDateRange(start?: string, end?: string | "present") {
 
 export default function CVPage() {
   return (
-    <div className={`${styles.cv} glassPanel`}>
+    <div className={styles.cv}>
       <header className={styles.header}>
         <h1>Curriculum Vitae</h1>
         <p className={styles.subtitle}>

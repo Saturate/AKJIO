@@ -1,18 +1,17 @@
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle/ThemeToggle";
+import ScrollProgress from "@/components/ScrollProgress/ScrollProgress";
 import styles from "./Header.module.css";
 
 export default function Header({ children }: { children: React.ReactNode }) {
 	return (
-		<header className={styles.websitetop}>
+		<header className={styles.top} data-site-header="">
+			<Link href="/" className={styles.mark} aria-label="akj.io, home">
+				akj.io
+			</Link>
+			{children}
 			<ThemeToggle />
-			<h2 className={styles.brand}>
-				<Link href={"/"}>
-					Allan Kimmer Jensen
-					<span>akj.io</span>
-				</Link>
-			</h2>
-			<section className={styles.header}>{children}</section>
+			<ScrollProgress />
 		</header>
 	);
 }

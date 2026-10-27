@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PostLayout from "./_components/PostLayout";
 import { getNonce } from "@/utils/nonce";
+import shell from "@/styles/Page.module.css";
 
 async function resolveSlug(slug: string) {
 	const post = await findPageBySlug(["posts", slug]);
@@ -98,5 +99,9 @@ export default async function Page({ params }: PageProps) {
 		);
 	}
 
-	return <div className="glassPanel">{page.Component()}</div>;
+	return (
+		<div data-layout="full-width">
+			<article className={`${shell.column} prose`}>{page.Component()}</article>
+		</div>
+	);
 }

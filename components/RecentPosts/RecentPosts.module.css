@@ -1,75 +1,27 @@
-.sidebar {
-	/* Removed sticky positioning - sidebar stickiness should be controlled at page level */
+.recent {
+	margin-top: 96px;
+}
+
+.head {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	margin-bottom: 16px;
 }
 
 .heading {
-	margin: 0 0 1rem 0;
-	font-size: 1.25rem;
-	line-height: 1.6;
-	color: var(--text-primary);
-	font-family: var(--font-jersey-25);
-	border-bottom: 2px solid var(--color-rule);
-	padding-bottom: 0.5rem;
+	margin: 0;
+	font-size: 32px;
 }
 
-.postList {
-	list-style: none;
-	padding: 0;
-	margin: 0 0 1rem 0;
+.all {
+	font-family: var(--font-mono);
+	font-size: 11.5px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--muted);
 }
 
-.postItem {
-	margin-bottom: 1rem;
-}
-
-.postLink {
-	display: block;
-	text-decoration: none;
-	color: inherit;
-	padding: 0.75rem;
-	border-radius: 8px;
-	transition: background-color 0.2s ease, transform 0.15s ease;
-	background: rgba(255, 255, 255, 0.03);
-}
-
-.postLink:hover {
-	background: rgba(255, 255, 255, 0.1);
-	transform: translateX(4px);
-}
-
-.postTitle {
-	display: block;
-	color: var(--text-primary);
-	font-weight: 500;
-	margin-bottom: 0.25rem;
-	font-size: 0.95rem;
-	line-height: 1.3;
-}
-
-.postDate {
-	display: block;
-	color: var(--text-muted);
-	font-size: 0.8rem;
-}
-
-.viewAll {
-	display: inline-block;
-	color: var(--text-primary);
-	text-decoration: none;
-	font-size: 0.9rem;
-	padding: 0.5rem 0;
-	font-weight: 500;
-	transition: background-color 0.2s ease, transform 0.15s ease;
-}
-
-.viewAll:hover {
-	color: var(--color-link-hover);
-	transform: translateX(4px);
-}
-
-@media (max-width: 1024px) {
-	.sidebar {
-		position: static;
-		margin-top: 2rem;
-	}
+.all:hover {
+	color: var(--text);
 }

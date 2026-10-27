@@ -1,10 +1,13 @@
-import { getPost, getPostsIds } from "@/app/actions";
-import ArticleExcerpt from "@/components/ArticleExcerpt/ArticleExcerpt";
-import Link from "next/link";
 import type { Metadata } from "next";
-import { generateCollectionPageSchema } from "@/utils/generateJsonLd";
+import Colony from "@/components/Colony/Colony";
+import PostRows from "@/components/PostRows/PostRows";
+import PopularTags from "@/components/PopularTags/PopularTags";
 import JsonLd from "@/components/JsonLd/JsonLd";
+import page from "@/styles/Page.module.css";
+import { generateCollectionPageSchema } from "@/utils/generateJsonLd";
 import { getNonce } from "@/utils/nonce";
+import { getPostSummaries, tagCounts } from "@/utils/postSummaries";
+import { hashStr } from "@/lib/random";
 
 type Props = {
 	searchParams: Promise<{ tag?: string }>;
@@ -34,63 +37,43 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
 export default async function PostsOverviewPage({ searchParams }: Props) {
 	const { tag } = await searchParams;
-	const nonce = await getNonce();
-	const { postIds } = await getPostsIds();
-
-	const posts = await Promise.all(
-		postIds.map(async (id) => {
-			return await getPost(id);
-		}),
-	);
-
-	// Filter by tag if provided
-	const filteredPosts = tag
-		? posts.filter((post) => post.frontmatter.tags?.includes(tag))
-		: posts;
-
-	const sortedPosts = filteredPosts.sort((a, b) => {
-		return (
-			new Date(b.frontmatter.date).getTime() -
-			new Date(a.frontmatter.date).getTime()
-		);
-	});
-
+	const [all, nonce] = await Promise.all([getPostSummaries(), getNonce()]);
+	const posts = tag ? all.filter((p) => p.tags.includes(tag)) : all;
 	const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://akj.io";
 
 	const jsonLd = generateCollectionPageSchema(
-		sortedPosts.map((post) => ({
-			title: post.frontmatter.title,
-			description: post.frontmatter.description,
-			subtitle: post.frontmatter.subtitle,
-			date:
-				post.frontmatter.date instanceof Date
-					? post.frontmatter.date.toISOString()
-					: post.frontmatter.date,
-			tags: post.frontmatter.tags,
-			url: `${siteUrl}${post.link}`,
+		posts.map((p) => ({
+			title: p.title,
+			description: p.description,
+			subtitle: p.subtitle,
+			date: p.date instanceof Date ? p.date.toISOString() : p.date,
+			tags: p.tags,
+			url: `${siteUrl}${p.link}`,
 		})),
 	);
 
-	const sortedPostElements = sortedPosts.map(({ frontmatter, link, readTime }) => {
-		return (
-			<ArticleExcerpt key={frontmatter.title} {...frontmatter} link={link} readTime={readTime} />
-		);
-	});
-
 	return (
-		<div className="glassPanel">
-			{tag && (
-				<div className="tagFilter">
-					<p>
-						Showing posts tagged with: <strong>{tag}</strong>
+		<div data-layout="full-width">
+			<div className={page.wide}>
+				<Colony as="header" seed={hashStr("posts:" + (tag ?? ""))} inward={0.4} reach={40} className={`${page.frame} ${page.head}`}>
+					<h1>{tag ? `Posts on ${tag}` : "Posts"}</h1>
+					<p className={page.lede}>
+						{tag
+							? `${posts.length} ${posts.length === 1 ? "post" : "posts"} tagged ${tag}.`
+							: "Security research, CTF writeups, frontend and the odd hardware project."}
 					</p>
-					<Link href="/posts">← Clear filter</Link>
-				</div>
-			)}
-			{sortedPostElements.length === 0 && (
-				<p>No posts found {tag && `with tag "${tag}"`}.</p>
-			)}
-			{sortedPostElements}
+					{/* One-off tags would bury the useful ones; they stay reachable from each post. */}
+					<PopularTags tags={tagCounts(all).filter(([t, n]) => n > 1 || t === tag)} active={tag} />
+				</Colony>
+				{posts.length ? (
+					<PostRows
+						posts={posts.map((p) => ({ ...p, lede: p.subtitle || p.description }))}
+						seed={hashStr("posts:list:" + (tag ?? ""))}
+					/>
+				) : (
+					<p className={page.label}>No posts tagged {tag}.</p>
+				)}
+			</div>
 			<JsonLd data={jsonLd} nonce={nonce} />
 		</div>
 	);

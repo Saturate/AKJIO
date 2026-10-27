@@ -205,10 +205,10 @@ export const cvData: CVData = {
       type: "side-project",
       dateRange: { start: "2024-01", end: "present" },
       description:
-        "Personal website showcasing work, blog posts, and projects with custom ocean-themed design.",
+        "Personal website showcasing work, blog posts, and projects with a custom generative, organic design.",
       highlights: [
         "Custom MDX processing pipeline with syntax highlighting",
-        "Animated ocean water effect with CSS and WebGL",
+        "Seeded canvas simulations: hyphae growing on borders and an interactive spore field",
         "Tag-based filtering system for blog posts",
         "SEO-optimized with dynamic metadata and sitemap generation",
       ],
