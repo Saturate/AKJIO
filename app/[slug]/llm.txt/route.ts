@@ -1,8 +1,5 @@
 import fs from "fs";
-import path from "path";
-
-const POST_CONTENT_PATH = "content/posts";
-const PAGE_CONTENT_PATH = "content";
+import generateContentMap from "@/utils/generateContentMap";
 
 function stripFrontmatter(content: string): string {
 	const match = content.match(/^---\s*\n[\s\S]*?\n---\s*\n/);
@@ -10,20 +7,14 @@ function stripFrontmatter(content: string): string {
 	return content.slice(match[0].length).trim();
 }
 
-function resolveContentPath(slug: string): string | null {
-	// Check posts/{slug}/index.mdx first
-	const postDir = path.join(POST_CONTENT_PATH, slug);
-	if (fs.existsSync(postDir) && fs.statSync(postDir).isDirectory()) {
-		const files = fs.readdirSync(postDir);
-		const mdxFile = files.find((f) => f.endsWith(".mdx"));
-		if (mdxFile) return path.join(postDir, mdxFile);
-	}
+// Same lookup as the HTML route, so ordered files like content/1_about.mdx resolve too
+async function resolveContentPath(slug: string): Promise<string | null> {
+	const contentMap = await generateContentMap();
+	const page =
+		contentMap.find((c) => c.websitePath === `/posts/${slug}`) ??
+		contentMap.find((c) => c.websitePath === `/${slug}`);
 
-	// Fall back to content/{slug}.mdx
-	const pagePath = path.join(PAGE_CONTENT_PATH, `${slug}.mdx`);
-	if (fs.existsSync(pagePath)) return pagePath;
-
-	return null;
+	return page?.filePath ?? null;
 }
 
 export async function GET(
@@ -31,7 +22,7 @@ export async function GET(
 	{ params }: { params: Promise<{ slug: string }> },
 ) {
 	const { slug } = await params;
-	const filePath = resolveContentPath(slug);
+	const filePath = await resolveContentPath(slug);
 
 	if (!filePath) {
 		return new Response("Not found", { status: 404 });
