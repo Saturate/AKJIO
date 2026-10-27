@@ -29,6 +29,9 @@
 	top: 112px;
 	max-height: calc(100vh - 140px);
 	overflow-y: auto;
+	/* overflow-y: auto already forces x to auto; the 3px hover nudge on a link then
+	   overflows sideways and flashes a horizontal scrollbar */
+	overflow-x: hidden;
 	overscroll-behavior: contain;
 	scrollbar-width: thin;
 	scrollbar-color: var(--line) transparent;
