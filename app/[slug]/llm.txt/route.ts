@@ -31,6 +31,11 @@ export async function GET(
 	{ params }: { params: Promise<{ slug: string }> },
 ) {
 	const { slug } = await params;
+	// slug is joined into a filesystem path
+	if (!/^[a-z0-9-]+$/.test(slug)) {
+		return new Response("Not found", { status: 404 });
+	}
+
 	const filePath = resolveContentPath(slug);
 
 	if (!filePath) {
