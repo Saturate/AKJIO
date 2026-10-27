@@ -1,0 +1,62 @@
+/* Shared shells for the home page, the posts list and plain MDX pages. */
+.column {
+	width: 100%;
+	max-width: calc(70ch + 2 * var(--gutter));
+	margin: 0 auto;
+	padding: 8px var(--gutter) 0;
+}
+
+.wide {
+	width: 100%;
+	max-width: calc(1180px + 2 * var(--gutter));
+	margin: 0 auto;
+	padding: 0 var(--gutter);
+}
+
+.frame {
+	border: 1px solid var(--line);
+	padding: 30px 30px 24px;
+}
+
+.frame > :last-child {
+	margin-bottom: 0;
+}
+
+.head {
+	margin-bottom: 40px;
+}
+
+.head h1 {
+	margin: 0 0 12px;
+}
+
+.lede {
+	color: var(--muted);
+	font-size: 18.5px;
+	line-height: 1.6;
+	margin: 0 0 24px;
+	max-width: 56ch;
+}
+
+.label {
+	font-family: var(--font-mono);
+	font-size: 11.5px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+.section {
+	margin-top: 56px;
+}
+
+.section h2 {
+	font-size: 32px;
+	margin: 0 0 16px;
+}
+
+@media (max-width: 720px) {
+	.frame {
+		padding: 22px 18px 18px;
+	}
+}

@@ -45,7 +45,21 @@
 	color: var(--muted);
 }
 
+.main {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+}
+
+.lede {
+	font-size: 14.5px;
+	line-height: 1.5;
+	color: var(--muted);
+}
+
 .title {
+	display: inline-block;
 	font-family: var(--font-head);
 	font-variation-settings: var(--head-fvs);
 	font-weight: 340;
