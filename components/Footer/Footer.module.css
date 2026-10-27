@@ -39,7 +39,7 @@
 }
 
 .slot {
-	min-height: 180px;
+	min-width: 0;
 }
 
 .wmCell {
@@ -95,7 +95,7 @@
 	}
 
 	.slot {
-		display: none;
+		grid-column: 1 / -1;
 	}
 
 	.wmCell {

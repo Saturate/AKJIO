@@ -1,5 +1,13 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import Colony from "@/components/Colony/Colony";
+import FieldStation from "@/components/FieldStation/FieldStation";
+import FieldStationView from "@/components/FieldStation/FieldStationView";
+import StrainPicker from "@/components/StrainPicker/StrainPicker";
 import Wordmark from "./Wordmark";
+
+const TOP_CORNERS = [0, 1] as const;
+const TOP_EDGE = [0] as const;
 import FooterPath from "./FooterPath";
 import styles from "./Footer.module.css";
 
@@ -19,7 +27,7 @@ const ELSEWHERE = [
 
 export default function Footer() {
 	return (
-		<footer className={styles.footer}>
+		<Colony as="footer" seed={4242} inward={0.35} reach={30} corners={TOP_CORNERS} edges={TOP_EDGE} className={styles.footer}>
 			<div className={styles.grid}>
 				<Wordmark />
 				<nav className={styles.col} aria-label="Writing">
@@ -44,7 +52,12 @@ export default function Footer() {
 						),
 					)}
 				</nav>
-				<div className={styles.slot} />
+				<div className={styles.slot}>
+					<Suspense fallback={<FieldStationView data={null} />}>
+						<FieldStation />
+					</Suspense>
+					<StrainPicker />
+				</div>
 			</div>
 			<div className={styles.bottom}>
 				<FooterPath />
@@ -52,6 +65,6 @@ export default function Footer() {
 					No trackers. No cookies.
 				</Link>
 			</div>
-		</footer>
+		</Colony>
 	);
 }
