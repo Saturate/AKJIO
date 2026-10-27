@@ -11,7 +11,7 @@
 }
 
 .popover {
-	z-index: 15;
+	z-index: var(--z-sticky);
 }
 
 /* Stuck: pinned right under the sticky site header. */

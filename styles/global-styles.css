@@ -13,6 +13,29 @@
 	--text-primary: var(--text);
 	--text-muted: var(--muted);
 	--toc-active: var(--accent);
+
+	/* Named roles from the earlier tokenization (#140), mapped onto the strain tokens. */
+	--text-secondary: var(--muted);
+	--text-tertiary: color-mix(in srgb, var(--muted) 80%, transparent);
+	--color-text-tertiary: var(--text-tertiary);
+	--color-accent: var(--accent);
+	--color-accent-dim: color-mix(in srgb, var(--accent) 50%, transparent);
+	--color-accent-bg: color-mix(in srgb, var(--accent) 10%, transparent);
+	--color-accent-border: color-mix(in srgb, var(--accent) 35%, transparent);
+	--color-secondary: var(--glitch-a);
+	--color-link-hover: var(--text);
+	--color-rule: var(--line);
+	--color-surface: color-mix(in srgb, var(--raised) 60%, transparent);
+	--color-surface-hover: var(--raised);
+	--color-border-subtle: color-mix(in srgb, var(--line) 60%, transparent);
+
+	/* z-index scale (#140). Negative and 1-3 values inside isolated components stay local. */
+	--z-base: 1;
+	--z-sticky: 5;
+	--z-header: 10;
+	--z-overlay: 20;
+	--z-modal: 30;
+	--z-toast: 40;
 }
 
 * {

@@ -2,7 +2,7 @@
 	position: fixed;
 	right: 14px;
 	bottom: 14px;
-	z-index: 40;
+	z-index: var(--z-overlay);
 	display: flex;
 	flex-direction: column-reverse;
 	align-items: flex-end;

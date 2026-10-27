@@ -1,7 +1,7 @@
 .wipe {
 	position: fixed;
 	inset: 0;
-	z-index: 50;
+	z-index: var(--z-modal);
 	display: grid;
 	grid-template-rows: repeat(9, 1fr);
 	pointer-events: none;
