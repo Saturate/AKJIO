@@ -29,7 +29,8 @@ export default function calculateReadTime(rawContent: string): number {
 		.replace(/^#{1,6}\s/gm, "");
 
 	const proseWords = cleanedProse.split(/\s+/).filter(Boolean).length;
-	const totalWordEquivalent = proseWords + codeLines * CODE_LINE_WORD_EQUIVALENT;
+	const totalWordEquivalent =
+		proseWords + codeLines * CODE_LINE_WORD_EQUIVALENT;
 
 	return Math.max(1, Math.round(totalWordEquivalent / WORDS_PER_MINUTE));
 }

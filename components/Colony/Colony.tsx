@@ -6,13 +6,7 @@ import { registerColony } from "@/lib/colony/loop";
 import styles from "./Colony.module.css";
 
 type Tag =
-	| "div"
-	| "section"
-	| "header"
-	| "footer"
-	| "article"
-	| "figure"
-	| "aside";
+	"div" | "section" | "header" | "footer" | "article" | "figure" | "aside";
 
 type ColonyProps = {
 	as?: Tag;

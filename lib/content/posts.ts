@@ -13,7 +13,8 @@ export interface PostEntry {
 
 function postFile(id: string): string | null {
 	const postDir = path.join(process.cwd(), POST_CONTENT_PATH, id);
-	if (!fs.existsSync(postDir) || !fs.statSync(postDir).isDirectory()) return null;
+	if (!fs.existsSync(postDir) || !fs.statSync(postDir).isDirectory())
+		return null;
 	const mdxFile = fs.readdirSync(postDir).find((f) => f.endsWith(".mdx"));
 	return mdxFile ? path.join(postDir, mdxFile) : null;
 }

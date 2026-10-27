@@ -50,7 +50,8 @@ export function prefersMarkdown(accept: string | null): boolean {
 
 export const markdownNegotiation: ProxyMiddleware = (request, next) => {
 	const markdownPath = markdownPathFor(request.nextUrl.pathname);
-	if (!markdownPath || !prefersMarkdown(request.headers.get("accept"))) return next();
+	if (!markdownPath || !prefersMarkdown(request.headers.get("accept")))
+		return next();
 
 	// Vary on the HTML variant would be pointless: Next's renderer overwrites it
 	const response = NextResponse.rewrite(new URL(markdownPath, request.url));

@@ -33,8 +33,8 @@ jobs:
           owner: Saturate
           repositories: akjio-content
 
-      #- name: "Check format"
-      #  run: pnpm format:check
+      - name: "Check format"
+        run: pnpm format:check
 
       - name: "Build"
         run: pnpm build

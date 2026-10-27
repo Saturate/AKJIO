@@ -23,12 +23,20 @@ export default async function generateContentMap() {
 			.filter((entry) => !entry.isDirectory() && entry.name.endsWith(".mdx"))
 			.map(async (entry) => {
 				// In newer Node.js versions, readdirSync with recursive returns parentPath instead of path
-				const entryWithPath = entry as fs.Dirent & { path?: string; parentPath?: string };
+				const entryWithPath = entry as fs.Dirent & {
+					path?: string;
+					parentPath?: string;
+				};
 				const entryPath = entryWithPath.parentPath || entryWithPath.path;
 				if (!entryPath) {
-					throw new Error(`Content entry missing path property: ${JSON.stringify(entry)}`);
+					throw new Error(
+						`Content entry missing path property: ${JSON.stringify(entry)}`,
+					);
 				}
-				const relativePath = entryPath.replace(folderPath, "").split("\\").join("/");
+				const relativePath = entryPath
+					.replace(folderPath, "")
+					.split("\\")
+					.join("/");
 				const slugs =
 					relativePath !== ""
 						? relativePath.split("/").filter((slug: string) => slug !== "")
@@ -58,6 +66,6 @@ export default async function generateContentMap() {
 					filePath: filePath,
 					relativeFilePath: path.join(relativePath, entry.name),
 				};
-		}),
+			}),
 	);
 }

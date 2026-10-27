@@ -80,7 +80,12 @@ const nextConfig = {
 const withMDX = createMDX({
 	// Add markdown plugins here, as desired
 	options: {
-		remarkPlugins: [remarkGfm, remarkFrontmatter, remarkMdxFrontmatter, remarkAbbr],
+		remarkPlugins: [
+			remarkGfm,
+			remarkFrontmatter,
+			remarkMdxFrontmatter,
+			remarkAbbr,
+		],
 		rehypePlugins: [
 			[
 				rehypePrettyCode,
@@ -93,11 +98,11 @@ const withMDX = createMDX({
 		],
 		remarkRehypeOptions: {
 			passThrough: [
-				'mdxjsEsm',
-				'mdxFlowExpression',
-				'mdxJsxFlowElement',
-				'mdxJsxTextElement',
-				'mdxTextExpression',
+				"mdxjsEsm",
+				"mdxFlowExpression",
+				"mdxJsxFlowElement",
+				"mdxJsxTextElement",
+				"mdxTextExpression",
 			],
 		},
 	},

@@ -24,13 +24,22 @@ export async function generateMetadata() {
 
 export default async function FrontPage({ params }: PageProps) {
 	const slug = (await params).slug;
-	const [content, posts] = await Promise.all([getPageFromSlug([slug]), getPostSummaries()]);
+	const [content, posts] = await Promise.all([
+		getPageFromSlug([slug]),
+		getPostSummaries(),
+	]);
 
 	return (
 		<>
 			<div data-layout="full-width">
 				<div className={page.column}>
-					<Colony as="article" seed={hashStr("home")} inward={0.4} reach={40} className={`${page.frame} prose`}>
+					<Colony
+						as="article"
+						seed={hashStr("home")}
+						inward={0.4}
+						reach={40}
+						className={`${page.frame} prose`}
+					>
 						{content.Component()}
 					</Colony>
 				</div>

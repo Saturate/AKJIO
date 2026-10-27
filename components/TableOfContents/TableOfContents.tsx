@@ -37,7 +37,10 @@ function flatten(entries: TOCEntry[]): TOCEntry[] {
 	return entries.flatMap((e) => [e, ...flatten(e.children)]);
 }
 
-function svgEl<K extends keyof SVGElementTagNameMap>(tag: K, attrs: Record<string, string | number>): SVGElementTagNameMap[K] {
+function svgEl<K extends keyof SVGElementTagNameMap>(
+	tag: K,
+	attrs: Record<string, string | number>,
+): SVGElementTagNameMap[K] {
 	const el = document.createElementNS(SVG_NS, tag);
 	for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, String(v));
 	return el;
@@ -49,8 +52,14 @@ export default function TableOfContents({ entries, introLabel }: Props) {
 	const uid = useId().replace(/:/g, "");
 	const active = useActiveAnchors();
 	const items = useMemo<Item[]>(() => {
-		const flat = flatten(entries).map((e) => ({ slug: e.slug, text: e.text, depth: e.level >= 3 ? 3 : 2 }));
-		return introLabel ? [{ slug: null, text: introLabel, depth: 2 }, ...flat] : flat;
+		const flat = flatten(entries).map((e) => ({
+			slug: e.slug,
+			text: e.text,
+			depth: e.level >= 3 ? 3 : 2,
+		}));
+		return introLabel
+			? [{ slug: null, text: introLabel, depth: 2 }, ...flat]
+			: flat;
 	}, [entries, introLabel]);
 
 	const listRef = useRef<HTMLOListElement>(null);
@@ -63,10 +72,19 @@ export default function TableOfContents({ entries, introLabel }: Props) {
 	const syncRef = useRef<(instant: boolean) => void>(() => {});
 	const retarget = useRef<() => void>(() => {});
 
-	const state = useRef<TocState>({ geo: [], pts: [], sprouts: [], cur: { y: 0, h: 0 }, target: { y: 0, h: 0 }, raf: 0 });
+	const state = useRef<TocState>({
+		geo: [],
+		pts: [],
+		sprouts: [],
+		cur: { y: 0, h: 0 },
+		target: { y: 0, h: 0 },
+		raf: 0,
+	});
 
 	const activeIdx = useMemo(() => {
-		const idx = items.map((it, i) => (it.slug && active.includes(it.slug.slice(1)) ? i : -1)).filter((i) => i >= 0);
+		const idx = items
+			.map((it, i) => (it.slug && active.includes(it.slug.slice(1)) ? i : -1))
+			.filter((i) => i >= 0);
 		return idx.length ? idx : introLabel ? [0] : [];
 	}, [items, active, introLabel]);
 
@@ -103,15 +121,21 @@ export default function TableOfContents({ entries, introLabel }: Props) {
 			const k = s.knot;
 			if (!k) return;
 			k.style.fill = "var(--tip)";
-			k.style.filter = liveTokens().dark ? "drop-shadow(0 0 3px var(--tip))" : "none";
+			k.style.filter = liveTokens().dark
+				? "drop-shadow(0 0 3px var(--tip))"
+				: "none";
 			k.style.transition = `opacity 0.4s ease ${s.delay + s.dur * 0.9}s`;
 			k.style.opacity = "0.95";
-			s.settle = window.setTimeout(() => {
-				k.style.transition = "fill 1.6s ease, opacity 1.6s ease, filter 1.6s ease";
-				k.style.fill = "var(--growth)";
-				k.style.filter = "none";
-				k.style.opacity = "0.75";
-			}, (s.delay + s.dur) * 1000 + 600);
+			s.settle = window.setTimeout(
+				() => {
+					k.style.transition =
+						"fill 1.6s ease, opacity 1.6s ease, filter 1.6s ease";
+					k.style.fill = "var(--growth)";
+					k.style.filter = "none";
+					k.style.opacity = "0.75";
+				},
+				(s.delay + s.dur) * 1000 + 600,
+			);
 		};
 
 		const wither = (s: Sprout, instant: boolean) => {
@@ -175,7 +199,8 @@ export default function TableOfContents({ entries, introLabel }: Props) {
 			st.geo = links.map((a, i) => {
 				const cs = getComputedStyle(a);
 				const top = a.offsetTop + parseFloat(cs.paddingTop);
-				const bottom = a.offsetTop + a.offsetHeight - parseFloat(cs.paddingBottom);
+				const bottom =
+					a.offsetTop + a.offsetHeight - parseFloat(cs.paddingBottom);
 				const x = items[i]?.depth === 3 ? 13 : 3;
 				if (px === null) {
 					d.push(`M${x} ${top}`);
@@ -200,7 +225,9 @@ export default function TableOfContents({ entries, introLabel }: Props) {
 				if (r() < 0.7) {
 					const hy = top + (bottom - top) * r();
 					const len = 3 + r() * 5;
-					hairs.push(`M${x} ${hy.toFixed(1)} q${(-len * 0.6).toFixed(1)} ${(-1 - r() * 2).toFixed(1)} ${(-len).toFixed(1)} ${(-2 - r() * 3).toFixed(1)}`);
+					hairs.push(
+						`M${x} ${hy.toFixed(1)} q${(-len * 0.6).toFixed(1)} ${(-1 - r() * 2).toFixed(1)} ${(-len).toFixed(1)} ${(-2 - r() * 3).toFixed(1)}`,
+					);
 				}
 				px = x;
 				py = bottom;
@@ -267,7 +294,12 @@ export default function TableOfContents({ entries, introLabel }: Props) {
 					g.append(dot);
 					dots.push(dot);
 				}
-				const p = svgEl("path", { d: path, pathLength: 1, fill: "none", "stroke-linecap": "round" });
+				const p = svgEl("path", {
+					d: path,
+					pathLength: 1,
+					fill: "none",
+					"stroke-linecap": "round",
+				});
 				p.style.stroke = "var(--growth)";
 				p.style.strokeWidth = String(0.5 + r() * 0.5);
 				p.style.opacity = "0.6";
@@ -276,12 +308,25 @@ export default function TableOfContents({ entries, introLabel }: Props) {
 				g.append(p);
 				let knot: SVGCircleElement | null = null;
 				if (r() < 0.45) {
-					knot = svgEl("circle", { cx: x.toFixed(1), cy: yy.toFixed(1), r: (0.7 + r() * 0.9).toFixed(2) });
+					knot = svgEl("circle", {
+						cx: x.toFixed(1),
+						cy: yy.toFixed(1),
+						r: (0.7 + r() * 0.9).toFixed(2),
+					});
 					knot.style.fill = "var(--growth)";
 					knot.style.opacity = "0";
 					g.append(knot);
 				}
-				st.sprouts.push({ y, path: p, knot, dots, dur: 1.2 + r() * 1.6, delay: r() * 0.5, on: false, settle: 0 });
+				st.sprouts.push({
+					y,
+					path: p,
+					knot,
+					dots,
+					dur: 1.2 + r() * 1.6,
+					delay: r() * 0.5,
+					on: false,
+					settle: 0,
+				});
 			}
 			sync(true);
 		};
@@ -294,7 +339,10 @@ export default function TableOfContents({ entries, introLabel }: Props) {
 		ro.observe(list);
 		const styleGlow = () => {
 			const dark = liveTokens().dark;
-			if (glowRef.current) glowRef.current.style.filter = dark ? "drop-shadow(0 0 3px var(--tip))" : "none";
+			if (glowRef.current)
+				glowRef.current.style.filter = dark
+					? "drop-shadow(0 0 3px var(--tip))"
+					: "none";
 		};
 		styleGlow();
 		const off = onTokensChange(styleGlow);
@@ -313,7 +361,10 @@ export default function TableOfContents({ entries, introLabel }: Props) {
 		const reduced = prefersReducedMotion();
 		const paint = () => {
 			rangeRef.current?.setAttribute("y", st.cur.y.toFixed(2));
-			rangeRef.current?.setAttribute("height", Math.max(0, st.cur.h).toFixed(2));
+			rangeRef.current?.setAttribute(
+				"height",
+				Math.max(0, st.cur.h).toFixed(2),
+			);
 		};
 		const animate = () => {
 			const c = st.cur;
@@ -332,18 +383,27 @@ export default function TableOfContents({ entries, introLabel }: Props) {
 		retarget.current = () => {
 			if (!st.geo.length || !activeIdx.length) return;
 			const top = Math.min(...activeIdx.map((i) => st.geo[i]?.top ?? Infinity));
-			const bottom = Math.max(...activeIdx.map((i) => st.geo[i]?.bottom ?? -Infinity));
+			const bottom = Math.max(
+				...activeIdx.map((i) => st.geo[i]?.bottom ?? -Infinity),
+			);
 			if (!Number.isFinite(top) || !Number.isFinite(bottom)) return;
 			st.target = { y: top - 8, h: bottom - top + 16 };
 			syncRef.current(false);
 			// If a parent caps the TOC height and scrolls it, keep the lit range in view (without moving the page).
 			let box = listRef.current?.parentElement ?? null;
-			while (box && getComputedStyle(box).overflowY === "visible") box = box.parentElement;
+			while (box && getComputedStyle(box).overflowY === "visible")
+				box = box.parentElement;
 			const list = listRef.current;
 			if (box && list && box.scrollHeight > box.clientHeight) {
-				const listTop = list.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop;
+				const listTop =
+					list.getBoundingClientRect().top -
+					box.getBoundingClientRect().top +
+					box.scrollTop;
 				const want = listTop + top - box.clientHeight * 0.35;
-				box.scrollTo({ top: Math.max(0, want), behavior: reduced ? "auto" : "smooth" });
+				box.scrollTo({
+					top: Math.max(0, want),
+					behavior: reduced ? "auto" : "smooth",
+				});
 			}
 			if (reduced) {
 				st.cur = { ...st.target };
@@ -357,14 +417,19 @@ export default function TableOfContents({ entries, introLabel }: Props) {
 
 	if (!items.length) return null;
 
-	const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, slug: string | null) => {
+	const scrollTo = (
+		e: React.MouseEvent<HTMLAnchorElement>,
+		slug: string | null,
+	) => {
 		e.preventDefault();
 		const smooth = prefersReducedMotion() ? "auto" : "smooth";
 		if (!slug) {
 			window.scrollTo({ top: 0, behavior: smooth });
 			return;
 		}
-		document.querySelector(slug)?.scrollIntoView({ behavior: smooth, block: "start" });
+		document
+			.querySelector(slug)
+			?.scrollIntoView({ behavior: smooth, block: "start" });
 		history.replaceState(null, "", slug);
 	};
 
@@ -380,18 +445,39 @@ export default function TableOfContents({ entries, introLabel }: Props) {
 							<stop offset="0.72" stopColor="#fff" stopOpacity="1" />
 							<stop offset="1" stopColor="#fff" stopOpacity="0" />
 						</linearGradient>
-						<mask id={`${uid}-range`} maskUnits="userSpaceOnUse" x="-20" y="-40" width="64" height="10000">
-							<rect ref={rangeRef} x="-20" y="0" width="64" height="0" fill={`url(#${uid}-fade)`} />
+						<mask
+							id={`${uid}-range`}
+							maskUnits="userSpaceOnUse"
+							x="-20"
+							y="-40"
+							width="64"
+							height="10000"
+						>
+							<rect
+								ref={rangeRef}
+								x="-20"
+								y="0"
+								width="64"
+								height="0"
+								fill={`url(#${uid}-fade)`}
+							/>
 						</mask>
 					</defs>
 					<path ref={railRef} className={styles.strand} />
 					<path ref={hairsRef} className={styles.hairs} />
 					<g ref={sproutsRef} />
-					<path ref={glowRef} className={styles.glow} mask={`url(#${uid}-range)`} />
+					<path
+						ref={glowRef}
+						className={styles.glow}
+						mask={`url(#${uid}-range)`}
+					/>
 				</svg>
 				<ol ref={listRef} className={styles.list}>
 					{items.map((it, i) => (
-						<li key={it.slug ?? "intro"} className={it.depth === 3 ? styles.d3 : undefined}>
+						<li
+							key={it.slug ?? "intro"}
+							className={it.depth === 3 ? styles.d3 : undefined}
+						>
 							<a
 								href={it.slug ?? "#"}
 								className={activeIdx.includes(i) ? styles.active : undefined}

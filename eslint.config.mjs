@@ -1,36 +1,35 @@
+import tseslint from "typescript-eslint";
+import eslintConfigPrettier from "eslint-config-prettier";
+import pluginNext from "@next/eslint-plugin-next";
 
-import tseslint from 'typescript-eslint';
-import eslintConfigPrettier from 'eslint-config-prettier';
-import pluginNext from '@next/eslint-plugin-next';
-
-export default  [
+export default [
 	{
 		ignores: [
-			'.next/**',
-			'node_modules/**',
-			'out/**',
-			'.vercel/**',
-			'next-env.d.ts',
+			".next/**",
+			"node_modules/**",
+			"out/**",
+			".vercel/**",
+			"next-env.d.ts",
 			// Local-only Obsidian plugin bundles; CI deletes them, and content components should be linted
-			'content/.obsidian/**',
+			"content/.obsidian/**",
 		],
 	},
 	eslintConfigPrettier,
 	...tseslint.configs.recommended,
 	{
 		plugins: {
-		  '@next/next': pluginNext,
+			"@next/next": pluginNext,
 		},
 		rules: {
-		  ...pluginNext.configs.recommended.rules,
-		  ...pluginNext.configs['core-web-vitals'].rules,
-		  '@typescript-eslint/no-unused-vars': [
-			'error',
-			{
-			  argsIgnorePattern: '^_',
-			  varsIgnorePattern: '^_',
-			},
-		  ],
+			...pluginNext.configs.recommended.rules,
+			...pluginNext.configs["core-web-vitals"].rules,
+			"@typescript-eslint/no-unused-vars": [
+				"error",
+				{
+					argsIgnorePattern: "^_",
+					varsIgnorePattern: "^_",
+				},
+			],
 		},
-	  },
-]
+	},
+];

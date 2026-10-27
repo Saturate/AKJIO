@@ -13,7 +13,9 @@ type Props = {
 	searchParams: Promise<{ tag?: string }>;
 };
 
-export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({
+	searchParams,
+}: Props): Promise<Metadata> {
 	const { tag } = await searchParams;
 
 	if (tag) {
@@ -28,7 +30,8 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
 	return {
 		title: "Posts - AKJ.IO",
-		description: "Writing about security, frontend development, architecture, and software engineering.",
+		description:
+			"Writing about security, frontend development, architecture, and software engineering.",
 		alternates: {
 			canonical: "/posts",
 		},
@@ -54,7 +57,13 @@ export default async function PostsOverviewPage({ searchParams }: Props) {
 	return (
 		<div data-layout="full-width">
 			<div className={page.wide}>
-				<Colony as="header" seed={hashStr("posts:" + (tag ?? ""))} inward={0.4} reach={40} className={`${page.frame} ${page.head}`}>
+				<Colony
+					as="header"
+					seed={hashStr("posts:" + (tag ?? ""))}
+					inward={0.4}
+					reach={40}
+					className={`${page.frame} ${page.head}`}
+				>
 					<h1>{tag ? `Posts on ${tag}` : "Posts"}</h1>
 					<p className={page.lede}>
 						{tag
@@ -62,11 +71,17 @@ export default async function PostsOverviewPage({ searchParams }: Props) {
 							: "Security research, CTF writeups, frontend and the odd hardware project."}
 					</p>
 					{/* One-off tags would bury the useful ones; they stay reachable from each post. */}
-					<PopularTags tags={tagCounts(all).filter(([t, n]) => n > 1 || t === tag)} active={tag} />
+					<PopularTags
+						tags={tagCounts(all).filter(([t, n]) => n > 1 || t === tag)}
+						active={tag}
+					/>
 				</Colony>
 				{posts.length ? (
 					<PostRows
-						posts={posts.map((p) => ({ ...p, lede: p.subtitle || p.description }))}
+						posts={posts.map((p) => ({
+							...p,
+							lede: p.subtitle || p.description,
+						}))}
 						seed={hashStr("posts:list:" + (tag ?? ""))}
 					/>
 				) : (

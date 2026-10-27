@@ -38,11 +38,7 @@ export default function Sources({ sources, label = "Sources" }: SourcesProps) {
 				<ul className={styles.list}>
 					{sources.map((source) => (
 						<li key={source.url}>
-							<a
-								href={source.url}
-								target="_blank"
-								rel="noopener noreferrer"
-							>
+							<a href={source.url} target="_blank" rel="noopener noreferrer">
 								{source.title}
 							</a>
 						</li>

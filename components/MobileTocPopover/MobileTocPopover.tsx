@@ -1,16 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react";
+import {
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+	type ComponentProps,
+} from "react";
 import { ChevronDown } from "lucide-react";
 import {
 	Collapsible,
 	CollapsibleTrigger,
 	CollapsibleContent,
 } from "@/components/Collapsible/Collapsible";
-import {
-	useActiveAnchor,
-	useActiveAnchors,
-} from "@/hooks/useActiveHeading";
+import { useActiveAnchor, useActiveAnchors } from "@/hooks/useActiveHeading";
 import { TOCEntry } from "@/utils/generateTableOfContentsFromMarkdown";
 import styles from "./MobileTocPopover.module.css";
 
@@ -29,7 +32,10 @@ interface MobileTocPopoverProps {
 	introLabel: string;
 }
 
-export default function MobileTocPopover({ entries, introLabel }: MobileTocPopoverProps) {
+export default function MobileTocPopover({
+	entries,
+	introLabel,
+}: MobileTocPopoverProps) {
 	const headerRef = useRef<HTMLElement>(null);
 	const placeholderRef = useRef<HTMLDivElement>(null);
 	const [open, setOpen] = useState(false);
@@ -52,10 +58,18 @@ export default function MobileTocPopover({ entries, introLabel }: MobileTocPopov
 
 		function onScroll() {
 			if (!placeholder) return;
-			const headerHeight = document.querySelector("[data-site-header]")?.getBoundingClientRect().height ?? 0;
+			const headerHeight =
+				document.querySelector("[data-site-header]")?.getBoundingClientRect()
+					.height ?? 0;
 			// Let go once the article has scrolled past, so it doesn't sit over related posts and the footer.
-			const articleBottom = placeholder.parentElement?.querySelector("article")?.getBoundingClientRect().bottom ?? Infinity;
-			setIsStuck(placeholder.getBoundingClientRect().top <= headerHeight && articleBottom > headerHeight + 40);
+			const articleBottom =
+				placeholder.parentElement
+					?.querySelector("article")
+					?.getBoundingClientRect().bottom ?? Infinity;
+			setIsStuck(
+				placeholder.getBoundingClientRect().top <= headerHeight &&
+					articleBottom > headerHeight + 40,
+			);
 		}
 
 		window.addEventListener("scroll", onScroll, { passive: true });
@@ -66,7 +80,11 @@ export default function MobileTocPopover({ entries, introLabel }: MobileTocPopov
 	useEffect(() => {
 		function onClick(e: MouseEvent) {
 			if (!open) return;
-			if (headerRef.current && e.target instanceof Node && !headerRef.current.contains(e.target)) {
+			if (
+				headerRef.current &&
+				e.target instanceof Node &&
+				!headerRef.current.contains(e.target)
+			) {
 				setOpen(false);
 			}
 		}
@@ -163,7 +181,10 @@ export default function MobileTocPopover({ entries, introLabel }: MobileTocPopov
 	);
 }
 
-interface ProgressCircleProps extends Omit<ComponentProps<"svg">, "strokeWidth"> {
+interface ProgressCircleProps extends Omit<
+	ComponentProps<"svg">,
+	"strokeWidth"
+> {
 	value: number;
 	strokeWidth?: number;
 	size?: number;

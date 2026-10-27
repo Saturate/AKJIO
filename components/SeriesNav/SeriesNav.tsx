@@ -44,15 +44,14 @@ export default async function SeriesNav({
 				{seriesPosts.map((post) => {
 					const isCurrent = post.id === currentSlug;
 					return (
-						<li key={post.id} className={isCurrent ? styles.current : undefined}>
+						<li
+							key={post.id}
+							className={isCurrent ? styles.current : undefined}
+						>
 							{isCurrent ? (
-								<span>
-									{post.frontmatter.title}
-								</span>
+								<span>{post.frontmatter.title}</span>
 							) : (
-								<Link href={post.link}>
-									{post.frontmatter.title}
-								</Link>
+								<Link href={post.link}>{post.frontmatter.title}</Link>
 							)}
 						</li>
 					);

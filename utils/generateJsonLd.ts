@@ -62,7 +62,8 @@ export function generateBlogPostingSchema(post: BlogPostData, url: string) {
 			name: AUTHOR_NAME,
 			url: SITE_URL,
 		},
-		...(post.tags && post.tags.length > 0 && { keywords: post.tags.join(", ") }),
+		...(post.tags &&
+			post.tags.length > 0 && { keywords: post.tags.join(", ") }),
 		url,
 		mainEntityOfPage: {
 			"@type": "WebPage",
@@ -123,7 +124,10 @@ export function generateCollectionPageSchema(
 	};
 }
 
-export function generateProfilePageSchema(work: WorkExperience[], skills: Skill[]) {
+export function generateProfilePageSchema(
+	work: WorkExperience[],
+	skills: Skill[],
+) {
 	return {
 		"@context": "https://schema.org",
 		"@type": "ProfilePage",

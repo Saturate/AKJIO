@@ -14,21 +14,23 @@ export type PostSummary = {
 export async function getPostSummaries(): Promise<PostSummary[]> {
 	const { postIds } = await getPostsIds();
 	const posts = await Promise.all(postIds.map((id) => getPost(id)));
-	return posts
-		.map((p) => ({
-			link: p.link,
-			title: p.frontmatter.title,
-			subtitle: p.frontmatter.subtitle,
-			description: p.frontmatter.description,
-			date: p.frontmatter.date,
-			readTime: p.readTime,
-			tags: p.frontmatter.tags ?? [],
-		}))
-		// An undated post would make the comparator return NaN and land anywhere; sort it last
-		.sort(
-			(a, b) =>
-				(new Date(b.date).getTime() || 0) - (new Date(a.date).getTime() || 0),
-		);
+	return (
+		posts
+			.map((p) => ({
+				link: p.link,
+				title: p.frontmatter.title,
+				subtitle: p.frontmatter.subtitle,
+				description: p.frontmatter.description,
+				date: p.frontmatter.date,
+				readTime: p.readTime,
+				tags: p.frontmatter.tags ?? [],
+			}))
+			// An undated post would make the comparator return NaN and land anywhere; sort it last
+			.sort(
+				(a, b) =>
+					(new Date(b.date).getTime() || 0) - (new Date(a.date).getTime() || 0),
+			)
+	);
 }
 
 export function tagCounts(posts: PostSummary[]): Array<[string, number]> {

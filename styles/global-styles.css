@@ -44,7 +44,12 @@
 
 html {
 	background:
-		radial-gradient(120% 85% at 50% 0%, var(--bg) 45%, color-mix(in srgb, var(--bg) 72%, var(--line)) 100%) fixed,
+		radial-gradient(
+				120% 85% at 50% 0%,
+				var(--bg) 45%,
+				color-mix(in srgb, var(--bg) 72%, var(--line)) 100%
+			)
+			fixed,
 		var(--bg);
 	color: var(--text);
 }
@@ -223,7 +228,9 @@ dd a {
 	user-select: none;
 	cursor: pointer;
 	padding: 0.15rem 0.5rem;
-	transition: background 0.2s ease, color 0.2s ease;
+	transition:
+		background 0.2s ease,
+		color 0.2s ease;
 	display: inline-block;
 	position: relative;
 	font-family: var(--font-mono);

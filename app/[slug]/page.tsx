@@ -23,7 +23,8 @@ export async function generateMetadata({
 	const resolved = await resolveSlug(slug);
 
 	// The page itself calls notFound(); match not-found.tsx so the 404 gets its title and noindex
-	if (!resolved) return { title: "Not found", robots: { index: false, follow: true } };
+	if (!resolved)
+		return { title: "Not found", robots: { index: false, follow: true } };
 
 	const { kind, page } = resolved;
 	const { title, description, frontmatter } = page;

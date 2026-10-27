@@ -19,20 +19,36 @@ const WRITING = [
 
 const ELSEWHERE = [
 	{ href: "https://github.com/Saturate", label: "GitHub", external: true },
-	{ href: "https://www.linkedin.com/in/allankimmerjensen", label: "LinkedIn", external: true },
+	{
+		href: "https://www.linkedin.com/in/allankimmerjensen",
+		label: "LinkedIn",
+		external: true,
+	},
 	{ href: "/feed", label: "RSS", external: false },
 	{ href: "/llms.txt", label: "llms.txt", external: false },
 ];
 
 export default function Footer() {
 	return (
-		<Colony as="footer" seed={4242} inward={0.35} reach={30} corners={TOP_CORNERS} edges={TOP_EDGE} className={styles.footer}>
+		<Colony
+			as="footer"
+			seed={4242}
+			inward={0.35}
+			reach={30}
+			corners={TOP_CORNERS}
+			edges={TOP_EDGE}
+			className={styles.footer}
+		>
 			<div className={styles.grid}>
 				<Wordmark />
 				<nav className={styles.col} aria-label="Writing">
 					<h2 className={styles.label}>Writing</h2>
 					{WRITING.map((l) => (
-						<Link key={l.href} href={l.href} className={`${styles.link} grow-underline`}>
+						<Link
+							key={l.href}
+							href={l.href}
+							className={`${styles.link} grow-underline`}
+						>
 							{l.label}
 						</Link>
 					))}
@@ -41,11 +57,21 @@ export default function Footer() {
 					<h2 className={styles.label}>Elsewhere</h2>
 					{ELSEWHERE.map((l) =>
 						l.external ? (
-							<a key={l.href} href={l.href} className={`${styles.link} grow-underline`} target="_blank" rel="noopener noreferrer">
+							<a
+								key={l.href}
+								href={l.href}
+								className={`${styles.link} grow-underline`}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
 								{l.label}
 							</a>
 						) : (
-							<a key={l.href} href={l.href} className={`${styles.link} grow-underline`}>
+							<a
+								key={l.href}
+								href={l.href}
+								className={`${styles.link} grow-underline`}
+							>
 								{l.label}
 							</a>
 						),
