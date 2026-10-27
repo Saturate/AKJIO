@@ -4,13 +4,16 @@ export interface PostFrontmatter {
 	title: string;
 	subtitle?: string;
 	description?: string;
-	/** YYYY-MM-DD, or undefined when the post has no date */
+	/** As written (YYYY-MM-DD, optionally with a time), or undefined when missing or impossible */
 	date?: string;
 	tags: string[];
 	draft: boolean;
 }
 
-const FRONTMATTER = /^---\s*\n([\s\S]*?)\n---\s*(?:\n|$)/;
+// vfile-matter's fence regex, which compileMDX uses for the post page: listings must find
+// exactly the same block, CRLF files included, or a "draft: true\r" reads as published
+const FRONTMATTER =
+	/^---(?:\r?\n|\r)(?:([\s\S]*?)(?:\r?\n|\r))?---(?:\r?\n|\r|$)/;
 
 export function stripFrontmatter(content: string): string {
 	const match = content.match(FRONTMATTER);
@@ -18,10 +21,10 @@ export function stripFrontmatter(content: string): string {
 	return content.slice(match[0].length).trim();
 }
 
-// Same YAML parser family compileMDX uses for the post page itself, so listings, the
-// feed and llms.txt can't disagree with the page about a post's title or tags.
-// Broken YAML yields no fields rather than taking down every listing.
-function frontmatterData(content: string): Record<string, unknown> {
+// Same yaml.parse the post page goes through, so listings agree with it on title, tags and
+// draft. null means the YAML is broken; the build fails on that file anyway, but until then
+// (e.g. next dev) it must not leak into listings.
+function frontmatterData(content: string): Record<string, unknown> | null {
 	const block = content.match(FRONTMATTER)?.[1];
 	if (!block) return {};
 	try {
@@ -30,7 +33,7 @@ function frontmatterData(content: string): Record<string, unknown> {
 			? Object.fromEntries(Object.entries(data))
 			: {};
 	} catch {
-		return {};
+		return null;
 	}
 }
 
@@ -39,9 +42,20 @@ function text(value: unknown): string | undefined {
 	return typeof value === "string" && value.trim() ? value : undefined;
 }
 
-function isoDate(value: unknown): string | undefined {
-	if (value instanceof Date) return value.toISOString().slice(0, 10);
-	return text(value)?.match(/^\d{4}-\d{2}-\d{2}/)?.[0];
+// Rejects 2024-13-01 and 2024-02-30 here, instead of an "Invalid time value" deep in the
+// sitemap build that doesn't say which post caused it
+function validDate(value: unknown): string | undefined {
+	const raw = text(value)?.trim();
+	const day = raw?.match(/^(\d{4})-(\d{2})-(\d{2})/);
+	if (!raw || !day || Number.isNaN(Date.parse(raw))) return undefined;
+
+	const [, y, m, d] = day.map(Number);
+	const check = new Date(Date.UTC(y, m - 1, d));
+	const real =
+		check.getUTCFullYear() === y &&
+		check.getUTCMonth() === m - 1 &&
+		check.getUTCDate() === d;
+	return real ? raw : undefined;
 }
 
 function tagList(value: unknown): string[] {
@@ -57,12 +71,13 @@ export function parseFrontmatter(
 	fallbackTitle = "",
 ): PostFrontmatter {
 	const data = frontmatterData(content);
+	if (!data) return { title: fallbackTitle, tags: [], draft: true };
 
 	return {
 		title: text(data.title) ?? fallbackTitle,
 		subtitle: text(data.subtitle),
 		description: text(data.description),
-		date: isoDate(data.date),
+		date: validDate(data.date),
 		tags: tagList(data.tags),
 		draft: data.draft === true || data.draft === "true",
 	};

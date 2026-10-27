@@ -1,10 +1,14 @@
 import fs from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseFundingYml } from "./funding";
 
 describe("parseFundingYml", () => {
 	it("reads the repo's real FUNDING.yml", () => {
-		const links = parseFundingYml(fs.readFileSync(".github/FUNDING.yml", "utf8"));
+		const links = parseFundingYml(fs.readFileSync(
+				path.join(import.meta.dirname, "..", ".github", "FUNDING.yml"),
+				"utf8",
+			));
 		expect(links).toContainEqual({
 			platform: "github",
 			url: "https://github.com/sponsors/Saturate",

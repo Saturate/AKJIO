@@ -55,7 +55,9 @@ describe("markdownPathFor", () => {
 				return metadataRoutes.includes(base) ? [base] : [];
 			});
 
-		const routes = topLevelRoutes(path.join(process.cwd(), "app"));
+		const routes = topLevelRoutes(
+			path.join(import.meta.dirname, "..", "..", "app"),
+		);
 
 		expect(routes.length).toBeGreaterThan(0);
 		for (const route of routes) {

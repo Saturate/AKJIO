@@ -35,8 +35,30 @@ describe("parseFrontmatter", () => {
 
 	it("leaves date undefined instead of inventing one", () => {
 		expect(parseFrontmatter(post(`title: A`)).date).toBeUndefined();
-		expect(parseFrontmatter(post(`date: "2026-07-22T10:00"`)).date).toBe(
-			"2026-07-22",
+	});
+
+	// Keeping the time means same-day posts sort the same in the feed and llms as on /posts
+	it("keeps the time of day and drops impossible dates", () => {
+		expect(parseFrontmatter(post(`date: "2026-07-22T10:00:00"`)).date).toBe(
+			"2026-07-22T10:00:00",
+		);
+		expect(parseFrontmatter(post(`date: 2026-07-22`)).date).toBe("2026-07-22");
+		expect(parseFrontmatter(post(`date: 2024-13-01`)).date).toBeUndefined();
+		expect(parseFrontmatter(post(`date: 2024-02-30`)).date).toBeUndefined();
+		expect(parseFrontmatter(post(`date: soon`)).date).toBeUndefined();
+	});
+
+	// Same fence rules as vfile-matter, which compileMDX uses for the post page
+	it("reads CRLF files and ignores fences with trailing spaces", () => {
+		const crlf = "---\r\ntitle: A\r\ntags: [x, y]\r\ndraft: true\r\n---\r\n\r\nBody\r\n";
+		expect(parseFrontmatter(crlf)).toMatchObject({
+			title: "A",
+			tags: ["x", "y"],
+			draft: true,
+		});
+		expect(stripFrontmatter(crlf)).toBe("Body");
+		expect(parseFrontmatter("--- \ntitle: A\n---\n", "fallback").title).toBe(
+			"fallback",
 		);
 	});
 
@@ -74,10 +96,10 @@ describe("parseFrontmatter", () => {
 		});
 	});
 
-	it("survives broken YAML instead of throwing", () => {
-		expect(parseFrontmatter(post(`title: [unclosed`), "fallback")).toMatchObject(
-			{ title: "fallback", tags: [], draft: false },
-		);
+	it("treats broken YAML as a draft rather than publishing it", () => {
+		expect(
+			parseFrontmatter(post(`title: Foo: bar\ndraft: true`), "fallback"),
+		).toMatchObject({ title: "fallback", tags: [], draft: true });
 	});
 
 	it("drops trailing comments but keeps # inside quotes and words", () => {
