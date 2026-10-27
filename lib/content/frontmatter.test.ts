@@ -51,6 +51,35 @@ describe("parseFrontmatter", () => {
 		expect(parseFrontmatter(post(`title: A`)).tags).toEqual([]);
 	});
 
+	it("handles the YAML forms a regex parser gets wrong", () => {
+		const fm = parseFrontmatter(
+			post(
+				[
+					`title: "He said \\"hi\\""`,
+					`subtitle: 'It''s fine'`,
+					`description: >-`,
+					`  Folded over`,
+					`  two lines`,
+					`tags:`,
+					`- unindented`,
+					`- list`,
+				].join("\n"),
+			),
+		);
+		expect(fm).toMatchObject({
+			title: 'He said "hi"',
+			subtitle: "It's fine",
+			description: "Folded over two lines",
+			tags: ["unindented", "list"],
+		});
+	});
+
+	it("survives broken YAML instead of throwing", () => {
+		expect(parseFrontmatter(post(`title: [unclosed`), "fallback")).toMatchObject(
+			{ title: "fallback", tags: [], draft: false },
+		);
+	});
+
 	it("drops trailing comments but keeps # inside quotes and words", () => {
 		expect(parseFrontmatter(post(`title: Real # not this`)).title).toBe("Real");
 		expect(parseFrontmatter(post(`title: "Issue #42" # note`)).title).toBe(

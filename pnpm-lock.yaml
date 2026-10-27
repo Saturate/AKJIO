@@ -89,6 +89,9 @@ importers:
       shiki:
         specifier: ^4.5.0
         version: 4.5.0
+      yaml:
+        specifier: ^2.9.1
+        version: 2.9.1
     devDependencies:
       '@next/eslint-plugin-next':
         specifier: ^16.4.3

@@ -1,3 +1,5 @@
+import { parse } from "yaml";
+
 export interface PostFrontmatter {
 	title: string;
 	subtitle?: string;
@@ -16,54 +18,52 @@ export function stripFrontmatter(content: string): string {
 	return content.slice(match[0].length).trim();
 }
 
-function frontmatterBlock(content: string): string {
-	return content.match(FRONTMATTER)?.[1] ?? "";
+// Same YAML parser family compileMDX uses for the post page itself, so listings, the
+// feed and llms.txt can't disagree with the page about a post's title or tags.
+// Broken YAML yields no fields rather than taking down every listing.
+function frontmatterData(content: string): Record<string, unknown> {
+	const block = content.match(FRONTMATTER)?.[1];
+	if (!block) return {};
+	try {
+		const data: unknown = parse(block);
+		return typeof data === "object" && data !== null && !Array.isArray(data)
+			? Object.fromEntries(Object.entries(data))
+			: {};
+	} catch {
+		return {};
+	}
 }
 
-// YAML scalar: a quoted value ends at its closing quote, a bare one at " #" (a comment)
-function scalar(raw: string): string {
-	const quoted = raw.match(/^(["'])(.*?)\1/);
-	if (quoted) return quoted[2];
-	return raw.replace(/\s+#.*$/, "").trim();
+function text(value: unknown): string | undefined {
+	if (typeof value === "number") return String(value);
+	return typeof value === "string" && value.trim() ? value : undefined;
 }
 
-function unquote(value: string): string {
-	const match = value.match(/^(["'])(.*)\1$/);
-	return match ? match[2] : value;
+function isoDate(value: unknown): string | undefined {
+	if (value instanceof Date) return value.toISOString().slice(0, 10);
+	return text(value)?.match(/^\d{4}-\d{2}-\d{2}/)?.[0];
 }
 
-// Scoped to the frontmatter block and anchored to line starts, so "subtitle:" can't
-// match "title:" and a "draft: true" inside a code sample in the body is ignored
-function field(block: string, key: string): string | undefined {
-	const raw = block.match(new RegExp(`^${key}:[ \\t]*(.*?)[ \\t]*$`, "m"))?.[1];
-	const value = raw ? scalar(raw) : "";
-	return value || undefined;
-}
-
-// Handles both inline arrays (tags: [a, "b"]) and YAML lists (tags:\n  - a)
-function tags(block: string): string[] {
-	const inline = block.match(/^tags:[ \t]*\[(.*?)\]/ms)?.[1];
-	const list = block.match(/^tags:[ \t]*\n((?:[ \t]+-[ \t]+.+\n?)+)/m)?.[1];
-
-	const items = inline
-		? inline.split(",")
-		: (list?.split("\n").map((line) => line.replace(/^\s+-\s+/, "")) ?? []);
-
-	return items.map((t) => unquote(t.trim())).filter((t) => t.length > 0);
+function tagList(value: unknown): string[] {
+	const items = Array.isArray(value) ? value : [value];
+	return items.flatMap((item) => {
+		const tag = text(item);
+		return tag ? [tag] : [];
+	});
 }
 
 export function parseFrontmatter(
 	content: string,
 	fallbackTitle = "",
 ): PostFrontmatter {
-	const block = frontmatterBlock(content);
+	const data = frontmatterData(content);
 
 	return {
-		title: field(block, "title") ?? fallbackTitle,
-		subtitle: field(block, "subtitle"),
-		description: field(block, "description"),
-		date: field(block, "date")?.match(/^\d{4}-\d{2}-\d{2}/)?.[0],
-		tags: tags(block),
-		draft: field(block, "draft") === "true",
+		title: text(data.title) ?? fallbackTitle,
+		subtitle: text(data.subtitle),
+		description: text(data.description),
+		date: isoDate(data.date),
+		tags: tagList(data.tags),
+		draft: data.draft === true || data.draft === "true",
 	};
 }

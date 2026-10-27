@@ -41,7 +41,8 @@
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
     "remark-mdx-frontmatter": "^6.0.0",
-    "shiki": "^4.5.0"
+    "shiki": "^4.5.0",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^16.4.3",
