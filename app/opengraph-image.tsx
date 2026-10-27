@@ -31,7 +31,7 @@ export default async function Image() {
 				>
 					<span
 						style={{
-							fontFamily: "Jersey 25",
+							fontFamily: "Silkscreen",
 							fontSize: 72 * S,
 							color: colors.text,
 							lineHeight: 1,
@@ -57,7 +57,7 @@ export default async function Image() {
 							background: colors.accent,
 							marginTop: 16 * S,
 							marginBottom: 16 * S,
-							borderRadius: 2 * S,
+							borderRadius: 0,
 						}}
 					/>
 
@@ -102,7 +102,7 @@ export default async function Image() {
 									color: colors.accent,
 									padding: `${4 * S}px ${12 * S}px`,
 									border: `${S}px solid ${colors.tagBorder}`,
-									borderRadius: 6 * S,
+									borderRadius: 0,
 									background: colors.tagBg,
 								}}
 							>

@@ -1,4 +1,14 @@
+/* This stylesheet always used these names with hard-coded fallbacks; map them onto the strain tokens. */
 .cv {
+  --color-accent: var(--accent);
+  --color-secondary: var(--glitch-a);
+  --color-text-secondary: var(--muted);
+  --color-text-tertiary: color-mix(in srgb, var(--muted) 80%, transparent);
+  --color-border: var(--line);
+  --color-border-subtle: color-mix(in srgb, var(--line) 60%, transparent);
+  --color-card-bg: color-mix(in srgb, var(--raised) 60%, transparent);
+  --color-tag-bg: transparent;
+  --color-tag-border: var(--line);
   max-width: 900px;
   margin: 0 auto;
 }

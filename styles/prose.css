@@ -1,0 +1,154 @@
+/* Long-form text: posts and plain MDX pages. Effects never draw over this. */
+.prose {
+	font-size: 17px;
+	line-height: 1.72;
+}
+
+.prose > :first-child {
+	margin-top: 0;
+}
+
+.prose p {
+	margin: 0 0 22px;
+}
+
+.prose h2 {
+	font-size: 34px;
+	line-height: 1.1;
+	margin: 64px 0 18px;
+	scroll-margin-top: 110px;
+}
+
+.prose h3 {
+	font-size: 25px;
+	line-height: 1.15;
+	margin: 40px 0 12px;
+	scroll-margin-top: 110px;
+}
+
+.prose h4,
+.prose h5,
+.prose h6 {
+	font-family: var(--font-mono);
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--muted);
+	margin: 32px 0 10px;
+	scroll-margin-top: 110px;
+}
+
+.prose a.anchor {
+	color: inherit;
+}
+
+.prose a.anchor:hover::before {
+	content: "#";
+	position: absolute;
+	margin-left: -0.8em;
+	color: var(--muted);
+}
+
+.prose ul {
+	list-style: none;
+	padding: 0;
+	margin: 0 0 22px;
+}
+
+.prose ul > li {
+	position: relative;
+	padding-left: 24px;
+}
+
+.prose ul > li::before {
+	content: "└";
+	position: absolute;
+	left: 0;
+	font-family: var(--font-mono);
+	color: var(--muted);
+}
+
+.prose ol {
+	padding-left: 1.4em;
+	margin: 0 0 22px;
+}
+
+.prose ol > li::marker {
+	font-family: var(--font-mono);
+	font-size: 0.85em;
+	color: var(--muted);
+}
+
+.prose li + li {
+	margin-top: 4px;
+}
+
+/* Links in running text: accent, dotted underline and a spinning spore on hover. */
+.prose a:not(.anchor) {
+	position: relative;
+	color: var(--accent);
+}
+
+.prose a:not(.anchor):hover {
+	text-decoration: underline dotted 0.08em;
+	text-underline-offset: 0.22em;
+}
+
+.prose a:not(.anchor)::after {
+	content: "✻";
+	position: absolute;
+	right: -1.05em;
+	top: 0.05em;
+	font-size: 0.75em;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.2s;
+}
+
+.prose a:not(.anchor):hover::after {
+	opacity: 1;
+	animation: spore-spin 1.15s linear infinite;
+}
+
+@keyframes spore-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Screenshots used to fill the column; keep them to a glance and let the viewer show the rest.
+   Covers markdown images, ProseImage and raw <img> in MDX alike. */
+.prose img {
+	display: block;
+	max-width: 100%;
+	max-height: 420px;
+	width: auto;
+	height: auto;
+	margin: 28px auto;
+	padding: 6px;
+	object-fit: contain;
+	border: 1px solid var(--line);
+	background: color-mix(in srgb, var(--raised) 50%, transparent);
+	transition: border-color 0.3s;
+}
+
+.prose img[data-zoomable] {
+	cursor: zoom-in;
+}
+
+.prose img[data-zoomable]:hover,
+.prose img[data-zoomable]:focus-visible {
+	border-color: var(--growth);
+}
+
+.prose figure:not([data-rehype-pretty-code-figure]) {
+	margin: 32px 0;
+}
+
+.prose figcaption:not([data-rehype-pretty-code-title]) {
+	margin-top: 8px;
+	font-family: var(--font-mono);
+	font-size: 12px;
+	color: var(--muted);
+}

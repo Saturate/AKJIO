@@ -1,44 +1,27 @@
-import { getPost, getPostsIds } from "@/app/actions";
-import { format as formatDate } from "date-fns";
 import Link from "next/link";
+import PostRows from "@/components/PostRows/PostRows";
+import { hashStr } from "@/lib/random";
+import type { PostSummary } from "@/utils/postSummaries";
 import styles from "./RecentPosts.module.css";
 
-export default async function RecentPosts({ limit = 3 }: { limit?: number }) {
-	const { postIds } = await getPostsIds();
-
-	const posts = await Promise.all(
-		postIds.map(async (id) => {
-			return await getPost(id);
-		}),
-	);
-
-	const recentPosts = posts
-		.sort((a, b) => {
-			return (
-				new Date(b.frontmatter.date).getTime() -
-				new Date(a.frontmatter.date).getTime()
-			);
-		})
-		.slice(0, limit);
-
+export default function RecentPosts({
+	posts,
+	limit = 5,
+}: {
+	posts: PostSummary[];
+	limit?: number;
+}) {
 	return (
-		<aside className={styles.sidebar}>
-			<h2 className={styles.heading}>Recent Posts</h2>
-			<ul className={styles.postList}>
-				{recentPosts.map(({ frontmatter, link }) => (
-					<li key={link} className={styles.postItem}>
-						<Link href={link} className={styles.postLink}>
-							<span className={styles.postTitle}>{frontmatter.title}</span>
-							<time className={styles.postDate}>
-								{formatDate(new Date(frontmatter.date), "MMM d, yyyy")}
-							</time>
-						</Link>
-					</li>
-				))}
-			</ul>
-			<Link href="/posts" className={styles.viewAll}>
-				View all posts →
-			</Link>
-		</aside>
+		<section className={styles.recent} aria-labelledby="recent-heading">
+			<div className={styles.head}>
+				<h2 id="recent-heading" className={styles.heading}>
+					Recent posts
+				</h2>
+				<Link href="/posts" className={`${styles.all} grow-underline`}>
+					All {posts.length} posts
+				</Link>
+			</div>
+			<PostRows posts={posts.slice(0, limit)} seed={hashStr("home:recent")} />
+		</section>
 	);
 }

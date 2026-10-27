@@ -1,0 +1,90 @@
+.list {
+	border: 1px solid var(--line);
+}
+
+.row {
+	position: relative;
+	display: grid;
+	grid-template-columns: 140px minmax(0, 1fr) auto;
+	gap: 24px;
+	align-items: baseline;
+	padding: 18px 22px;
+	border-top: 1px solid var(--line);
+	color: var(--text);
+}
+
+/* Canvases and marks come first in the colony, so the first row isn't :first-child. */
+.row:first-of-type {
+	border-top: 0;
+}
+
+.row::after {
+	content: "";
+	position: absolute;
+	left: 22px;
+	right: 22px;
+	bottom: -1px;
+	height: 1px;
+	background: var(--growth);
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 0.8s var(--ease);
+}
+
+.row:hover::after,
+.row:focus-visible::after {
+	transform: scaleX(1);
+}
+
+.date,
+.read {
+	font-family: var(--font-mono);
+	font-size: 12px;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+.main {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+}
+
+.lede {
+	font-size: 14.5px;
+	line-height: 1.5;
+	color: var(--muted);
+}
+
+.title {
+	display: inline-block;
+	font-family: var(--font-head);
+	font-variation-settings: var(--head-fvs);
+	font-weight: 340;
+	font-size: 21px;
+	line-height: 1.2;
+	letter-spacing: -0.015em;
+	transition:
+		color 0.35s,
+		transform 0.6s var(--ease);
+}
+
+.row:hover .title,
+.row:focus-visible .title {
+	color: var(--accent);
+	transform: translateX(6px);
+}
+
+@media (max-width: 720px) {
+	.row {
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 12px;
+		padding: 16px;
+	}
+
+	.date {
+		display: none;
+	}
+}

@@ -1,0 +1,19 @@
+.word {
+	white-space: nowrap;
+}
+
+.word :global(.ch) {
+	transition: color 2.4s var(--ease);
+}
+
+.word :global(.ch-inf) {
+	color: color-mix(in srgb, var(--text) 72%, var(--accent));
+}
+
+.word :global(.ch-gl) {
+	color: var(--accent);
+	text-shadow:
+		-2px 0 var(--glitch-a),
+		2px 0 var(--glitch-b);
+	transition: none;
+}

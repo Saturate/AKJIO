@@ -48,7 +48,7 @@ export default async function Image({
 				<OgBackground>
 					<span
 						style={{
-							fontFamily: "Jersey 25",
+							fontFamily: "Silkscreen",
 							fontSize: 32 * S,
 							color: colors.textMuted,
 							lineHeight: 1,
@@ -69,7 +69,7 @@ export default async function Image({
 					>
 						<span
 							style={{
-								fontFamily: "Jersey 25",
+								fontFamily: "Fraunces",
 								fontSize: titleFontSize(title.length),
 								color: colors.text,
 								lineHeight: 1.2,
@@ -110,7 +110,7 @@ export default async function Image({
 											color: colors.accent,
 											padding: `${4 * S}px ${12 * S}px`,
 											border: `${S}px solid ${colors.tagBorder}`,
-											borderRadius: 6 * S,
+											borderRadius: 0,
 											background: colors.tagBg,
 										}}
 									>
@@ -149,7 +149,7 @@ export default async function Image({
 			<OgBackground>
 				<span
 					style={{
-						fontFamily: "Jersey 25",
+						fontFamily: "Silkscreen",
 						fontSize: 32 * S,
 						color: colors.textMuted,
 						lineHeight: 1,
@@ -170,7 +170,7 @@ export default async function Image({
 				>
 					<span
 						style={{
-							fontFamily: "Jersey 25",
+							fontFamily: "Fraunces",
 							fontSize: titleFontSize(title.length),
 							color: colors.text,
 							lineHeight: 1.2,

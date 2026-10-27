@@ -1,0 +1,24 @@
+.progress {
+	position: absolute;
+	left: 0;
+	bottom: -1px;
+	height: 1px;
+	width: calc(var(--p, 0) * 100%);
+	background: var(--accent);
+}
+
+.progress::after {
+	content: "";
+	position: absolute;
+	right: -2px;
+	top: -2px;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: var(--tip);
+	box-shadow: 0 0 10px var(--tip);
+}
+
+:global(.light) .progress::after {
+	box-shadow: none;
+}

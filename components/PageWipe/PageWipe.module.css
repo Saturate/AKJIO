@@ -1,0 +1,54 @@
+.wipe {
+	position: fixed;
+	inset: 0;
+	z-index: var(--z-modal);
+	display: grid;
+	grid-template-rows: repeat(9, 1fr);
+	pointer-events: none;
+}
+
+.wipe i {
+	display: block;
+	background: var(--bg);
+	border-top: 1px solid color-mix(in srgb, var(--growth) 55%, transparent);
+	animation: peel 620ms cubic-bezier(0.7, 0, 0.2, 1) both;
+}
+
+.left {
+	transform-origin: left;
+}
+
+.right {
+	transform-origin: right;
+}
+
+@keyframes peel {
+	from {
+		transform: scaleX(1);
+	}
+	to {
+		transform: scaleX(0);
+	}
+}
+
+@keyframes rgb {
+	0% {
+		filter: drop-shadow(-3px 0 var(--glitch-a))
+			drop-shadow(3px 0 var(--glitch-b));
+		translate: 3px 0;
+	}
+	50% {
+		filter: drop-shadow(2px 0 var(--glitch-a))
+			drop-shadow(-2px 0 var(--glitch-b));
+		translate: -2px 0;
+	}
+	100% {
+		filter: none;
+		translate: none;
+	}
+}
+
+/* No fill mode: a lingering filter would turn the wrapper into a containing block for fixed children. */
+.rgb {
+	animation: rgb 0.18s steps(3) 1;
+}

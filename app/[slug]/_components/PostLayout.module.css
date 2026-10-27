@@ -1,59 +1,150 @@
-.postLayout {
-	max-width: 760px;
-	margin: 0 auto;
-	width: 100%;
-	box-sizing: border-box;
+/* The TOC column has a floor so it never overflows on mid-width screens; the article
+   drifts a little left of centre there instead. Below 1180px the TOC moves to the mobile bar. */
+.layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 70ch) minmax(200px, 1fr);
+	column-gap: 56px;
+	padding: 8px var(--gutter) 0;
 }
 
-.postToc {
-	display: none;
-}
-
-.postContent {
+.article {
+	grid-column: 2;
+	grid-row: 1;
 	min-width: 0;
+}
+
+/* Sticky inside its own grid cell so it stops where the article ends. */
+.toc {
+	grid-column: 3;
+	grid-row: 1;
+	justify-self: start;
+	align-self: stretch;
+	width: min(100%, 260px);
+}
+
+/* Long TOCs on short screens scroll inside the column. The padding/negative margin pair gives
+   the sprouts (which grow left of the rail) room inside the scroll box so they aren't clipped. */
+.tocInner {
+	position: sticky;
+	top: 112px;
+	max-height: calc(100vh - 140px);
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	scrollbar-width: thin;
+	scrollbar-color: var(--line) transparent;
+	margin-left: -28px;
+	padding: 0 0 12px 28px;
+}
+
+.below {
+	grid-column: 1 / -1;
+	grid-row: 2;
 	width: 100%;
+	max-width: 1180px;
+	justify-self: center;
 }
 
-.postMeta {
+.head {
+	border: 1px solid var(--line);
+	padding: 30px 30px 24px;
+	margin-bottom: 56px;
+}
+
+.title {
+	margin: 0 0 20px;
+}
+
+.lede {
+	color: var(--muted);
+	font-size: 18.5px;
+	line-height: 1.6;
+	margin: 0 0 28px;
+	max-width: 56ch;
+}
+
+/* Overrides the global dl look: a dashed row of mono labels with tree-branch values. */
+.meta {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+	gap: 16px;
+	margin: 0;
+	padding: 16px 0 0;
+	border: 0;
+	border-top: 1px dashed var(--line);
+}
+
+.meta dt {
+	font-size: 10.5px;
+}
+
+.meta dd {
+	margin: 4px 0 0;
+	font-size: 14.5px;
+}
+
+.meta dd::before {
+	content: "└ ";
+	font-family: var(--font-mono);
+	color: var(--muted);
+}
+
+/* Tags get their own full-width row as chips; the tree glyph only suits single values. */
+.tagsRow {
+	grid-column: 1 / -1;
+}
+
+.tags {
 	display: flex;
-	align-items: center;
-	gap: 0.75rem;
-	color: color-mix(in srgb, currentColor 60%, transparent);
-	font-size: 0.875rem;
-	margin-top: 0.5rem;
-	margin-bottom: 2rem;
+	flex-wrap: wrap;
+	gap: 6px;
 }
 
-.postMeta span::before {
-	content: "·";
-	margin-right: 0.75rem;
+.meta .tags {
+	margin-top: 8px;
 }
 
-.postSidebar {
-	display: none;
+.meta .tags::before {
+	content: none;
 }
 
-@media (min-width: 1024px) {
-	.postLayout {
-		display: grid;
-		grid-template-columns: 760px 280px;
-		grid-template-areas: "content toc";
-		gap: 3rem;
-		max-width: none;
-		width: calc(760px + 280px + 3rem);
-		margin-inline: calc((-280px - 3rem) / 2);
+.tag {
+	padding: 3px 9px;
+	border: 1px solid var(--line);
+	font-family: var(--font-mono);
+	font-size: 12px;
+	letter-spacing: 0.04em;
+	color: var(--muted);
+	text-decoration: none;
+	transition:
+		color 0.2s,
+		border-color 0.2s;
+}
+
+.tag:hover,
+.tag:focus-visible {
+	color: var(--text);
+	border-color: var(--growth);
+}
+
+@media (max-width: 1180px) {
+	.layout {
+		grid-template-columns: minmax(0, 1fr);
+		max-width: calc(70ch + 2 * var(--gutter));
+		margin: 0 auto;
 	}
 
-	.postContent {
-		grid-area: content;
-		max-width: 100%;
+	.article,
+	.below {
+		grid-column: 1;
 	}
 
-	.postToc {
-		display: block;
-		grid-area: toc;
-		align-self: start;
-		position: sticky;
-		top: 2rem;
+	.toc {
+		display: none;
+	}
+}
+
+@media (max-width: 720px) {
+	.head {
+		padding: 22px 18px 18px;
 	}
 }

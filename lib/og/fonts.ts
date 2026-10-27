@@ -23,19 +23,27 @@ async function fetchGoogleFont(
 	const fontRes = await fetch(match[1], {
 		next: { revalidate: 86400 },
 	});
+	if (!fontRes.ok) {
+		throw new Error(
+			`Font download failed for ${family} ${weight}: HTTP ${fontRes.status}`,
+		);
+	}
 	return fontRes.arrayBuffer();
 }
 
+// Satori can't use variable axes, so Fraunces comes in as a static instance here.
 export async function loadOgFonts() {
-	const [jersey400, inter400, inter600] = await Promise.all([
-		fetchGoogleFont("Jersey 25", 400),
-		fetchGoogleFont("Inter", 400),
-		fetchGoogleFont("Inter", 600),
+	const [silkscreen700, fraunces400, geist400, geist600] = await Promise.all([
+		fetchGoogleFont("Silkscreen", 700),
+		fetchGoogleFont("Fraunces", 400),
+		fetchGoogleFont("Geist", 400),
+		fetchGoogleFont("Geist", 600),
 	]);
 
 	return [
-		{ name: "Jersey 25", data: jersey400, weight: 400 as const },
-		{ name: "Inter", data: inter400, weight: 400 as const },
-		{ name: "Inter", data: inter600, weight: 600 as const },
+		{ name: "Silkscreen", data: silkscreen700, weight: 700 as const },
+		{ name: "Fraunces", data: fraunces400, weight: 400 as const },
+		{ name: "Geist", data: geist400, weight: 400 as const },
+		{ name: "Geist", data: geist600, weight: 600 as const },
 	];
 }

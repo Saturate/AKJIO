@@ -1,0 +1,63 @@
+.colonized {
+	position: relative;
+	isolation: isolate;
+}
+
+/* Canvases bleed 36px past the element (MARGIN in lib/colony/engine.ts) and sit under its content. */
+.canvas {
+	position: absolute;
+	left: calc(-36px - 1px);
+	top: calc(-36px - 1px);
+	z-index: -1;
+	pointer-events: none;
+}
+
+.reg {
+	position: absolute;
+	width: 9px;
+	height: 9px;
+	z-index: 2;
+	color: var(--muted);
+	pointer-events: none;
+}
+
+.reg::before,
+.reg::after {
+	content: "";
+	position: absolute;
+	background: currentColor;
+}
+
+.reg::before {
+	left: 4px;
+	top: 0;
+	width: 1px;
+	height: 9px;
+}
+
+.reg::after {
+	top: 4px;
+	left: 0;
+	height: 1px;
+	width: 9px;
+}
+
+.tl {
+	top: -5px;
+	left: -5px;
+}
+
+.tr {
+	top: -5px;
+	right: -5px;
+}
+
+.br {
+	bottom: -5px;
+	right: -5px;
+}
+
+.bl {
+	bottom: -5px;
+	left: -5px;
+}

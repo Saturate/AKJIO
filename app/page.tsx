@@ -2,13 +2,13 @@ import getPageFromSlug from "@/utils/getPageFromSlug";
 import { PageProps } from "./types";
 import RecentPosts from "@/components/RecentPosts/RecentPosts";
 import PopularTags from "@/components/PopularTags/PopularTags";
-import styles from "./page.module.css";
-import {
-	generatePersonSchema,
-	generateOrganizationSchema,
-} from "@/utils/generateJsonLd";
+import Colony from "@/components/Colony/Colony";
+import page from "@/styles/Page.module.css";
+import { generatePersonSchema, generateOrganizationSchema } from "@/utils/generateJsonLd";
 import JsonLd from "@/components/JsonLd/JsonLd";
 import { getNonce } from "@/utils/nonce";
+import { hashStr } from "@/lib/random";
+import { getPostSummaries, tagCounts } from "@/utils/postSummaries";
 
 export async function generateMetadata() {
 	return {
@@ -22,26 +22,29 @@ export async function generateMetadata() {
 		},
 	};
 }
+
 export default async function FrontPage({ params }: PageProps) {
 	const slug = (await params).slug;
-
-	const page = await getPageFromSlug([slug]);
-	const nonce = await getNonce();
-
-	const personJsonLd = generatePersonSchema();
-	const orgJsonLd = generateOrganizationSchema();
+	const [content, posts, nonce] = await Promise.all([getPageFromSlug([slug]), getPostSummaries(), getNonce()]);
 
 	return (
 		<>
-			<div className={styles.homeLayout} data-layout="full-width">
-				<article className={styles.greeting}>{page.Component()}</article>
-				<aside className={styles.recentWork}>
-					<RecentPosts limit={5} />
-					<PopularTags limit={10} />
-				</aside>
+			<div data-layout="full-width">
+				<div className={page.column}>
+					<Colony as="article" seed={hashStr("home")} inward={0.4} reach={40} className={`${page.frame} prose`}>
+						{content.Component()}
+					</Colony>
+				</div>
+				<div className={page.wide}>
+					<RecentPosts posts={posts} limit={5} />
+					<section className={page.section} aria-labelledby="tags-heading">
+						<h2 id="tags-heading">Tags</h2>
+						<PopularTags tags={tagCounts(posts)} limit={14} />
+					</section>
+				</div>
 			</div>
-			<JsonLd data={personJsonLd} nonce={nonce} />
-			<JsonLd data={orgJsonLd} nonce={nonce} />
+			<JsonLd data={generatePersonSchema()} nonce={nonce} />
+			<JsonLd data={generateOrganizationSchema()} nonce={nonce} />
 		</>
 	);
 }
