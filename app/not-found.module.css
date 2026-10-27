@@ -1,0 +1,26 @@
+.head {
+	margin-top: 40px;
+}
+
+/* URLs are case-sensitive, so the uppercase label style would show the wrong path */
+.path {
+	text-transform: none;
+	letter-spacing: normal;
+	color: var(--fg);
+	overflow-wrap: anywhere;
+}
+
+.title {
+	margin: 12px 0 20px;
+}
+
+.actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 24px;
+}
+
+.actions a {
+	color: var(--fg);
+	text-decoration: none;
+}
