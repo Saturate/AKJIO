@@ -1,65 +1,34 @@
 .nav {
-	font-family: var(--font-mark);
-	color: var(--text-primary);
 	display: flex;
-	font-size: 1.3em;
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.09);
+	gap: 26px;
 }
 
-.nav a {
-	text-decoration: none;
-	display: inline-block;
-	padding: 10px 20px;
-	text-align: center;
-	font-size: 1.1em;
-	flex-direction: column;
-	flex: 1;
-	line-height: 1;
-	transition:
-		transform 0.18s ease,
-		text-shadow 0.18s ease;
-	&:after {
-		padding-top: 8px;
-		border-bottom: 1px solid #e0e0e0;
-		content: " ";
-		display: block;
-		width: 10%;
-		margin: auto;
-		transition:
-			width 0.22s ease,
-			border-color 0.22s ease,
-			filter 0.22s ease;
-	}
-	/* Glow + the underline spreads like a glint on the horizon. Works on
-	   both the sunset and the night sky, unlike a dark overlay. */
-	&:hover,
-	&:focus-visible {
-		text-decoration: none;
-		transform: translateY(-2px);
-		text-shadow:
-			0 0 14px rgba(255, 255, 255, 0.65),
-			1px 1px 1px rgba(0, 0, 0, 0.09);
-		&:after {
-			width: 70%;
-			border-color: #ffffff;
-			/* drop-shadow hugs the line itself; box-shadow would halo the
-			   whole pseudo-element as a rectangle. */
-			filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6));
-		}
-	}
-	span {
-		font-size: 0.6em;
-		display: block;
-	}
+.link {
+	font-family: var(--font-mono);
+	font-size: 11.5px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--muted);
+	transition: color 0.2s;
 }
 
-@media (prefers-reduced-motion: reduce) {
-	.nav a,
-	.nav a:after {
-		transition: none;
+.link:hover,
+.link[aria-current="page"] {
+	color: var(--text);
+}
+
+.index {
+	font-size: 9.5px;
+	opacity: 0.55;
+	margin-right: 6px;
+}
+
+@media (max-width: 640px) {
+	.nav {
+		gap: 16px;
 	}
-	.nav a:hover,
-	.nav a:focus-visible {
-		transform: none;
+
+	.index {
+		display: none;
 	}
 }

@@ -252,6 +252,45 @@ dd a {
 	display: none;
 }
 
+/* Underline that grows from the left; the site's replacement for bracketed buttons. */
+.grow-underline {
+	position: relative;
+}
+
+.grow-underline::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -3px;
+	height: 1px;
+	background: var(--growth);
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 0.5s var(--ease);
+}
+
+.grow-underline:hover::after,
+.grow-underline:focus-visible::after,
+.grow-underline[aria-current="page"]::after {
+	transform: scaleX(1);
+}
+
+@keyframes glitch-split {
+	0% {
+		text-shadow:
+			-2px 0 var(--glitch-a),
+			2px 0 var(--glitch-b);
+	}
+	100% {
+		text-shadow: none;
+	}
+}
+
+.glitch-split {
+	animation: glitch-split 0.2s steps(2) 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,

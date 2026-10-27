@@ -5,6 +5,7 @@ import "../styles/syntaxhighlighting.css";
 import Navigation from "@/components/Navigation/Navigation";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
+import SporeField from "@/components/SporeField/SporeField";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { getNonce } from "@/utils/nonce";
 import { DEFAULT_STRAIN, STRAIN_KEYS, strainCss } from "@/lib/strains";
@@ -108,6 +109,7 @@ export default async function RootLayout({
 			</head>
 			<body className={styles.page}>
 				<ThemeProvider>
+					<SporeField />
 					<Header>
 						<Navigation />
 					</Header>
