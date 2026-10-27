@@ -24,12 +24,14 @@ const SETTINGS_SCHEMA = {
 		theme: { type: "string", enum: ["system", "dark", "light"] },
 		growth: {
 			type: "number",
-			...GROWTH_RANGE,
+			minimum: GROWTH_RANGE.min,
+			maximum: GROWTH_RANGE.max,
 			description: "Hyphae growth speed multiplier; 0 freezes them",
 		},
 		length: {
 			type: "number",
-			...LENGTH_RANGE,
+			minimum: LENGTH_RANGE.min,
+			maximum: LENGTH_RANGE.max,
 			description: "How far strands crawl and tendrils reach",
 		},
 		spores: {

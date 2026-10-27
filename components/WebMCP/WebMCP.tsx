@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { DEFAULT_SETTINGS } from "@/lib/settings";
 import { useSettings } from "@/providers/ThemeProvider";
 import { createSettingsTools } from "./settingsTools";
 
@@ -132,8 +133,16 @@ export default function WebMCP() {
 			...TOOLS,
 			...createSettingsTools({
 				current: () => settingsRef.current,
-				update,
-				reset,
+				// Write the ref first: two back-to-back tool calls would otherwise both read the
+				// pre-update value, since the syncing effect only runs after React re-renders
+				update: (next) => {
+					settingsRef.current = next;
+					update(next);
+				},
+				reset: () => {
+					settingsRef.current = DEFAULT_SETTINGS;
+					reset();
+				},
 			}),
 		];
 
