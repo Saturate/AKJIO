@@ -81,6 +81,9 @@ export default function MoonCanvas({ phase: rawPhase }: { phase: number | null }
 			last = now;
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			// The spores below leave globalAlpha at their own fade; without this reset the whole
+			// moon blitted at that alpha and visibly flickered as spores spawned and died.
+			ctx.globalAlpha = 1;
 			ctx.drawImage(cache, 0, 0);
 			if (reduced) return;
 			ctx.setTransform(size.dpr, 0, 0, size.dpr, 0, 0);
