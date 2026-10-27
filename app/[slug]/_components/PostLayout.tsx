@@ -11,6 +11,7 @@ import SeriesNav from "@/components/SeriesNav/SeriesNav";
 import Sources from "@/components/Sources/Sources";
 import Colony from "@/components/Colony/Colony";
 import InfectedTitle from "@/components/InfectedTitle/InfectedTitle";
+import RelatedPosts from "@/components/RelatedPosts/RelatedPosts";
 import { hashStr } from "@/lib/random";
 import type { TOCEntry } from "@/utils/generateTableOfContentsFromMarkdown";
 
@@ -108,6 +109,10 @@ export default function PostLayout({ slug, Component, frontmatter, toc, readTime
 							<TableOfContents entries={toc} introLabel={introLabel} />
 						</div>
 					</aside>
+
+					<div className={styles.below}>
+						<RelatedPosts currentSlug={slug} tags={frontmatter.tags ?? []} />
+					</div>
 				</div>
 			</AnchorProvider>
 			<JsonLd data={jsonLd} nonce={nonce} />

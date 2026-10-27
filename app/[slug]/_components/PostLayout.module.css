@@ -25,6 +25,14 @@
 	top: 112px;
 }
 
+.below {
+	grid-column: 1 / -1;
+	grid-row: 2;
+	width: 100%;
+	max-width: 1180px;
+	justify-self: center;
+}
+
 .head {
 	border: 1px solid var(--line);
 	padding: 30px 30px 24px;
@@ -87,7 +95,8 @@
 		margin: 0 auto;
 	}
 
-	.article {
+	.article,
+	.below {
 		grid-column: 1;
 	}
 

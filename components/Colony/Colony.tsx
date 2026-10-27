@@ -53,10 +53,11 @@ export default function Colony({
 		});
 		engine.current = e;
 		const unregister = registerColony(e);
+		// pointerover bubbles, so moving between rows of a list pulses too; pulse() throttles itself.
 		const onEnter = () => e.pulse(false);
-		node.addEventListener("pointerenter", onEnter);
+		node.addEventListener("pointerover", onEnter);
 		return () => {
-			node.removeEventListener("pointerenter", onEnter);
+			node.removeEventListener("pointerover", onEnter);
 			unregister();
 			engine.current = null;
 		};

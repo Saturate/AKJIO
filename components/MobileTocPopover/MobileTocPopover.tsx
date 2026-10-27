@@ -53,7 +53,9 @@ export default function MobileTocPopover({ entries, introLabel }: MobileTocPopov
 		function onScroll() {
 			if (!placeholder) return;
 			const headerHeight = document.querySelector("[data-site-header]")?.getBoundingClientRect().height ?? 0;
-			setIsStuck(placeholder.getBoundingClientRect().top <= headerHeight);
+			// Let go once the article has scrolled past, so it doesn't sit over related posts and the footer.
+			const articleBottom = placeholder.parentElement?.querySelector("article")?.getBoundingClientRect().bottom ?? Infinity;
+			setIsStuck(placeholder.getBoundingClientRect().top <= headerHeight && articleBottom > headerHeight + 40);
 		}
 
 		window.addEventListener("scroll", onScroll, { passive: true });
