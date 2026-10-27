@@ -1,3 +1,5 @@
+import { runtimeSettings } from "@/lib/runtimeSettings";
+
 export const GLYPHS = "01░▒▓<>/\\|_#*%";
 
 export function prefersReducedMotion(): boolean {
@@ -10,9 +12,14 @@ export function randomGlyph(): string {
 
 const busy = new WeakSet<HTMLElement>();
 
-// A few frames of noise that resolve left to right into the final label.
+// A few frames of noise that resolve left to right into the final label. With reduced motion or
+// glitches switched off the label is set straight away, so it still changes (e.g. Copy -> Copied).
 export function scramble(el: HTMLElement, finalText: string, frames = 5, frameMs = 45): void {
-	if (prefersReducedMotion() || busy.has(el)) return;
+	if (prefersReducedMotion() || !runtimeSettings().glitch) {
+		el.textContent = finalText;
+		return;
+	}
+	if (busy.has(el)) return;
 	busy.add(el);
 	el.classList.remove("glitch-split");
 	void el.offsetWidth;

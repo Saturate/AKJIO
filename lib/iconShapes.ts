@@ -1,7 +1,7 @@
-import { STRAINS } from "@/lib/strains";
+import { DEFAULT_STRAIN, STRAINS } from "@/lib/strains";
 
 // Shared by app/icon.tsx (SVG) and app/apple-icon.tsx (PNG) so every size draws the same mark.
-const t = STRAINS.biolume.dark;
+const t = STRAINS[DEFAULT_STRAIN].dark;
 export const ICON_COLORS = { bg: t.bg, line: t.line, text: t.text, accent: t.accent, growth: t.growth } as const;
 
 // Silkscreen-style "A" on a 5x6 grid (1 = filled), drawn as rects so no font is needed.

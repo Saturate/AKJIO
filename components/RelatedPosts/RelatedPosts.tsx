@@ -29,7 +29,9 @@ export default async function RelatedPosts({ currentSlug, tags }: { currentSlug:
 				<h2 id="related-heading" className={styles.heading}>
 					Related posts
 				</h2>
-				<span className={styles.count}>{ranked.length} posts</span>
+				<span className={styles.count}>
+					{ranked.length} {ranked.length === 1 ? "post" : "posts"}
+				</span>
 			</div>
 			<PostRows posts={ranked} seed={hashStr(currentSlug + ":related")} />
 		</section>

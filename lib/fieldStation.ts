@@ -1,7 +1,10 @@
-// Copenhagen. Fetched on the server so visitors never contact these services (and CSP stays 'self').
-export const STATION = { name: "Copenhagen", lat: 55.6761, lon: 12.5683, tz: "Europe/Copenhagen" } as const;
+import { STATION } from "@/lib/station";
 
+// Fetched on the server so visitors never contact these services (and CSP stays 'self').
 const REVALIDATE = 1800;
+// Failed fetches aren't cached, so remember a dead relay ourselves instead of waiting on it every render.
+const RELAY_RETRY_MS = 10 * 60 * 1000;
+let relayDownUntil = 0;
 
 export type StationData = {
 	air: { temp: number; rh: number } | null;
@@ -88,14 +91,17 @@ function pollenLevel(v: number): string {
 
 async function pollen(): Promise<StationData["pollen"]> {
 	// Own relay first; it is Denmark-specific but currently unreliable, so keep its timeout short.
-	const own = await getJson("https://pollen.akj.io/v1/dk/copenhagen/forecast?lang=en", 2500);
-	if (Array.isArray(own) && own.length) {
-		const items = own
-			.filter(isRecord)
-			.slice(0, 4)
-			.map((x) => `${String(x.name ?? x.type ?? "")} ${String(x.level ?? x.value ?? "")}`.trim())
-			.filter(Boolean);
+	if (Date.now() > relayDownUntil) {
+		const own = await getJson("https://pollen.akj.io/v1/dk/copenhagen/forecast?lang=en", 2500);
+		const items = Array.isArray(own)
+			? own
+					.filter(isRecord)
+					.slice(0, 4)
+					.map((x) => `${String(x.name ?? x.type ?? "")} ${String(x.level ?? x.value ?? "")}`.trim())
+					.filter(Boolean)
+			: [];
 		if (items.length) return { items, aqi: null, source: "pollen.akj.io" };
+		relayDownUntil = Date.now() + RELAY_RETRY_MS;
 	}
 	const aq = await getJson(
 		`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${STATION.lat}&longitude=${STATION.lon}` +

@@ -75,9 +75,10 @@ export default function MoonCanvas({ phase: rawPhase }: { phase: number | null }
 			spores = [];
 		};
 
+		// Loops only while on screen with motion allowed; otherwise it paints once and stops.
 		const draw = (now: number) => {
-			raf = requestAnimationFrame(draw);
-			if (!visible || !cache || now - last < 50) return;
+			raf = visible && !reduced ? requestAnimationFrame(draw) : 0;
+			if (!cache || (raf && now - last < 50)) return;
 			last = now;
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -109,13 +110,20 @@ export default function MoonCanvas({ phase: rawPhase }: { phase: number | null }
 			ctx.shadowBlur = 0;
 		};
 
+		const paint = () => {
+			if (!raf) raf = requestAnimationFrame(draw);
+		};
 		render();
-		const off = onTokensChange(render);
+		const off = onTokensChange(() => {
+			render();
+			paint();
+		});
 		const io = new IntersectionObserver(([e]) => {
 			visible = e?.isIntersecting ?? false;
+			if (visible) paint();
 		});
 		io.observe(canvas);
-		raf = requestAnimationFrame(draw);
+		paint();
 		return () => {
 			cancelAnimationFrame(raf);
 			io.disconnect();

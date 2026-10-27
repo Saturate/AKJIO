@@ -22,6 +22,15 @@ type Sprout = {
 	settle: number;
 };
 
+type TocState = {
+	geo: Geo[];
+	pts: Array<[number, number]>;
+	sprouts: Sprout[];
+	cur: { y: number; h: number };
+	target: { y: number; h: number };
+	raf: number;
+};
+
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 function flatten(entries: TOCEntry[]): TOCEntry[] {
@@ -54,14 +63,7 @@ export default function TableOfContents({ entries, introLabel }: Props) {
 	const syncRef = useRef<(instant: boolean) => void>(() => {});
 	const retarget = useRef<() => void>(() => {});
 
-	const state = useRef({
-		geo: [] as Geo[],
-		pts: [] as Array<[number, number]>,
-		sprouts: [] as Sprout[],
-		cur: { y: 0, h: 0 },
-		target: { y: 0, h: 0 },
-		raf: 0,
-	});
+	const state = useRef<TocState>({ geo: [], pts: [], sprouts: [], cur: { y: 0, h: 0 }, target: { y: 0, h: 0 }, raf: 0 });
 
 	const activeIdx = useMemo(() => {
 		const idx = items.map((it, i) => (it.slug && active.includes(it.slug.slice(1)) ? i : -1)).filter((i) => i >= 0);

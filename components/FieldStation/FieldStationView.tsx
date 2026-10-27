@@ -3,12 +3,11 @@
 import { useEffect, useState } from "react";
 import type { StationData } from "@/lib/fieldStation";
 import { getIlluminationFraction, getMoonPhase } from "@/lib/moonPhase";
+import { STATION } from "@/lib/station";
 import MoonCanvas from "./MoonCanvas";
 import styles from "./FieldStation.module.css";
 
-const LAT = 55.6761;
-const LON = 12.5683;
-const TZ = "Europe/Copenhagen";
+const { lat: LAT, lon: LON, tz: TZ } = STATION;
 const PHASES = ["New moon", "Waxing crescent", "First quarter", "Waxing gibbous", "Full moon", "Waning gibbous", "Last quarter", "Waning crescent"];
 const COMPASS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 
@@ -66,7 +65,7 @@ export default function FieldStationView({ data }: { data: StationData | null })
 	return (
 		<section className={styles.station} aria-label="Copenhagen right now">
 			<h2 className={styles.label}>
-				Field station · Copenhagen <span className={styles.coords}>55.68°N 12.57°E</span>
+				Field station · Copenhagen <span className={styles.coords}>{STATION.coords}</span>
 			</h2>
 			<div className={styles.body}>
 				<MoonCanvas phase={phase} />
@@ -101,7 +100,7 @@ export default function FieldStationView({ data }: { data: StationData | null })
 					/>
 					<Stat
 						label="Daylight"
-						value={d?.daylight ? `${Math.floor(d.daylight.seconds / 3600)}h ${Math.round((d.daylight.seconds % 3600) / 60)}m` : "–"}
+						value={d?.daylight ? `${Math.floor(Math.round(d.daylight.seconds / 60) / 60)}h ${Math.round(d.daylight.seconds / 60) % 60}m` : "–"}
 						note={
 							d?.daylight
 								? `${d.daylight.delta < 0 ? "−" : "+"}${Math.floor(Math.abs(Math.round(d.daylight.delta)) / 60)}m ${Math.abs(Math.round(d.daylight.delta)) % 60}s`

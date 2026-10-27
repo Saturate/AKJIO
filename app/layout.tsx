@@ -9,7 +9,10 @@ import Footer from "@/components/Footer/Footer";
 import SporeField from "@/components/SporeField/SporeField";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { getNonce } from "@/utils/nonce";
-import { DEFAULT_STRAIN, STRAIN_KEYS, strainCss } from "@/lib/strains";
+import { strainCss } from "@/lib/strains";
+import { SETTINGS_COOKIE, parseSettings } from "@/lib/settings";
+import { cookies } from "next/headers";
+import CulturePanel from "@/components/CulturePanel/CulturePanel";
 
 const fraunces = Fraunces({
 	subsets: ["latin"],
@@ -40,8 +43,9 @@ const silkscreen = Silkscreen({
 
 const fontVars = [fraunces, geist, geistMono, silkscreen].map((f) => f.variable).join(" ");
 
-// Runs before paint so the stored mode and strain apply without a flash.
-const prePaint = `(function(){try{var t=localStorage.getItem("theme")||"system";var r=t;if(t==="system")r=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";var d=document.documentElement;d.classList.add(r);d.style.colorScheme=r;var s=localStorage.getItem("strain");d.dataset.strain=${JSON.stringify(STRAIN_KEYS)}.indexOf(s)>-1?s:${JSON.stringify(DEFAULT_STRAIN)}}catch(e){}})()`;
+// Strain and an explicit mode are rendered on the server from the settings cookie. Only "system"
+// needs the browser, so this resolves it before paint to avoid a flash.
+const prePaint = `(function(){try{var d=document.documentElement;if(d.dataset.theme!=="system")return;var r=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";d.classList.add(r);d.style.colorScheme=r}catch(e){}})()`;
 
 export const metadata = {
 	metadataBase: new URL("https://akj.io"),
@@ -101,16 +105,26 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }) {
 	const nonce = await getNonce();
+	const settings = parseSettings((await cookies()).get(SETTINGS_COOKIE)?.value);
+	const modeClass = settings.theme === "system" ? "" : ` ${settings.theme}`;
 
 	return (
-		<html lang="en" className={fontVars} data-strain={DEFAULT_STRAIN} suppressHydrationWarning>
+		<html
+			lang="en"
+			className={fontVars + modeClass}
+			data-strain={settings.strain}
+			data-theme={settings.theme}
+			style={settings.theme === "system" ? undefined : { colorScheme: settings.theme }}
+			suppressHydrationWarning
+		>
 			<head>
 				<script nonce={nonce} dangerouslySetInnerHTML={{ __html: prePaint }} />
 				<style dangerouslySetInnerHTML={{ __html: strainCss() }} />
 			</head>
 			<body className={styles.page}>
-				<ThemeProvider>
+				<ThemeProvider initial={settings}>
 					<SporeField />
+					<CulturePanel />
 					<Header>
 						<Navigation />
 					</Header>

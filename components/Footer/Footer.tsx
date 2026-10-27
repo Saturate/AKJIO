@@ -3,13 +3,12 @@ import { Suspense } from "react";
 import Colony from "@/components/Colony/Colony";
 import FieldStation from "@/components/FieldStation/FieldStation";
 import FieldStationView from "@/components/FieldStation/FieldStationView";
-import StrainPicker from "@/components/StrainPicker/StrainPicker";
 import Wordmark from "./Wordmark";
+import FooterPath from "./FooterPath";
+import styles from "./Footer.module.css";
 
 const TOP_CORNERS = [0, 1] as const;
 const TOP_EDGE = [0] as const;
-import FooterPath from "./FooterPath";
-import styles from "./Footer.module.css";
 
 const WRITING = [
 	{ href: "/posts", label: "Posts" },
@@ -56,13 +55,12 @@ export default function Footer() {
 					<Suspense fallback={<FieldStationView data={null} />}>
 						<FieldStation />
 					</Suspense>
-					<StrainPicker />
 				</div>
 			</div>
 			<div className={styles.bottom}>
 				<FooterPath />
 				<Link href="/privacy" className="grow-underline">
-					No trackers. No cookies.
+					No trackers. A cookie only if you change the settings.
 				</Link>
 			</div>
 		</Colony>

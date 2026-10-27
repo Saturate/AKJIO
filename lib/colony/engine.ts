@@ -3,6 +3,7 @@
 import { liveTokens } from "@/lib/liveTokens";
 import { prefersReducedMotion, randomGlyph } from "@/lib/motion";
 import { mulberry } from "@/lib/random";
+import { runtimeSettings } from "@/lib/runtimeSettings";
 
 export const MARGIN = 36;
 const NORMALS: ReadonlyArray<readonly [number, number]> = [
@@ -35,7 +36,7 @@ type Pulse = { s: Strand; pos: number; v: number; ci: number };
 type Target = { el: HTMLElement; x: number; y: number; w: number; h: number };
 
 export function glitchChar(el: HTMLElement): void {
-	if (prefersReducedMotion() || el.dataset.glitching) return;
+	if (prefersReducedMotion() || !runtimeSettings().glitch || el.dataset.glitching) return;
 	el.dataset.glitching = "1";
 	const original = el.dataset.c ?? el.textContent ?? "";
 	el.textContent = randomGlyph();
@@ -60,7 +61,10 @@ export class ColonyEngine {
 	private readonly io: IntersectionObserver;
 
 	visible = false;
+	/** Set by the loop so a colony scrolling into view can restart a stopped rAF. */
+	onVisible: () => void = () => {};
 	private size = "";
+	private lastKnotFrame = 0;
 	private w = 0;
 	private h = 0;
 	W = 0;
@@ -90,6 +94,7 @@ export class ColonyEngine {
 		this.ro = new ResizeObserver(() => this.layout(false));
 		this.io = new IntersectionObserver(([entry]) => {
 			this.visible = entry?.isIntersecting ?? false;
+			if (this.visible) this.onVisible();
 		}, { rootMargin: "120px" });
 		this.ro.observe(el);
 		this.io.observe(el);
@@ -131,14 +136,6 @@ export class ColonyEngine {
 		let guard = 0;
 		while (this.steps < target && this.agents.length && guard++ < 30000) this.step(false);
 		this.redraw();
-	}
-
-	regrow(seed: number): void {
-		this.o.seed = seed;
-		this.age = 0;
-		this.acc = 0;
-		this.steps = 0;
-		this.layout(true);
 	}
 
 	private reset(): void {
@@ -370,8 +367,13 @@ export class ColonyEngine {
 		if (!this.agents.length) this.acc = 0;
 	}
 
+	/** True while something is animating: growth, tips or pulses. Knots alone don't count. */
+	get active(): boolean {
+		return (this.agents.length > 0 && runtimeSettings().growth > 0) || this.pulses.length > 0;
+	}
+
 	pulse(force: boolean): void {
-		if (this.reduced) return;
+		if (this.reduced || !runtimeSettings().pulses) return;
 		const now = performance.now();
 		if (!force && now - this.lastPulse < 1500) return;
 		this.lastPulse = now;
@@ -383,8 +385,7 @@ export class ColonyEngine {
 		}
 	}
 
-	/** Distance in px from a point (canvas coords) to the nearest strand point, or Infinity. */
-	nearest(x: number, y: number, max: number): { d: number; s: Strand; i: number } | null {
+	private nearest(x: number, y: number, max: number): { d: number; s: Strand; i: number } | null {
 		let best: { d: number; s: Strand; i: number } | null = null;
 		let bd = max;
 		for (const s of this.strands) {
@@ -424,13 +425,19 @@ export class ColonyEngine {
 		const g = this.g;
 		if (!g) return;
 		const { tokens, dark } = liveTokens();
-		const idle = !this.agents.length && !this.pulses.length && (!dark || !this.knots.length);
-		if (idle) {
+		// Knots breathing is the only thing left once growth ends; it doesn't need 60fps,
+		// and under reduced motion it doesn't run at all.
+		const breathing = dark && this.knots.length > 0 && !this.reduced;
+		if (!this.active && !breathing) {
 			if (this.glowDirty) {
 				g.clearRect(0, 0, this.W, this.H);
 				this.glowDirty = false;
 			}
 			return;
+		}
+		if (!this.active) {
+			if (now - this.lastKnotFrame < 100) return;
+			this.lastKnotFrame = now;
 		}
 		this.glowDirty = true;
 		g.clearRect(0, 0, this.W, this.H);
@@ -445,7 +452,7 @@ export class ColonyEngine {
 			g.arc(p[0], p[1], p[2] * 0.9 + 0.7, 0, 6.283);
 			g.fill();
 		}
-		if (dark) {
+		if (breathing) {
 			this.knots.forEach((k, i) => {
 				g.globalAlpha = 0.16 + 0.24 * (0.5 + 0.5 * Math.sin(now / 1300 + i * 1.7));
 				g.beginPath();

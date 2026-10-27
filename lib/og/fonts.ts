@@ -23,6 +23,9 @@ async function fetchGoogleFont(
 	const fontRes = await fetch(match[1], {
 		next: { revalidate: 86400 },
 	});
+	if (!fontRes.ok) {
+		throw new Error(`Font download failed for ${family} ${weight}: HTTP ${fontRes.status}`);
+	}
 	return fontRes.arrayBuffer();
 }
 

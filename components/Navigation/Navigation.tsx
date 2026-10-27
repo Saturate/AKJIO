@@ -28,6 +28,8 @@ export default function Navigation() {
 						href={item.href}
 						className={`${styles.link} grow-underline`}
 						aria-current={current ? "page" : undefined}
+						// The visible label scrambles on focus; screen readers get the stable name.
+						aria-label={item.label}
 						onPointerEnter={run}
 						onFocus={run}
 					>

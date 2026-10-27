@@ -17,7 +17,7 @@ export type Tokens = {
 
 export type Strain = { name: string; dark: Tokens; light: Tokens };
 
-export const DEFAULT_STRAIN: StrainKey = "biolume";
+export const DEFAULT_STRAIN: StrainKey = "spore";
 
 export const STRAINS: Record<StrainKey, Strain> = {
 	biolume: {

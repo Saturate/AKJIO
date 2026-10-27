@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { liveTokens, rgba } from "@/lib/liveTokens";
+import { liveTokens, onTokensChange, rgba } from "@/lib/liveTokens";
+import { onRuntimeSettings, runtimeSettings } from "@/lib/runtimeSettings";
 import { prefersReducedMotion } from "@/lib/motion";
 import { mulberry } from "@/lib/random";
 import styles from "./SporeField.module.css";
@@ -15,6 +16,7 @@ type Spore = {
 	ph: number;
 	drift: number;
 	tint: number;
+	rank: number;
 	dx: number;
 	dy: number;
 	vx: number;
@@ -32,13 +34,14 @@ function makeSpores(): Spore[] {
 		for (let i = 0; i < n; i++) {
 			out.push({
 				x: r(), y: r(), r: rmin + r() * (rmax - rmin), par, layer, ph: r() * 6.28, drift: (r() - 0.5) * 0.004, tint: r(),
-				dx: 0, dy: 0, vx: 0, vy: 0, sx: 0, sy: 0,
+				rank: r(), dx: 0, dy: 0, vx: 0, vy: 0, sx: 0, sy: 0,
 			});
 		}
 	};
-	add(90, 0, 0.3, 0.8, 0.04);
-	add(40, 1, 0.6, 1.6, 0.14);
-	add(7, 2, 10, 26, 0.32);
+	// Twice the default field; the density setting shows the share with rank < density / 2.
+	add(180, 0, 0.3, 0.8, 0.04);
+	add(80, 1, 0.6, 1.6, 0.14);
+	add(14, 2, 10, 26, 0.32);
 	return out;
 }
 
@@ -79,6 +82,7 @@ export default function SporeField() {
 		};
 
 		const onMove = (e: PointerEvent) => {
+			if (!runtimeSettings().react) return;
 			const now = performance.now();
 			const dt = Math.max(8, now - ptr.t);
 			if (ptr.t) {
@@ -94,7 +98,7 @@ export default function SporeField() {
 			ptr.y = -1e4;
 		};
 		const onKey = (e: KeyboardEvent) => {
-			if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+			if (e.repeat || e.metaKey || e.ctrlKey || e.altKey || !runtimeSettings().react || runtimeSettings().spores === 0) return;
 			let x = window.innerWidth / 2;
 			let y = window.innerHeight / 2;
 			const focused = document.activeElement;
@@ -109,10 +113,19 @@ export default function SporeField() {
 			puff(x, y);
 		};
 
+		// Nothing moves under reduced motion or with the field switched off, so draw once instead of looping.
+		const animating = () => !reduced && runtimeSettings().spores > 0;
+
 		const draw = (now: number) => {
-			raf = requestAnimationFrame(draw);
-			if (document.hidden || now - last < 16) return;
+			if (animating()) raf = requestAnimationFrame(draw);
+			else raf = 0;
+			if (document.hidden || (raf && now - last < 16)) return;
 			last = now;
+			const density = runtimeSettings().spores / 2;
+			if (!runtimeSettings().react) {
+				ptr.x = -1e4;
+				ptr.y = -1e4;
+			}
 			const w = window.innerWidth;
 			const h = window.innerHeight;
 			const dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -129,6 +142,7 @@ export default function SporeField() {
 			ptr.vy *= 0.9;
 
 			for (const p of spores) {
+				if (p.rank >= density) continue;
 				const hx = ((((p.x + p.drift * t) % 1) + 1) % 1) * w;
 				const hy = (((p.y * h - sy * p.par - t * (p.layer ? 3 * p.layer : 1.2)) % h) + h) % h;
 				if (!reduced && p.layer < 2) {
@@ -195,17 +209,26 @@ export default function SporeField() {
 			ctx.shadowBlur = 0;
 		};
 
+		const redraw = () => {
+			if (!raf) raf = requestAnimationFrame(draw);
+		};
 		if (!reduced) {
 			window.addEventListener("pointermove", onMove, { passive: true });
 			document.addEventListener("pointerleave", onLeave);
 			window.addEventListener("keydown", onKey);
 		}
+		window.addEventListener("resize", redraw);
+		const offSettings = onRuntimeSettings(redraw);
+		const offTokens = onTokensChange(redraw);
 		raf = requestAnimationFrame(draw);
 		return () => {
 			cancelAnimationFrame(raf);
 			window.removeEventListener("pointermove", onMove);
 			document.removeEventListener("pointerleave", onLeave);
 			window.removeEventListener("keydown", onKey);
+			window.removeEventListener("resize", redraw);
+			offSettings();
+			offTokens();
 		};
 	}, []);
 

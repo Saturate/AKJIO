@@ -47,8 +47,8 @@ export default function Colony({
 			seed,
 			inward,
 			reach,
-			corners: cornerKey.split(",").map(Number),
-			edges: edgeKey.split(",").map(Number),
+			corners: cornerKey ? cornerKey.split(",").map(Number) : [],
+			edges: edgeKey ? edgeKey.split(",").map(Number) : [],
 			infect,
 		});
 		engine.current = e;
