@@ -53,21 +53,27 @@ export function isStrainKey(value: unknown): value is StrainKey {
 
 const cssName = (key: string) => "--" + key.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
 
-function declarations(tokens: Tokens): string {
-	return Object.entries(tokens)
-		.map(([k, v]) => `${cssName(k)}:${v};`)
-		.join("");
+function declarations(tokens: Tokens, strain: Strain): string {
+	// Syntax colors come from a dark Shiki theme, so code surfaces stay dark in both modes.
+	const code = `--code-bg:${strain.dark.raised};--code-line:${strain.dark.line};--code-text:${strain.dark.text};--code-muted:${strain.dark.muted};`;
+	return (
+		Object.entries(tokens)
+			.map(([k, v]) => `${cssName(k)}:${v};`)
+			.join("") + code
+	);
 }
 
 // Rendered once into <head>. Biolume is also the fallback before the pre-paint script runs.
 export function strainCss(): string {
+	const fallback = STRAINS[DEFAULT_STRAIN];
 	const rules: string[] = [
-		`:root{${declarations(STRAINS[DEFAULT_STRAIN].dark)}}`,
-		`:root.light{${declarations(STRAINS[DEFAULT_STRAIN].light)}}`,
+		`:root{${declarations(fallback.dark, fallback)}}`,
+		`:root.light{${declarations(fallback.light, fallback)}}`,
 	];
 	for (const key of STRAIN_KEYS) {
-		rules.push(`:root[data-strain="${key}"]{${declarations(STRAINS[key].dark)}}`);
-		rules.push(`:root.light[data-strain="${key}"]{${declarations(STRAINS[key].light)}}`);
+		const s = STRAINS[key];
+		rules.push(`:root[data-strain="${key}"]{${declarations(s.dark, s)}}`);
+		rules.push(`:root.light[data-strain="${key}"]{${declarations(s.light, s)}}`);
 	}
 	return rules.join("");
 }

@@ -1,47 +1,23 @@
-/* Code Pretty */
-.code {
-	background: #fafafa;
-	border-radius: 5px;
-	padding: 0.75rem;
-	font-size: 0.875rem;
-	font-family:
-		Menlo,
-		Monaco,
-		Lucida Console,
-		Liberation Mono,
-		DejaVu Sans Mono,
-		Bitstream Vera Sans Mono,
-		Courier New,
-		monospace;
-}
-
-figure[data-rehype-pretty-code-figure] {
-	background-color: #0b0e14;
-	padding: 5px 17px;
+/* Block code: the frame (components/CodeFrame) owns border and background; pre only scrolls. */
+figure[data-rehype-pretty-code-figure] pre {
 	margin: 0;
-	margin-bottom: 1rem;
+	padding: 16px 20px;
 	overflow: auto;
 	tab-size: 2;
-	font-size: 0.875rem;
+	font-family: var(--font-mono);
+	font-size: 13.5px;
+	line-height: 1.7;
+	/* Shiki inlines the theme background; the strain's code surface replaces it. */
+	background: transparent !important;
 	scrollbar-width: thin;
-	scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+	scrollbar-color: var(--code-line) transparent;
 }
 
-figure[data-rehype-pretty-code-figure]::-webkit-scrollbar {
-	height: 6px;
-}
-
-figure[data-rehype-pretty-code-figure]::-webkit-scrollbar-track {
-	background: transparent;
-}
-
-figure[data-rehype-pretty-code-figure]::-webkit-scrollbar-thumb {
-	background: rgba(255, 255, 255, 0.15);
-	border-radius: 3px;
-}
-
-figure[data-rehype-pretty-code-figure]::-webkit-scrollbar-thumb:hover {
-	background: rgba(255, 255, 255, 0.3);
+figure[data-rehype-pretty-code-figure] pre code {
+	font: inherit;
+	background: none;
+	border: 0;
+	padding: 0;
 }
 
 code[data-line-numbers] {
@@ -51,13 +27,11 @@ code[data-line-numbers] {
 code[data-line-numbers] > [data-line]::before {
 	counter-increment: line;
 	content: counter(line);
-
-	/* Other styling */
 	display: inline-block;
 	width: 0.75rem;
 	margin-right: 2rem;
 	text-align: right;
-	color: gray;
+	color: var(--code-muted);
 }
 
 code[data-line-numbers-max-digits="2"] > [data-line]::before {
@@ -74,31 +48,25 @@ code[data-line-numbers-max-digits="4"] > [data-line]::before {
 
 /* Inline code */
 span[data-rehype-pretty-code-figure] > code {
-	padding: 2px 4px;
-	border-radius: 6px;
+	font-family: var(--font-mono);
+	font-size: 0.86em;
+	padding: 0.05em 0.35em;
+	background: var(--code-bg) !important;
+	border: 1px solid var(--line);
 }
 
-/* AI Prompt blocks - dark styling to differentiate from code */
+/* AI prompt blocks read as quoted speech, not code. */
 figure[data-rehype-pretty-code-figure]:has(code[data-language="prompt"]) {
-	background-color: rgba(20, 30, 45, 0.6);
-	overflow: visible;
-	margin: 1.5rem -2.25rem;
-	padding: 1rem 2.5rem;
-}
-
-@media (max-width: 768px) {
-	figure[data-rehype-pretty-code-figure]:has(code[data-language="prompt"]) {
-		margin: 1.5rem -1.25rem;
-		padding: 1rem 1.5rem;
-	}
-}
-
-figure[data-rehype-pretty-code-figure]:has(code[data-language="prompt"]) pre {
-	background-color: transparent !important;
+	background: transparent;
+	border-style: dashed;
 }
 
 figure[data-rehype-pretty-code-figure]:has(code[data-language="prompt"]) code {
 	font-style: italic;
-	opacity: 0.9;
 	white-space: pre-wrap;
+	color: var(--muted);
+}
+
+figure[data-rehype-pretty-code-figure]:has(code[data-language="prompt"]) code span {
+	color: inherit !important;
 }

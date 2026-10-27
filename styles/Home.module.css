@@ -7,6 +7,8 @@
 .main {
 	flex: 1;
 	padding: 72px 0 0;
+	/* Colony canvases bleed past their frames; clip, not hidden, so sticky children still work. */
+	overflow-x: clip;
 	color: var(--text);
 	display: flex;
 	flex-direction: column;

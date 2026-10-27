@@ -1,59 +1,103 @@
-.postLayout {
-	max-width: 760px;
-	margin: 0 auto;
-	width: 100%;
-	box-sizing: border-box;
+.layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 70ch) minmax(0, 1fr);
+	column-gap: 56px;
+	padding: 8px var(--gutter) 0;
 }
 
-.postToc {
-	display: none;
-}
-
-.postContent {
+.article {
+	grid-column: 2;
+	grid-row: 1;
 	min-width: 0;
-	width: 100%;
 }
 
-.postMeta {
+/* Sticky inside its own grid cell so it stops where the article ends. */
+.toc {
+	grid-column: 3;
+	grid-row: 1;
+	justify-self: start;
+	align-self: stretch;
+	width: 240px;
+}
+
+.tocInner {
+	position: sticky;
+	top: 112px;
+}
+
+.head {
+	border: 1px solid var(--line);
+	padding: 30px 30px 24px;
+	margin-bottom: 56px;
+}
+
+.title {
+	margin: 0 0 20px;
+}
+
+.lede {
+	color: var(--muted);
+	font-size: 18.5px;
+	line-height: 1.6;
+	margin: 0 0 28px;
+	max-width: 56ch;
+}
+
+/* Overrides the global dl look: a dashed row of mono labels with tree-branch values. */
+.meta {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+	gap: 16px;
+	margin: 0;
+	padding: 16px 0 0;
+	border: 0;
+	border-top: 1px dashed var(--line);
+}
+
+.meta dt {
+	font-size: 10.5px;
+}
+
+.meta dd {
+	margin: 4px 0 0;
+	font-size: 14.5px;
+}
+
+.meta dd::before {
+	content: "└ ";
+	font-family: var(--font-mono);
+	color: var(--muted);
+}
+
+.tags {
 	display: flex;
-	align-items: center;
-	gap: 0.75rem;
-	color: color-mix(in srgb, currentColor 60%, transparent);
-	font-size: 0.875rem;
-	margin-top: 0.5rem;
-	margin-bottom: 2rem;
+	flex-wrap: wrap;
+	gap: 4px 10px;
 }
 
-.postMeta span::before {
-	content: "·";
-	margin-right: 0.75rem;
+.tags a {
+	color: var(--text);
+	text-decoration: none;
 }
 
-.postSidebar {
-	display: none;
-}
-
-@media (min-width: 1024px) {
-	.postLayout {
-		display: grid;
-		grid-template-columns: 760px 280px;
-		grid-template-areas: "content toc";
-		gap: 3rem;
-		max-width: none;
-		width: calc(760px + 280px + 3rem);
-		margin-inline: calc((-280px - 3rem) / 2);
+@media (max-width: 1180px) {
+	.layout {
+		grid-template-columns: minmax(0, 1fr);
+		max-width: calc(70ch + 2 * var(--gutter));
+		margin: 0 auto;
 	}
 
-	.postContent {
-		grid-area: content;
-		max-width: 100%;
+	.article {
+		grid-column: 1;
 	}
 
-	.postToc {
-		display: block;
-		grid-area: toc;
-		align-self: start;
-		position: sticky;
-		top: 2rem;
+	.toc {
+		display: none;
+	}
+}
+
+@media (max-width: 720px) {
+	.head {
+		padding: 22px 18px 18px;
 	}
 }
