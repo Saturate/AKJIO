@@ -334,6 +334,15 @@ export default function TableOfContents({ entries, introLabel }: Props) {
 			if (!Number.isFinite(top) || !Number.isFinite(bottom)) return;
 			st.target = { y: top - 8, h: bottom - top + 16 };
 			syncRef.current(false);
+			// If a parent caps the TOC height and scrolls it, keep the lit range in view (without moving the page).
+			let box = listRef.current?.parentElement ?? null;
+			while (box && getComputedStyle(box).overflowY === "visible") box = box.parentElement;
+			const list = listRef.current;
+			if (box && list && box.scrollHeight > box.clientHeight) {
+				const listTop = list.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop;
+				const want = listTop + top - box.clientHeight * 0.35;
+				box.scrollTo({ top: Math.max(0, want), behavior: reduced ? "auto" : "smooth" });
+			}
 			if (reduced) {
 				st.cur = { ...st.target };
 				paint();

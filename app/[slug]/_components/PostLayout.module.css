@@ -1,6 +1,8 @@
+/* The TOC column has a floor so it never overflows on mid-width screens; the article
+   drifts a little left of centre there instead. Below 1180px the TOC moves to the mobile bar. */
 .layout {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(0, 70ch) minmax(0, 1fr);
+	grid-template-columns: minmax(0, 1fr) minmax(0, 70ch) minmax(200px, 1fr);
 	column-gap: 56px;
 	padding: 8px var(--gutter) 0;
 }
@@ -17,12 +19,21 @@
 	grid-row: 1;
 	justify-self: start;
 	align-self: stretch;
-	width: 240px;
+	width: min(100%, 260px);
 }
 
+/* Long TOCs on short screens scroll inside the column. The padding/negative margin pair gives
+   the sprouts (which grow left of the rail) room inside the scroll box so they aren't clipped. */
 .tocInner {
 	position: sticky;
 	top: 112px;
+	max-height: calc(100vh - 140px);
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	scrollbar-width: thin;
+	scrollbar-color: var(--line) transparent;
+	margin-left: -28px;
+	padding: 0 0 12px 28px;
 }
 
 .below {
@@ -77,15 +88,42 @@
 	color: var(--muted);
 }
 
+/* Tags get their own full-width row as chips; the tree glyph only suits single values. */
+.tagsRow {
+	grid-column: 1 / -1;
+}
+
 .tags {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 4px 10px;
+	gap: 6px;
 }
 
-.tags a {
-	color: var(--text);
+.meta .tags {
+	margin-top: 8px;
+}
+
+.meta .tags::before {
+	content: none;
+}
+
+.tag {
+	padding: 3px 9px;
+	border: 1px solid var(--line);
+	font-family: var(--font-mono);
+	font-size: 12px;
+	letter-spacing: 0.04em;
+	color: var(--muted);
 	text-decoration: none;
+	transition:
+		color 0.2s,
+		border-color 0.2s;
+}
+
+.tag:hover,
+.tag:focus-visible {
+	color: var(--text);
+	border-color: var(--growth);
 }
 
 @media (max-width: 1180px) {

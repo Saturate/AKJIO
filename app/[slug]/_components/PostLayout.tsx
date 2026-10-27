@@ -82,11 +82,11 @@ export default function PostLayout({ slug, Component, frontmatter, toc, readTime
 									<dd>{readTime} min</dd>
 								</div>
 								{frontmatter.tags && frontmatter.tags.length > 0 && (
-									<div>
+									<div className={styles.tagsRow}>
 										<dt>Tags</dt>
 										<dd className={styles.tags}>
 											{frontmatter.tags.map((tag) => (
-												<Link key={tag} href={`/posts?tag=${encodeURIComponent(tag)}`} className="grow-underline">
+												<Link key={tag} href={`/posts?tag=${encodeURIComponent(tag)}`} className={styles.tag}>
 													{tag}
 												</Link>
 											))}
