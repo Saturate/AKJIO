@@ -18,7 +18,13 @@ const spores = Array.from({ length: 70 }, () => ({
 }));
 
 // Short hyphae creeping from the frame corners along its edges.
-function strand(x: number, y: number, dx: number, dy: number, len: number): string {
+function strand(
+	x: number,
+	y: number,
+	dx: number,
+	dy: number,
+	len: number,
+): string {
 	let d = `M${x.toFixed(1)} ${y.toFixed(1)}`;
 	let off = 0;
 	for (let s = 0; s < len; s += 3) {
@@ -64,23 +70,55 @@ export function OgBackground({ children }: { children: React.ReactNode }) {
 				background: `radial-gradient(120% 90% at 50% 0%, ${colors.bg} 45%, ${colors.raised} 100%)`,
 			}}
 		>
-			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position: "absolute", top: 0, left: 0 }}>
+			<svg
+				width={W}
+				height={H}
+				viewBox={`0 0 ${W} ${H}`}
+				style={{ position: "absolute", top: 0, left: 0 }}
+			>
 				{spores.map((s, i) => (
 					<circle
 						key={i}
 						cx={s.x}
 						cy={s.y}
 						r={s.r}
-						fill={s.tint < 0.12 ? colors.accent : s.tint < 0.35 ? colors.growth : colors.textMuted}
+						fill={
+							s.tint < 0.12
+								? colors.accent
+								: s.tint < 0.35
+									? colors.growth
+									: colors.textMuted
+						}
 						opacity={s.o}
 					/>
 				))}
-				<rect x={L} y={T} width={R - L} height={B - T} fill="none" stroke={colors.line} strokeWidth={S} />
+				<rect
+					x={L}
+					y={T}
+					width={R - L}
+					height={B - T}
+					fill="none"
+					stroke={colors.line}
+					strokeWidth={S}
+				/>
 				{strands.map((d, i) => (
-					<path key={i} d={d} fill="none" stroke={colors.growth} strokeWidth={1.1 * S} opacity={0.7} strokeLinecap="round" />
+					<path
+						key={i}
+						d={d}
+						fill="none"
+						stroke={colors.growth}
+						strokeWidth={1.1 * S}
+						opacity={0.7}
+						strokeLinecap="round"
+					/>
 				))}
 				{marks.map(([x, y], i) => (
-					<path key={i} d={`M${x - 5} ${y} L${x + 5} ${y} M${x} ${y - 5} L${x} ${y + 5}`} stroke={colors.textMuted} strokeWidth={S} />
+					<path
+						key={i}
+						d={`M${x - 5} ${y} L${x + 5} ${y} M${x} ${y - 5} L${x} ${y + 5}`}
+						stroke={colors.textMuted}
+						strokeWidth={S}
+					/>
 				))}
 			</svg>
 			{children}

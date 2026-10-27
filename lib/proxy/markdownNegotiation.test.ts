@@ -39,7 +39,12 @@ describe("markdownPathFor", () => {
 	// Any top-level route that isn't MDX content must be excluded, or agents asking for
 	// markdown get a 404 where browsers get a page. This fails when a new one is added.
 	it("skips every top-level app route that has no llm.txt twin", () => {
-		const metadataRoutes = ["icon", "apple-icon", "opengraph-image", "twitter-image"];
+		const metadataRoutes = [
+			"icon",
+			"apple-icon",
+			"opengraph-image",
+			"twitter-image",
+		];
 
 		// Route groups like (site) don't add a URL segment, so their children are top-level too
 		const topLevelRoutes = (dir: string): string[] =>
@@ -49,7 +54,9 @@ describe("markdownPathFor", () => {
 						return topLevelRoutes(path.join(dir, entry.name));
 					}
 					// _private folders, [dynamic] and @slot segments, and dotted routes like llms.txt
-					return /^[_[@]/.test(entry.name) || entry.name.includes(".") ? [] : [entry.name];
+					return /^[_[@]/.test(entry.name) || entry.name.includes(".")
+						? []
+						: [entry.name];
 				}
 				const base = entry.name.replace(/\.(tsx?|jsx?)$/, "");
 				return metadataRoutes.includes(base) ? [base] : [];

@@ -24,9 +24,7 @@ function processText(text: string): (string | ReactElement)[] {
 		}
 
 		// Add the flag wrapped in a Spoiler
-		parts.push(
-			<Spoiler key={`flag-${keyCounter++}`}>{match[0]}</Spoiler>
-		);
+		parts.push(<Spoiler key={`flag-${keyCounter++}`}>{match[0]}</Spoiler>);
 
 		lastIndex = match.index + match[0].length;
 	}

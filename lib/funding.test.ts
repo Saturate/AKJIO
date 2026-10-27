@@ -5,10 +5,12 @@ import { parseFundingYml } from "./funding";
 
 describe("parseFundingYml", () => {
 	it("reads the repo's real FUNDING.yml", () => {
-		const links = parseFundingYml(fs.readFileSync(
+		const links = parseFundingYml(
+			fs.readFileSync(
 				path.join(import.meta.dirname, "..", ".github", "FUNDING.yml"),
 				"utf8",
-			));
+			),
+		);
 		expect(links).toContainEqual({
 			platform: "github",
 			url: "https://github.com/sponsors/Saturate",

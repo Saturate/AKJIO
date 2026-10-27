@@ -33,10 +33,19 @@ type PostLayoutProps = {
 	readTime: number;
 };
 
-export default function PostLayout({ slug, Component, frontmatter, toc, readTime }: PostLayoutProps) {
+export default function PostLayout({
+	slug,
+	Component,
+	frontmatter,
+	toc,
+	readTime,
+}: PostLayoutProps) {
 	const postUrl = `${SITE_URL}/${slug}`;
 	const introLabel = frontmatter.subtitle ?? frontmatter.description ?? "";
-	const updated = frontmatter.updated && frontmatter.updated !== frontmatter.date ? frontmatter.updated : null;
+	const updated =
+		frontmatter.updated && frontmatter.updated !== frontmatter.date
+			? frontmatter.updated
+			: null;
 
 	const jsonLd = generateBlogPostingSchema(
 		{
@@ -56,15 +65,27 @@ export default function PostLayout({ slug, Component, frontmatter, toc, readTime
 				<MobileTocPopover entries={toc} introLabel={introLabel} />
 				<div className={styles.layout} data-layout="full-width">
 					<article className={styles.article}>
-						<Colony as="header" className={styles.head} seed={hashStr(slug)} inward={0.65} reach={70} infect>
-							<InfectedTitle text={frontmatter.title} className={styles.title} />
+						<Colony
+							as="header"
+							className={styles.head}
+							seed={hashStr(slug)}
+							inward={0.65}
+							reach={70}
+							infect
+						>
+							<InfectedTitle
+								text={frontmatter.title}
+								className={styles.title}
+							/>
 							{introLabel && <p className={styles.lede}>{introLabel}</p>}
 							<dl className={styles.meta}>
 								{frontmatter.date && (
 									<div>
 										<dt>Published</dt>
 										<dd>
-											<time dateTime={frontmatter.date}>{format(new Date(frontmatter.date), "MMM d, yyyy")}</time>
+											<time dateTime={frontmatter.date}>
+												{format(new Date(frontmatter.date), "MMM d, yyyy")}
+											</time>
 										</dd>
 									</div>
 								)}
@@ -72,7 +93,9 @@ export default function PostLayout({ slug, Component, frontmatter, toc, readTime
 									<div>
 										<dt>Updated</dt>
 										<dd>
-											<time dateTime={updated}>{format(new Date(updated), "MMM d, yyyy")}</time>
+											<time dateTime={updated}>
+												{format(new Date(updated), "MMM d, yyyy")}
+											</time>
 										</dd>
 									</div>
 								)}
@@ -85,7 +108,11 @@ export default function PostLayout({ slug, Component, frontmatter, toc, readTime
 										<dt>Tags</dt>
 										<dd className={styles.tags}>
 											{frontmatter.tags.map((tag) => (
-												<Link key={tag} href={`/posts?tag=${encodeURIComponent(tag)}`} className={styles.tag}>
+												<Link
+													key={tag}
+													href={`/posts?tag=${encodeURIComponent(tag)}`}
+													className={styles.tag}
+												>
 													{tag}
 												</Link>
 											))}
@@ -98,8 +125,12 @@ export default function PostLayout({ slug, Component, frontmatter, toc, readTime
 						<div className="prose">
 							<Component />
 						</div>
-						{frontmatter.sources && frontmatter.sources.length > 0 && <Sources sources={frontmatter.sources} />}
-						{frontmatter.series && <SeriesNav seriesName={frontmatter.series} currentSlug={slug} />}
+						{frontmatter.sources && frontmatter.sources.length > 0 && (
+							<Sources sources={frontmatter.sources} />
+						)}
+						{frontmatter.series && (
+							<SeriesNav seriesName={frontmatter.series} currentSlug={slug} />
+						)}
 						<Comments />
 					</article>
 

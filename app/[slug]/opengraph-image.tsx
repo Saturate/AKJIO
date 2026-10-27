@@ -44,108 +44,6 @@ export default async function Image({
 		const isLong = title.length > 60;
 
 		return new ImageResponse(
-			(
-				<OgBackground>
-					<span
-						style={{
-							fontFamily: "Silkscreen",
-							fontSize: 32 * S,
-							color: colors.textMuted,
-							lineHeight: 1,
-						}}
-					>
-						AKJ.IO
-					</span>
-
-					<div
-						style={{
-							display: "flex",
-							flexDirection: "column",
-							flex: 1,
-							justifyContent: "center",
-							gap: (isLong ? 8 : 12) * S,
-							marginTop: 10 * S,
-						}}
-					>
-						<span
-							style={{
-								fontFamily: "Fraunces",
-								fontSize: titleFontSize(title.length),
-								color: colors.text,
-								lineHeight: 1.2,
-							}}
-						>
-							{title}
-						</span>
-
-						{subtitle && (
-							<span
-								style={{
-									fontSize: (isLong ? 20 : 22) * S,
-									color: colors.textMuted,
-									lineHeight: 1.4,
-									maxWidth: 900 * S,
-									overflow: "hidden",
-									maxHeight: (isLong ? 56 : 62) * S,
-								}}
-							>
-								{subtitle}
-							</span>
-						)}
-
-						{tags.length > 0 && (
-							<div
-								style={{
-									display: "flex",
-									flexWrap: "wrap",
-									gap: 8 * S,
-									marginTop: (isLong ? 6 : 12) * S,
-								}}
-							>
-								{tags.slice(0, 5).map((tag) => (
-									<span
-										key={tag}
-										style={{
-											fontSize: 16 * S,
-											color: colors.accent,
-											padding: `${4 * S}px ${12 * S}px`,
-											border: `${S}px solid ${colors.tagBorder}`,
-											borderRadius: 0,
-											background: colors.tagBg,
-										}}
-									>
-										{tag}
-									</span>
-								))}
-							</div>
-						)}
-
-						{dateStr && (
-							<span
-								style={{
-									fontSize: 18 * S,
-									color: colors.textMuted,
-									marginTop: 8 * S,
-								}}
-							>
-								{dateStr}
-							</span>
-						)}
-					</div>
-				</OgBackground>
-			),
-			{ width: OG_RENDER_WIDTH, height: OG_RENDER_HEIGHT, fonts },
-		);
-	}
-
-	// Fall back to generic page OG
-	const page = await findPageBySlug([slug]);
-	const title = page?.frontmatter?.title ?? slug;
-	const description =
-		page?.frontmatter?.subtitle ?? page?.frontmatter?.description;
-
-	return new ImageResponse(
-		(
 			<OgBackground>
 				<span
 					style={{
@@ -164,7 +62,7 @@ export default async function Image({
 						flexDirection: "column",
 						flex: 1,
 						justifyContent: "center",
-						gap: 16 * S,
+						gap: (isLong ? 8 : 12) * S,
 						marginTop: 10 * S,
 					}}
 				>
@@ -179,21 +77,119 @@ export default async function Image({
 						{title}
 					</span>
 
-					{description && (
+					{subtitle && (
 						<span
 							style={{
-								fontSize: 22 * S,
+								fontSize: (isLong ? 20 : 22) * S,
 								color: colors.textMuted,
 								lineHeight: 1.4,
 								maxWidth: 900 * S,
+								overflow: "hidden",
+								maxHeight: (isLong ? 56 : 62) * S,
 							}}
 						>
-							{description}
+							{subtitle}
+						</span>
+					)}
+
+					{tags.length > 0 && (
+						<div
+							style={{
+								display: "flex",
+								flexWrap: "wrap",
+								gap: 8 * S,
+								marginTop: (isLong ? 6 : 12) * S,
+							}}
+						>
+							{tags.slice(0, 5).map((tag) => (
+								<span
+									key={tag}
+									style={{
+										fontSize: 16 * S,
+										color: colors.accent,
+										padding: `${4 * S}px ${12 * S}px`,
+										border: `${S}px solid ${colors.tagBorder}`,
+										borderRadius: 0,
+										background: colors.tagBg,
+									}}
+								>
+									{tag}
+								</span>
+							))}
+						</div>
+					)}
+
+					{dateStr && (
+						<span
+							style={{
+								fontSize: 18 * S,
+								color: colors.textMuted,
+								marginTop: 8 * S,
+							}}
+						>
+							{dateStr}
 						</span>
 					)}
 				</div>
-			</OgBackground>
-		),
+			</OgBackground>,
+			{ width: OG_RENDER_WIDTH, height: OG_RENDER_HEIGHT, fonts },
+		);
+	}
+
+	// Fall back to generic page OG
+	const page = await findPageBySlug([slug]);
+	const title = page?.frontmatter?.title ?? slug;
+	const description =
+		page?.frontmatter?.subtitle ?? page?.frontmatter?.description;
+
+	return new ImageResponse(
+		<OgBackground>
+			<span
+				style={{
+					fontFamily: "Silkscreen",
+					fontSize: 32 * S,
+					color: colors.textMuted,
+					lineHeight: 1,
+				}}
+			>
+				AKJ.IO
+			</span>
+
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					flex: 1,
+					justifyContent: "center",
+					gap: 16 * S,
+					marginTop: 10 * S,
+				}}
+			>
+				<span
+					style={{
+						fontFamily: "Fraunces",
+						fontSize: titleFontSize(title.length),
+						color: colors.text,
+						lineHeight: 1.2,
+					}}
+				>
+					{title}
+				</span>
+
+				{description && (
+					<span
+						style={{
+							fontSize: 22 * S,
+							color: colors.textMuted,
+							lineHeight: 1.4,
+							maxWidth: 900 * S,
+						}}
+					>
+						{description}
+					</span>
+				)}
+			</div>
+		</OgBackground>,
 		{ width: OG_RENDER_WIDTH, height: OG_RENDER_HEIGHT, fonts },
 	);
 }

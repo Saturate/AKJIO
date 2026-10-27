@@ -7,7 +7,10 @@ const SYNODIC_PERIOD = 29.53059;
 export function getMoonPhase(date: Date = new Date()): number {
 	const daysSinceEpoch = date.getTime() / 86_400_000;
 	const daysSinceNewMoon = daysSinceEpoch - KNOWN_NEW_MOON;
-	return ((daysSinceNewMoon % SYNODIC_PERIOD) + SYNODIC_PERIOD) % SYNODIC_PERIOD / SYNODIC_PERIOD;
+	return (
+		(((daysSinceNewMoon % SYNODIC_PERIOD) + SYNODIC_PERIOD) % SYNODIC_PERIOD) /
+		SYNODIC_PERIOD
+	);
 }
 
 /** Returns 0–1 representing how lit the moon is (0 = new, 1 = full). */

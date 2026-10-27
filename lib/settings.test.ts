@@ -23,7 +23,13 @@ describe("parseSettings", () => {
 
 	it("clamps numbers and rejects wrong types field by field", () => {
 		const s = parseSettings(
-			cookie({ growth: 999, spores: "lots", strain: "nope", react: "yes", theme: "light" }),
+			cookie({
+				growth: 999,
+				spores: "lots",
+				strain: "nope",
+				react: "yes",
+				theme: "light",
+			}),
 		);
 		expect(s.growth).toBe(GROWTH_RANGE.max);
 		expect(s.spores).toBe(DEFAULT_SETTINGS.spores);
@@ -33,6 +39,8 @@ describe("parseSettings", () => {
 	});
 
 	it("drops unknown keys", () => {
-		expect(parseSettings(cookie({ evil: "<script>" }))).not.toHaveProperty("evil");
+		expect(parseSettings(cookie({ evil: "<script>" }))).not.toHaveProperty(
+			"evil",
+		);
 	});
 });

@@ -50,7 +50,8 @@ describe("parseFrontmatter", () => {
 
 	// Same fence rules as vfile-matter, which compileMDX uses for the post page
 	it("reads CRLF files and ignores fences with trailing spaces", () => {
-		const crlf = "---\r\ntitle: A\r\ntags: [x, y]\r\ndraft: true\r\n---\r\n\r\nBody\r\n";
+		const crlf =
+			"---\r\ntitle: A\r\ntags: [x, y]\r\ndraft: true\r\n---\r\n\r\nBody\r\n";
 		expect(parseFrontmatter(crlf)).toMatchObject({
 			title: "A",
 			tags: ["x", "y"],
@@ -63,9 +64,10 @@ describe("parseFrontmatter", () => {
 	});
 
 	it("reads inline and YAML list tags", () => {
-		expect(parseFrontmatter(post(`tags: [ctf, "web security"]`)).tags).toEqual(
-			["ctf", "web security"],
-		);
+		expect(parseFrontmatter(post(`tags: [ctf, "web security"]`)).tags).toEqual([
+			"ctf",
+			"web security",
+		]);
 		expect(parseFrontmatter(post(`tags:\n  - ctf\n  - 'ai'`)).tags).toEqual([
 			"ctf",
 			"ai",
