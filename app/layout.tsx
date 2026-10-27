@@ -1,26 +1,45 @@
-import { Jersey_25, Inter } from "next/font/google";
+import { Fraunces, Geist, Geist_Mono, Silkscreen } from "next/font/google";
 import styles from "../styles/Home.module.css";
 import "../styles/global-styles.css";
 import "../styles/syntaxhighlighting.css";
 import Navigation from "@/components/Navigation/Navigation";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
-import Ocean3DLazy from "@/components/Ocean3D/Ocean3DLazy";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { getNonce } from "@/utils/nonce";
+import { DEFAULT_STRAIN, STRAIN_KEYS, strainCss } from "@/lib/strains";
 
-const font = Jersey_25({
+const fraunces = Fraunces({
 	subsets: ["latin"],
-	weight: "400",
-	variable: "--font-jersey-25",
+	axes: ["SOFT", "WONK", "opsz"],
+	style: ["normal", "italic"],
+	variable: "--font-fraunces",
 	display: "swap",
 });
 
-const inter = Inter({
+const geist = Geist({
 	subsets: ["latin"],
-	variable: "--font-inter",
+	variable: "--font-geist",
 	display: "swap",
 });
+
+const geistMono = Geist_Mono({
+	subsets: ["latin"],
+	variable: "--font-geist-mono",
+	display: "swap",
+});
+
+const silkscreen = Silkscreen({
+	subsets: ["latin"],
+	weight: ["400", "700"],
+	variable: "--font-silkscreen",
+	display: "swap",
+});
+
+const fontVars = [fraunces, geist, geistMono, silkscreen].map((f) => f.variable).join(" ");
+
+// Runs before paint so the stored mode and strain apply without a flash.
+const prePaint = `(function(){try{var t=localStorage.getItem("theme")||"system";var r=t;if(t==="system")r=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";var d=document.documentElement;d.classList.add(r);d.style.colorScheme=r;var s=localStorage.getItem("strain");d.dataset.strain=${JSON.stringify(STRAIN_KEYS)}.indexOf(s)>-1?s:${JSON.stringify(DEFAULT_STRAIN)}}catch(e){}})()`;
 
 export const metadata = {
 	metadataBase: new URL("https://akj.io"),
@@ -82,23 +101,13 @@ export default async function RootLayout({
 	const nonce = await getNonce();
 
 	return (
-		<html
-			lang="en"
-			className={`${font.variable} ${inter.variable}`}
-			suppressHydrationWarning
-		>
+		<html lang="en" className={fontVars} data-strain={DEFAULT_STRAIN} suppressHydrationWarning>
 			<head>
-				<script
-					nonce={nonce}
-					dangerouslySetInnerHTML={{
-						__html: `(function(){try{var t=localStorage.getItem("theme")||"system";var r=t;if(t==="system")r=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";document.documentElement.classList.add(r);document.documentElement.style.colorScheme=r}catch{}})()`,
-					}}
-				/>
+				<script nonce={nonce} dangerouslySetInnerHTML={{ __html: prePaint }} />
+				<style dangerouslySetInnerHTML={{ __html: strainCss() }} />
 			</head>
 			<body className={styles.page}>
 				<ThemeProvider>
-					<Ocean3DLazy />
-
 					<Header>
 						<Navigation />
 					</Header>
