@@ -69,13 +69,14 @@ export function glitchChar(el: HTMLElement): void {
 	)
 		return;
 	el.dataset.glitching = "1";
-	const original = el.dataset.c ?? el.textContent ?? "";
-	el.textContent = randomGlyph();
+	// The glyph is drawn over the letter by CSS (attr(data-g)) instead of replacing it, so the
+	// letter keeps its width and the rest of the line doesn't jump while it glitches
+	el.dataset.g = randomGlyph();
 	el.classList.add("ch-gl");
 	window.setTimeout(
 		() => {
-			el.textContent = original;
 			el.classList.remove("ch-gl");
+			delete el.dataset.g;
 			delete el.dataset.glitching;
 		},
 		70 + Math.random() * 90,

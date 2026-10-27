@@ -10,10 +10,23 @@
 	color: color-mix(in srgb, var(--text) 72%, var(--accent));
 }
 
+/* The real letter stays in the flow but turns invisible, holding its width; the glyph sits
+   on top, centred, and may spill over its neighbours without pushing them */
 .word :global(.ch-gl) {
+	position: relative;
+	color: transparent;
+	transition: none;
+}
+
+.word :global(.ch-gl)::after {
+	content: attr(data-g);
+	position: absolute;
+	inset: 0;
+	display: flex;
+	justify-content: center;
 	color: var(--accent);
 	text-shadow:
 		-2px 0 var(--glitch-a),
 		2px 0 var(--glitch-b);
-	transition: none;
+	pointer-events: none;
 }
