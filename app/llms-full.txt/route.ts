@@ -18,7 +18,7 @@ export async function GET() {
 			[
 				`# ${post.title}`,
 				`URL: ${siteUrl}/${post.id}  `,
-				`Published: ${post.date.toISOString().slice(0, 10)}`,
+				post.date ? `Published: ${post.date.toISOString().slice(0, 10)}` : "",
 				post.description ? `\n> ${post.description}` : "",
 				`\n${post.body}`,
 			].join("\n"),
