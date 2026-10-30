@@ -11,6 +11,7 @@ const colonies = new Set<ColonyEngine>();
 let raf = 0;
 let last = 0;
 let started = false;
+let twitchInterval = 0;
 
 function frame(now: number) {
 	const dt = Math.min(0.05, (now - last) / 1000);
@@ -99,8 +100,20 @@ function twitch() {
 	}
 }
 
+function isTyping(): boolean {
+	const el = document.activeElement;
+	if (!el) return false;
+	const tag = el.tagName;
+	return (
+		tag === "INPUT" ||
+		tag === "TEXTAREA" ||
+		tag === "SELECT" ||
+		(el as HTMLElement).isContentEditable
+	);
+}
+
 function onKeyDown(e: KeyboardEvent) {
-	if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+	if (e.repeat || e.metaKey || e.ctrlKey || e.altKey || isTyping()) return;
 	let any = false;
 	for (const c of colonies) {
 		if (!c.visible) continue;
@@ -131,7 +144,7 @@ function start() {
 	if (prefersReducedMotion()) return;
 	window.addEventListener("pointerdown", onPointerDown, { passive: true });
 	window.addEventListener("keydown", onKeyDown);
-	window.setInterval(twitch, 1700);
+	twitchInterval = window.setInterval(twitch, 1700);
 }
 
 export function registerColony(c: ColonyEngine): () => void {
@@ -142,6 +155,10 @@ export function registerColony(c: ColonyEngine): () => void {
 	return () => {
 		colonies.delete(c);
 		c.destroy();
+		if (colonies.size === 0 && twitchInterval) {
+			clearInterval(twitchInterval);
+			twitchInterval = 0;
+		}
 	};
 }
 
