@@ -11,6 +11,10 @@ export type Settings = {
 	length: number;
 	/** Background spore density; 1 is the default field, 0 hides it. */
 	spores: number;
+	/** Border colony density; 0 hides it, 1 is default. */
+	colony: number;
+	/** Tendril reach variance multiplier for border colonies. */
+	reach: number;
 	/** Spores move away from the pointer and puff on keypress. */
 	react: boolean;
 	pulses: boolean;
@@ -22,6 +26,8 @@ export const SETTINGS_COOKIE = "akj-culture";
 export const GROWTH_RANGE = { min: 0, max: 50 } as const;
 export const LENGTH_RANGE = { min: 0.25, max: 10 } as const;
 export const SPORES_RANGE = { min: 0, max: 2, step: 0.25 } as const;
+export const COLONY_RANGE = { min: 0, max: 2, step: 0.25 } as const;
+export const REACH_RANGE = { min: 0.25, max: 4 } as const;
 
 export const DEFAULT_SETTINGS: Settings = {
 	strain: DEFAULT_STRAIN,
@@ -29,6 +35,8 @@ export const DEFAULT_SETTINGS: Settings = {
 	growth: 1,
 	length: 1,
 	spores: 1,
+	colony: 1,
+	reach: 1,
 	react: true,
 	pulses: true,
 	glitch: true,
@@ -73,6 +81,8 @@ export function parseSettings(raw: string | undefined): Settings {
 		growth: clamp(data.growth, GROWTH_RANGE, d.growth),
 		length: clamp(data.length, LENGTH_RANGE, d.length),
 		spores: clamp(data.spores, SPORES_RANGE, d.spores),
+		colony: clamp(data.colony, COLONY_RANGE, d.colony),
+		reach: clamp(data.reach, REACH_RANGE, d.reach),
 		react: bool(data.react, d.react),
 		pulses: bool(data.pulses, d.pulses),
 		glitch: bool(data.glitch, d.glitch),
@@ -91,6 +101,8 @@ export function isDefaultSettings(s: Settings): boolean {
 		s.growth === d.growth &&
 		s.length === d.length &&
 		s.spores === d.spores &&
+		s.colony === d.colony &&
+		s.reach === d.reach &&
 		s.react === d.react &&
 		s.pulses === d.pulses &&
 		s.glitch === d.glitch

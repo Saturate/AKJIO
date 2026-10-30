@@ -27,7 +27,7 @@ export default function Colony({
 	as = "div",
 	className,
 	seed,
-	inward = 0.3,
+	inward = 0.15,
 	reach = 28,
 	corners = ALL,
 	edges = ALL,

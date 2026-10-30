@@ -33,7 +33,7 @@ export default function Footer() {
 		<Colony
 			as="footer"
 			seed={4242}
-			inward={0.35}
+			inward={0.1}
 			reach={30}
 			corners={TOP_CORNERS}
 			edges={TOP_EDGE}
@@ -86,7 +86,7 @@ export default function Footer() {
 			<div className={styles.bottom}>
 				<FooterPath />
 				<Link href="/privacy" className="grow-underline">
-					No trackers. A cookie only if you change the settings.
+					No tracking, full privacy.
 				</Link>
 			</div>
 		</Colony>

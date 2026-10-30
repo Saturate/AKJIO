@@ -36,8 +36,9 @@ export default async function FrontPage({ params }: PageProps) {
 					<Colony
 						as="article"
 						seed={hashStr("home")}
-						inward={0.4}
+						inward={0.25}
 						reach={40}
+						infect
 						className={`${page.frame} prose`}
 					>
 						{content.Component()}

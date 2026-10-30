@@ -3,11 +3,11 @@
 	isolation: isolate;
 }
 
-/* Canvases bleed 36px past the element (MARGIN in lib/colony/engine.ts) and sit under its content. */
+/* Canvases bleed 80px past the element (MARGIN in lib/colony/engine.ts) and sit under its content. */
 .canvas {
 	position: absolute;
-	left: calc(-36px - 1px);
-	top: calc(-36px - 1px);
+	left: calc(-80px - 1px);
+	top: calc(-80px - 1px);
 	z-index: -1;
 	pointer-events: none;
 }

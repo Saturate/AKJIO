@@ -17,9 +17,13 @@ function frame(now: number) {
 	last = now;
 	let busy = false;
 	if (!document.hidden) {
-		const growth = runtimeSettings().growth;
+		const s = runtimeSettings();
+		const growth = s.growth;
+		const colonyOn = s.colony > 0;
 		for (const c of colonies) {
 			if (!c.visible) continue;
+			c.setVisible(colonyOn);
+			if (!colonyOn) continue;
 			c.tick(dt, growth);
 			c.drawGlow(now, dt);
 			if (c.needsFrames) busy = true;
@@ -35,7 +39,12 @@ function wake() {
 	raf = requestAnimationFrame(frame);
 }
 
-// Clicking near any network makes the closest one grow toward the pointer.
+// Track clicks in a region: spawn a new colony only after enough land nearby.
+let clickCluster = { x: 0, y: 0, n: 0, t: 0 };
+const SPAWN_THRESHOLD = 4;
+const CLUSTER_RADIUS = 80;
+const CLUSTER_TIMEOUT = 2000;
+
 function onPointerDown(e: PointerEvent) {
 	let best: { c: ColonyEngine; x: number; y: number; edge: number } | null =
 		null;
@@ -54,7 +63,26 @@ function onPointerDown(e: PointerEvent) {
 		);
 		if (!best || edge < best.edge) best = { c, x, y, edge };
 	}
-	if (best?.c.sprout(best.x, best.y)) wake();
+	if (!best) return;
+	const now = performance.now();
+	const dx = best.x - clickCluster.x;
+	const dy = best.y - clickCluster.y;
+	if (
+		Math.hypot(dx, dy) < CLUSTER_RADIUS &&
+		now - clickCluster.t < CLUSTER_TIMEOUT
+	) {
+		clickCluster.n++;
+	} else {
+		clickCluster = { x: best.x, y: best.y, n: 1, t: now };
+	}
+	clickCluster.t = now;
+
+	best.c.sprout(best.x, best.y);
+	if (clickCluster.n >= SPAWN_THRESHOLD) {
+		best.c.spawn(best.x, best.y);
+		clickCluster.n = 0;
+	}
+	wake();
 }
 
 // Infected letters twitch now and then.
@@ -71,6 +99,16 @@ function twitch() {
 	}
 }
 
+function onKeyDown(e: KeyboardEvent) {
+	if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+	let any = false;
+	for (const c of colonies) {
+		if (!c.visible) continue;
+		if (c.infectNear(2) > 0) any = true;
+	}
+	if (any) wake();
+}
+
 function start() {
 	if (started) return;
 	started = true;
@@ -78,18 +116,21 @@ function start() {
 		colonies.forEach((c) => c.redraw());
 		wake();
 	});
-	// Length changes the shape, so colonies replay their growth at the new scale.
+	// Length and reach change the shape, so colonies replay their growth at the new scale.
 	let length = runtimeSettings().length;
+	let reach = runtimeSettings().reach;
 	onRuntimeSettings(() => {
-		const next = runtimeSettings().length;
-		if (next !== length) {
-			length = next;
+		const s = runtimeSettings();
+		if (s.length !== length || s.reach !== reach) {
+			length = s.length;
+			reach = s.reach;
 			colonies.forEach((c) => c.layout(true));
 		}
 		wake();
 	});
 	if (prefersReducedMotion()) return;
 	window.addEventListener("pointerdown", onPointerDown, { passive: true });
+	window.addEventListener("keydown", onKeyDown);
 	window.setInterval(twitch, 1700);
 }
 
