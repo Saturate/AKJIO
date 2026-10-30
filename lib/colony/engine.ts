@@ -615,8 +615,16 @@ export class ColonyEngine {
 		const m = MARGIN;
 		const edges: Array<{ x: number; y: number; d: number }> = [
 			{ x: Math.max(m, Math.min(m + this.w, tx)), y: m, d: Math.abs(ty - m) },
-			{ x: m + this.w, y: Math.max(m, Math.min(m + this.h, ty)), d: Math.abs(tx - m - this.w) },
-			{ x: Math.max(m, Math.min(m + this.w, tx)), y: m + this.h, d: Math.abs(ty - m - this.h) },
+			{
+				x: m + this.w,
+				y: Math.max(m, Math.min(m + this.h, ty)),
+				d: Math.abs(tx - m - this.w),
+			},
+			{
+				x: Math.max(m, Math.min(m + this.w, tx)),
+				y: m + this.h,
+				d: Math.abs(ty - m - this.h),
+			},
 			{ x: m, y: Math.max(m, Math.min(m + this.h, ty)), d: Math.abs(tx - m) },
 		];
 		edges.sort((a, b) => a.d - b.d);

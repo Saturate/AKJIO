@@ -11,9 +11,7 @@ export const contentSecurityPolicy: ProxyMiddleware = (request, next) => {
 		"style-src 'self' 'unsafe-inline'",
 		"img-src 'self' blob: data:",
 		"font-src 'self'",
-		isProd
-			? "connect-src 'self'"
-			: "connect-src 'self' https://*.vercel.live",
+		isProd ? "connect-src 'self'" : "connect-src 'self' https://*.vercel.live",
 		"object-src 'none'",
 		"base-uri 'self'",
 		"form-action 'self'",
