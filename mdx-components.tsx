@@ -30,21 +30,29 @@ function getTextContent(node: React.ReactNode): string {
 	return ""; // If the node is neither text nor a React element
 }
 
-function infectableChars(node: React.ReactNode): React.ReactNode {
-	const text = getTextContent(node);
-	const words = text.trim().split(/\s+/);
-	return words.map((word, wi) => (
-		<React.Fragment key={wi}>
-			{wi > 0 && " "}
-			<span aria-hidden="true">
-				{[...word].map((ch, ci) => (
+function splitTextToChars(text: string): React.ReactNode {
+	const words = text.split(/(\s+)/);
+	return words.map((seg, wi) => {
+		if (/^\s+$/.test(seg)) return seg;
+		return (
+			<span key={wi} aria-hidden="true">
+				{[...seg].map((ch, ci) => (
 					<span key={ci} className="ch" data-c={ch}>
 						{ch}
 					</span>
 				))}
 			</span>
-		</React.Fragment>
-	));
+		);
+	});
+}
+
+function infectableChars(node: React.ReactNode): React.ReactNode {
+	return React.Children.map(node, (child, i) => {
+		if (typeof child === "string") return splitTextToChars(child);
+		if (typeof child === "number") return splitTextToChars(String(child));
+		if (React.isValidElement(child)) return React.cloneElement(child, { key: i });
+		return child;
+	});
 }
 
 function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {

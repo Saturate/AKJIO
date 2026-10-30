@@ -17,5 +17,12 @@ export default function ProseImage({ src, alt, width, height }: Props) {
 		);
 	}
 	// eslint-disable-next-line @next/next/no-img-element -- no intrinsic size to give next/image (markdown images)
-	return <img src={src} alt={alt} loading="lazy" />;
+	return (
+		<img
+			src={src}
+			alt={alt}
+			loading="lazy"
+			style={{ maxWidth: "100%", height: "auto" }}
+		/>
+	);
 }

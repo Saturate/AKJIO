@@ -133,11 +133,19 @@ export default function SporeField() {
 			ptr.y = -1e4;
 		};
 		const onKey = (e: KeyboardEvent) => {
+			const ae = document.activeElement;
+			const typing =
+				ae &&
+				(ae.tagName === "INPUT" ||
+					ae.tagName === "TEXTAREA" ||
+					ae.tagName === "SELECT" ||
+					(ae as HTMLElement).isContentEditable);
 			if (
 				e.repeat ||
 				e.metaKey ||
 				e.ctrlKey ||
 				e.altKey ||
+				typing ||
 				!runtimeSettings().react ||
 				runtimeSettings().spores === 0
 			)
