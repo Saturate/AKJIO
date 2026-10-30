@@ -5,7 +5,7 @@ import { prefersReducedMotion, randomGlyph } from "@/lib/motion";
 import { mulberry } from "@/lib/random";
 import { runtimeSettings } from "@/lib/runtimeSettings";
 
-export const MARGIN = 36;
+export const MARGIN = 80;
 const NORMALS: ReadonlyArray<readonly [number, number]> = [
 	[0, -1],
 	[1, 0],
@@ -102,6 +102,7 @@ export class ColonyEngine {
 	private lastKnotFrame = 0;
 	/** Length multiplier captured at reset, so a layout replay grows the same shape. */
 	private length = 1;
+	private reachMul = 1;
 	private w = 0;
 	private h = 0;
 	W = 0;
@@ -150,6 +151,11 @@ export class ColonyEngine {
 		this.io.disconnect();
 	}
 
+	setVisible(on: boolean): void {
+		this.trail.style.display = on ? "" : "none";
+		this.glow.style.display = on ? "" : "none";
+	}
+
 	get box(): { w: number; h: number } {
 		return { w: this.w, h: this.h };
 	}
@@ -187,6 +193,7 @@ export class ColonyEngine {
 	private reset(): void {
 		const rnd = (this.rnd = mulberry(this.o.seed));
 		this.length = runtimeSettings().length;
+		this.reachMul = runtimeSettings().reach;
 		this.strands = [];
 		this.agents = [];
 		this.spawned = [];
@@ -332,11 +339,25 @@ export class ColonyEngine {
 						y,
 						base + (rnd() - 0.5) * 1.1,
 						Math.max(0.6, a.w * 0.8),
-						(8 + rnd() * reach) * this.length,
+						(8 + rnd() * reach) * this.length * this.reachMul,
 						1,
 					);
 				}
 			} else {
+				// Steer away from the canvas edge so tendrils curve back
+				// instead of dying at the boundary.
+				const pad = 8;
+				const ex =
+					a.x < pad ? pad - a.x : a.x > this.W - pad ? this.W - pad - a.x : 0;
+				const ey =
+					a.y < pad ? pad - a.y : a.y > this.H - pad ? this.H - pad - a.y : 0;
+				if (ex !== 0 || ey !== 0) {
+					const want = Math.atan2(ey, ex);
+					let da = want - a.ang;
+					da = da - Math.round(da / (Math.PI * 2)) * Math.PI * 2;
+					a.ang += da * 0.35;
+				}
+
 				a.ang += (rnd() - 0.5) * 0.55;
 				x = a.x + Math.cos(a.ang);
 				y = a.y + Math.sin(a.ang);
@@ -360,10 +381,10 @@ export class ColonyEngine {
 			if (
 				a.w < 0.2 ||
 				a.len > a.max ||
-				x < 1 ||
-				y < 1 ||
-				x > this.W - 1 ||
-				y > this.H - 1
+				x < -2 ||
+				y < -2 ||
+				x > this.W + 2 ||
+				y > this.H + 2
 			) {
 				this.die(a, a.kind === "tendril" && rnd() < 0.4);
 				continue;
@@ -559,6 +580,7 @@ export class ColonyEngine {
 	// Click near the network: sprout a few tendrils from the closest point toward the click.
 	sprout(x: number, y: number): boolean {
 		if (this.reduced) return false;
+		this.reachMul = runtimeSettings().reach;
 		const hit = this.nearest(x, y, 70);
 		if (!hit) return false;
 		const p = hit.s.pts[hit.i];
@@ -577,13 +599,70 @@ export class ColonyEngine {
 				ang,
 				w: 0.95,
 				len: 0,
-				max: hit.d + 18 + Math.random() * 30,
+				max: (hit.d + 18 + Math.random() * 30) * this.reachMul,
 				depth: 1,
 				s,
 			});
 		}
 		this.age = Math.min(this.age, 2);
 		return true;
+	}
+
+	// Seed a new colony on the nearest border, tendrils aimed toward (tx, ty).
+	spawn(tx: number, ty: number): boolean {
+		if (this.reduced) return false;
+		this.reachMul = runtimeSettings().reach;
+		const m = MARGIN;
+		const edges: Array<{ x: number; y: number; d: number }> = [
+			{ x: Math.max(m, Math.min(m + this.w, tx)), y: m, d: Math.abs(ty - m) },
+			{ x: m + this.w, y: Math.max(m, Math.min(m + this.h, ty)), d: Math.abs(tx - m - this.w) },
+			{ x: Math.max(m, Math.min(m + this.w, tx)), y: m + this.h, d: Math.abs(ty - m - this.h) },
+			{ x: m, y: Math.max(m, Math.min(m + this.h, ty)), d: Math.abs(tx - m) },
+		];
+		edges.sort((a, b) => a.d - b.d);
+		const anchor = edges[0];
+		const base = Math.atan2(ty - anchor.y, tx - anchor.x);
+		const n = 3 + Math.floor(Math.random() * 3);
+		for (let k = 0; k < n; k++) {
+			const s = this.newStrand(null);
+			s.pts.push([anchor.x, anchor.y, 0.85]);
+			const ang = base + (k - (n - 1) / 2) * 0.4 + (Math.random() - 0.5) * 0.3;
+			this.agents.push({
+				kind: "tendril",
+				x: anchor.x,
+				y: anchor.y,
+				ang,
+				w: 0.85,
+				len: 0,
+				max: (20 + Math.random() * 40) * this.reachMul,
+				depth: 0,
+				s,
+			});
+		}
+		this.age = Math.min(this.age, 2);
+		return true;
+	}
+
+	infectNear(limit: number): number {
+		if (this.reduced || !this.o.infect) return 0;
+		this.measure();
+		if (!this.targets) return 0;
+		const uninfected = this.targets.filter(
+			(t) => !t.el.classList.contains("ch-inf"),
+		);
+		if (!uninfected.length) return 0;
+		let hit = 0;
+		for (const t of uninfected) {
+			if (hit >= limit) break;
+			const cx = t.x + t.w / 2;
+			const cy = t.y + t.h / 2;
+			if (this.nearest(cx, cy, 60)) {
+				t.el.classList.add("ch-inf");
+				glitchChar(t.el);
+				hit++;
+			}
+		}
+		return hit;
 	}
 
 	drawGlow(now: number, dt: number): void {

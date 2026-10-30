@@ -48,7 +48,7 @@ export default function CodeFrame({
 		<Colony
 			as="figure"
 			seed={hashStr(seedText)}
-			inward={0.2}
+			inward={0.05}
 			reach={22}
 			className={styles.frame}
 			{...rest}

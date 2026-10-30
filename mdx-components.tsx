@@ -30,20 +30,40 @@ function getTextContent(node: React.ReactNode): string {
 	return ""; // If the node is neither text nor a React element
 }
 
+function infectableChars(node: React.ReactNode): React.ReactNode {
+	const text = getTextContent(node);
+	const words = text.trim().split(/\s+/);
+	return words.map((word, wi) => (
+		<React.Fragment key={wi}>
+			{wi > 0 && " "}
+			<span aria-hidden="true">
+				{[...word].map((ch, ci) => (
+					<span key={ci} className="ch" data-c={ch}>
+						{ch}
+					</span>
+				))}
+			</span>
+		</React.Fragment>
+	));
+}
+
 function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
 	return ({ children }: React.PropsWithChildren) => {
-		const slug = slugify(getTextContent(children));
-		return React.createElement(`h${level}`, { id: slug }, [
-			React.createElement(
-				"a",
-				{
-					href: `#${slug}`,
-					key: `link-${slug}`,
-					className: "anchor",
-				},
-				children,
-			),
-		]);
+		const text = getTextContent(children);
+		const slug = slugify(text);
+		const inner =
+			level === 1
+				? infectableChars(children)
+				: React.createElement(
+						"a",
+						{ href: `#${slug}`, key: `link-${slug}`, className: "anchor" },
+						children,
+					);
+		return React.createElement(
+			`h${level}`,
+			{ id: slug, ...(level === 1 ? { "data-infect": "", "aria-label": text } : {}) },
+			inner,
+		);
 	};
 }
 

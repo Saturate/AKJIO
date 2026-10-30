@@ -2,6 +2,8 @@ import {
 	GROWTH_RANGE,
 	LENGTH_RANGE,
 	SPORES_RANGE,
+	COLONY_RANGE,
+	REACH_RANGE,
 	parseSettings,
 	type Settings,
 } from "@/lib/settings";
@@ -39,6 +41,18 @@ const SETTINGS_SCHEMA = {
 			minimum: SPORES_RANGE.min,
 			maximum: SPORES_RANGE.max,
 			description: "Background spore density; 0 hides them",
+		},
+		colony: {
+			type: "number",
+			minimum: COLONY_RANGE.min,
+			maximum: COLONY_RANGE.max,
+			description: "Border colony density; 0 hides them",
+		},
+		reach: {
+			type: "number",
+			minimum: REACH_RANGE.min,
+			maximum: REACH_RANGE.max,
+			description: "Tendril reach variance for border colonies",
 		},
 		react: {
 			type: "boolean",

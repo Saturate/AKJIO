@@ -7,6 +7,8 @@ import {
 	GROWTH_RANGE,
 	LENGTH_RANGE,
 	SPORES_RANGE,
+	COLONY_RANGE,
+	REACH_RANGE,
 	isDefaultSettings,
 	type ThemeChoice,
 } from "@/lib/settings";
@@ -215,6 +217,30 @@ export default function CulturePanel() {
 							{settings.spores === 0 ? "off" : `${settings.spores}×`}
 						</span>
 					</label>
+
+					<label className={styles.row}>
+						<span className={styles.label}>Colony</span>
+						<input
+							type="range"
+							min={COLONY_RANGE.min}
+							max={COLONY_RANGE.max}
+							step={COLONY_RANGE.step}
+							value={settings.colony}
+							onChange={(e) =>
+								update({ colony: e.currentTarget.valueAsNumber })
+							}
+						/>
+						<span className={styles.value}>
+							{settings.colony === 0 ? "off" : `${settings.colony}×`}
+						</span>
+					</label>
+					<LogRange
+						label="Reach"
+						value={settings.reach}
+						low={REACH_RANGE.min}
+						max={REACH_RANGE.max}
+						onChange={(reach) => update({ reach })}
+					/>
 
 					<label className={styles.row}>
 						<span className={styles.label}>Cursor</span>

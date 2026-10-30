@@ -51,21 +51,12 @@
 }
 
 .prose ul {
-	list-style: none;
-	padding: 0;
+	list-style: disc;
+	padding-left: 1.4em;
 	margin: 0 0 22px;
 }
 
-.prose ul > li {
-	position: relative;
-	padding-left: 24px;
-}
-
-.prose ul > li::before {
-	content: "└";
-	position: absolute;
-	left: 0;
-	font-family: var(--font-mono);
+.prose ul > li::marker {
 	color: var(--muted);
 }
 
