@@ -50,7 +50,8 @@ function infectableChars(node: React.ReactNode): React.ReactNode {
 	return React.Children.map(node, (child, i) => {
 		if (typeof child === "string") return splitTextToChars(child);
 		if (typeof child === "number") return splitTextToChars(String(child));
-		if (React.isValidElement(child)) return React.cloneElement(child, { key: i });
+		if (React.isValidElement(child))
+			return React.cloneElement(child, { key: i });
 		return child;
 	});
 }
@@ -69,7 +70,10 @@ function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
 					);
 		return React.createElement(
 			`h${level}`,
-			{ id: slug, ...(level === 1 ? { "data-infect": "", "aria-label": text } : {}) },
+			{
+				id: slug,
+				...(level === 1 ? { "data-infect": "", "aria-label": text } : {}),
+			},
 			inner,
 		);
 	};

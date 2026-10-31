@@ -6,6 +6,7 @@ export default [
 	{
 		ignores: [
 			".next/**",
+			".claude/**",
 			"node_modules/**",
 			"out/**",
 			".vercel/**",
